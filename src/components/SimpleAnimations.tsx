@@ -135,16 +135,12 @@ export const NeuralNetworkBackground: React.FC = () => {
     const MAGNETIC_RADIUS =120;
     const BASE_SPEED = 0.1;
     const MAX_PULSES_PER_NODE = 2;
-    const REPULSION_FORCE = 0.01// Fuerza de repulsión entre nodos
-    const REPULSION_RADIUS = 40; // Radio de repulsión entre nodos
-    const MIN_NODE_DISTANCE = 30; // Distancia mínima entre nodos
 
     // --- ESTADO ---
     const particles: Particle[] = [];
     const pulses: Pulse[] = [];
     const connectionGlows: ConnectionGlow[] = [];
     let animationFrameId: number;
-    let lastMousePosition = { x: 0, y: 0 }; // Para detectar movimiento del imán
 
     // Función para generar una dirección aleatoria normalizada
     const getRandomDirection = () => {
@@ -211,12 +207,7 @@ export const NeuralNetworkBackground: React.FC = () => {
 
     const animate = () => {
       if (!ctx || !canvas) return;
-      const now = Date.now();
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      // Detectar si el imán se está alejando
-      const mouseMoved = Math.hypot(mouse.current.x - lastMousePosition.x, mouse.current.y - lastMousePosition.y) > 5;
-      lastMousePosition = { x: mouse.current.x, y: mouse.current.y };
 
       // --- 1. ACTUALIZAR CONEXIONES ---
       updateConnections();
@@ -319,26 +310,6 @@ export const NeuralNetworkBackground: React.FC = () => {
             p1.vx = (p1.vx / currentSpeed) * BASE_SPEED;
             p1.vy = (p1.vy / currentSpeed) * BASE_SPEED;
           }
-        }
-
-        // Aplicar repulsión entre nodos cercanos si el imán se está alejando
-        if (mouseMoved) {
-          particles.forEach((p2) => {
-            if (p1.id !== p2.id) {
-              const dx = p2.x - p1.x;
-              const dy = p2.y - p1.y;
-              const distance = Math.hypot(dx, dy);
-
-              if (distance < REPULSION_RADIUS) {
-                const repulsionForce = (1 - distance / REPULSION_RADIUS) * REPULSION_FORCE;
-                const repulsionVx = (-dx / distance) * repulsionForce;
-                const repulsionVy = (-dy / distance) * repulsionForce;
-
-                p1.vx += repulsionVx;
-                p1.vy += repulsionVy;
-              }
-            }
-          });
         }
 
         // Actualizar posición
