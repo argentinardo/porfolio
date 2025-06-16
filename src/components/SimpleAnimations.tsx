@@ -108,6 +108,7 @@ export const NeuralNetworkBackground: React.FC = () => {
       illumination: number; // 0 to 1
       neighbors: number[];
       lastPulseTime: number; // Para el cooldown
+      activePulses: number; // Contador de pulsos activos
     }
 
     interface Pulse {
@@ -125,33 +126,50 @@ export const NeuralNetworkBackground: React.FC = () => {
     }
 
     // --- CONFIGURACIÓN ---
-    const particleCount = 80;
-    const synapseFormationDistance = 120;
+    const particleCount = 200;
+    const synapseFormationDistance = 90;
     const synapseBreakDistance = synapseFormationDistance * 2;
-    const PULSE_PIXELS_PER_FRAME = 2.5;
-    const MAX_CHAIN_REACTION_DEPTH = 2;
-    const MOUSE_INTERACTION_RADIUS = 60;
-    const PULSE_COOLDOWN = 2500; // Cooldown aumentado a 2.5 segundos
+    const PULSE_PIXELS_PER_FRAME = 2;
+    const MAX_CHAIN_REACTION_DEPTH = 1;
+    const MAGNETIC_FORCE = 0.8;
+    const MAGNETIC_RADIUS =120;
+    const BASE_SPEED = 0.1;
+    const MAX_PULSES_PER_NODE = 2;
+    const REPULSION_FORCE = 0.01// Fuerza de repulsión entre nodos
+    const REPULSION_RADIUS = 40; // Radio de repulsión entre nodos
+    const MIN_NODE_DISTANCE = 30; // Distancia mínima entre nodos
 
     // --- ESTADO ---
     const particles: Particle[] = [];
     const pulses: Pulse[] = [];
     const connectionGlows: ConnectionGlow[] = [];
     let animationFrameId: number;
+    let lastMousePosition = { x: 0, y: 0 }; // Para detectar movimiento del imán
+
+    // Función para generar una dirección aleatoria normalizada
+    const getRandomDirection = () => {
+      const angle = Math.random() * Math.PI * 2;
+      return {
+        x: Math.cos(angle),
+        y: Math.sin(angle)
+      };
+    };
 
     // Inicializar partículas
     for (let i = 0; i < particleCount; i++) {
+      const direction = getRandomDirection();
       particles.push({
         id: i,
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
-        vx: (Math.random() - 0.5) * 0.3,
-        vy: (Math.random() - 0.5) * 0.3,
+        vx: direction.x * BASE_SPEED,
+        vy: direction.y * BASE_SPEED,
         size: Math.random() * 1.5 + 0.5,
         hue: 200 + Math.random() * 60,
         illumination: 0,
         neighbors: [],
         lastPulseTime: 0,
+        activePulses: 0,
       });
     }
 
@@ -174,6 +192,17 @@ export const NeuralNetworkBackground: React.FC = () => {
             const exists = connectionGlows.some(g => (g.source === p1 && g.destination === p2) || (g.source === p2 && g.destination === p1));
             if (!exists) {
               connectionGlows.push({ source: p1, destination: p2, life: 1 });
+              // Generar pulso cuando se crea un nuevo enlace
+              const distance = Math.hypot(p1.x - p2.x, p1.y - p2.y);
+              if (distance > 0) {
+                pulses.push({
+                  source: p1,
+                  destination: p2,
+                  progress: 0,
+                  speed: PULSE_PIXELS_PER_FRAME / distance,
+                  depth: 0,
+                });
+              }
             }
           }
         }
@@ -184,6 +213,10 @@ export const NeuralNetworkBackground: React.FC = () => {
       if (!ctx || !canvas) return;
       const now = Date.now();
       ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Detectar si el imán se está alejando
+      const mouseMoved = Math.hypot(mouse.current.x - lastMousePosition.x, mouse.current.y - lastMousePosition.y) > 5;
+      lastMousePosition = { x: mouse.current.x, y: mouse.current.y };
 
       // --- 1. ACTUALIZAR CONEXIONES ---
       updateConnections();
@@ -210,11 +243,10 @@ export const NeuralNetworkBackground: React.FC = () => {
             ctx.beginPath();
             ctx.moveTo(glow.source.x, glow.source.y);
             ctx.lineTo(glow.destination.x, glow.destination.y);
-            // Brillo mucho más sutil
             ctx.strokeStyle = `hsla(180, 100%, 90%, ${glow.life * 0.25})`;
             ctx.lineWidth = 1;
             ctx.shadowColor = `hsl(180, 100%, 80%)`;
-            ctx.shadowBlur = 3 * glow.life; // Resplandor muy reducido
+            ctx.shadowBlur = 3 * glow.life;
             ctx.stroke();
             ctx.shadowBlur = 0;
         }
@@ -229,26 +261,32 @@ export const NeuralNetworkBackground: React.FC = () => {
             const sourceNode = pulse.source;
             const destNode = pulse.destination;
             destNode.illumination = 1;
+            sourceNode.activePulses--;
             pulses.splice(i, 1);
 
-            // Iniciar reacción en cadena si no hemos alcanzado la profundidad máxima
             if (pulse.depth < MAX_CHAIN_REACTION_DEPTH) {
               const potentialTargets = destNode.neighbors.filter(id => id !== sourceNode.id);
-              
-              // Enviar un pulso a CADA ramificación
-              potentialTargets.forEach(targetId => {
-                const newTargetNode = particles[targetId];
-                const distance = Math.hypot(destNode.x - newTargetNode.x, destNode.y - newTargetNode.y);
-                if (distance > 0) {
-                  pulses.push({
-                    source: destNode,
-                    destination: newTargetNode,
-                    progress: 0,
-                    speed: PULSE_PIXELS_PER_FRAME / distance,
-                    depth: pulse.depth + 1,
-                  });
-                }
-              });
+              const maxNewPulses = Math.min(3, MAX_PULSES_PER_NODE - destNode.activePulses);
+              if (maxNewPulses > 0) {
+                const selectedTargets = potentialTargets
+                  .sort(() => Math.random() - 0.5)
+                  .slice(0, maxNewPulses);
+                
+                selectedTargets.forEach(targetId => {
+                  const newTargetNode = particles[targetId];
+                  const distance = Math.hypot(destNode.x - newTargetNode.x, destNode.y - newTargetNode.y);
+                  if (distance > 0) {
+                    destNode.activePulses++;
+                    pulses.push({
+                      source: destNode,
+                      destination: newTargetNode,
+                      progress: 0,
+                      speed: PULSE_PIXELS_PER_FRAME / distance,
+                      depth: pulse.depth + 1,
+                    });
+                  }
+                });
+              }
             }
         } else {
             const x = pulse.source.x + (pulse.destination.x - pulse.source.x) * pulse.progress;
@@ -262,71 +300,85 @@ export const NeuralNetworkBackground: React.FC = () => {
       
       // --- 5. ACTUALIZAR PARTÍCULAS ---
       particles.forEach((p1) => {
+        // Calcular distancia al mouse
+        const dx = mouse.current.x - p1.x;
+        const dy = mouse.current.y - p1.y;
+        const distanceToMouse = Math.hypot(dx, dy);
+
+        // Aplicar fuerza magnética si está dentro del radio
+        if (distanceToMouse < MAGNETIC_RADIUS) {
+          const force = (1 - distanceToMouse / MAGNETIC_RADIUS) * MAGNETIC_FORCE;
+          const magneticVx = (dx / distanceToMouse) * force;
+          const magneticVy = (dy / distanceToMouse) * force;
+          
+          p1.vx = p1.vx + magneticVx;
+          p1.vy = p1.vy + magneticVy;
+          
+          const currentSpeed = Math.hypot(p1.vx, p1.vy);
+          if (currentSpeed > 0) {
+            p1.vx = (p1.vx / currentSpeed) * BASE_SPEED;
+            p1.vy = (p1.vy / currentSpeed) * BASE_SPEED;
+          }
+        }
+
+        // Aplicar repulsión entre nodos cercanos si el imán se está alejando
+        if (mouseMoved) {
+          particles.forEach((p2) => {
+            if (p1.id !== p2.id) {
+              const dx = p2.x - p1.x;
+              const dy = p2.y - p1.y;
+              const distance = Math.hypot(dx, dy);
+
+              if (distance < REPULSION_RADIUS) {
+                const repulsionForce = (1 - distance / REPULSION_RADIUS) * REPULSION_FORCE;
+                const repulsionVx = (-dx / distance) * repulsionForce;
+                const repulsionVy = (-dy / distance) * repulsionForce;
+
+                p1.vx += repulsionVx;
+                p1.vy += repulsionVy;
+              }
+            }
+          });
+        }
+
+        // Actualizar posición
         p1.x += p1.vx;
         p1.y += p1.vy;
-        if (p1.x < 0 || p1.x > canvas.width) p1.vx *= -1;
-        if (p1.y < 0 || p1.y > canvas.height) p1.vy *= -1;
+
+        // Rebotar en los bordes
+        if (p1.x < 0) {
+          p1.x = 0;
+          p1.vx = Math.abs(p1.vx);
+        } else if (p1.x > canvas.width) {
+          p1.x = canvas.width;
+          p1.vx = -Math.abs(p1.vx);
+        }
+        if (p1.y < 0) {
+          p1.y = 0;
+          p1.vy = Math.abs(p1.vy);
+        } else if (p1.y > canvas.height) {
+          p1.y = canvas.height;
+          p1.vy = -Math.abs(p1.vy);
+        }
 
         // Iluminación de nodo más sutil
         if (p1.illumination > 0) p1.illumination -= 0.03;
 
-        const currentSize = p1.size + p1.illumination * 1.5; // Menos crecimiento
-        const opacity = 0.5 + p1.illumination * 0.4; // Menos opacidad
+        const currentSize = p1.size + p1.illumination * 1.5;
+        const opacity = 0.5 + p1.illumination * 0.4;
         
         ctx.beginPath();
         ctx.arc(p1.x, p1.y, currentSize, 0, Math.PI * 2);
-        ctx.fillStyle = `hsla(${p1.hue}, 100%, ${70 + p1.illumination * 15}%, ${opacity})`; // Menos brillo
+        ctx.fillStyle = `hsla(${p1.hue}, 100%, ${70 + p1.illumination * 15}%, ${opacity})`;
         
         if (p1.illumination > 0) {
           ctx.shadowColor = `hsl(${p1.hue}, 100%, 70%)`;
-          ctx.shadowBlur = 6 * p1.illumination; // Menos resplandor
+          ctx.shadowBlur = 6 * p1.illumination;
         }
         
         ctx.fill();
         ctx.shadowBlur = 0;
       });
-
-      // --- 6. CREAR NUEVOS PULSOS ---
-      // Crear pulsos desde el mouse (con cooldown y probabilidad reducida)
-      if (particles.length > 0) {
-        particles.forEach(p => {
-          const distanceToMouse = Math.hypot(p.x - mouse.current.x, p.y - mouse.current.y);
-          
-          if (distanceToMouse < MOUSE_INTERACTION_RADIUS && p.neighbors.length > 0 && (now - p.lastPulseTime > PULSE_COOLDOWN) && Math.random() < 0.04) { // Probabilidad muy reducida
-            const destination = particles[p.neighbors[Math.floor(Math.random() * p.neighbors.length)]];
-            const distance = Math.hypot(p.x - destination.x, p.y - destination.y);
-            if (distance > 0) {
-              p.lastPulseTime = now; // Registrar el tiempo del pulso
-              pulses.push({
-                source: p,
-                destination: destination,
-                progress: 0,
-                speed: PULSE_PIXELS_PER_FRAME / distance,
-                depth: 0,
-              });
-            }
-          }
-        });
-      }
-
-      // Crear pulsos aleatorios (con cooldown y probabilidad reducida)
-      if (Math.random() < 0.0008) { // Probabilidad muy reducida
-        const source = particles[Math.floor(Math.random() * particles.length)];
-        if (source && source.neighbors.length > 0 && (now - source.lastPulseTime > PULSE_COOLDOWN)) {
-          const destination = particles[source.neighbors[Math.floor(Math.random() * source.neighbors.length)]];
-          const distance = Math.hypot(source.x - destination.x, source.y - destination.y);
-          if (distance > 0) {
-            source.lastPulseTime = now; // Registrar el tiempo del pulso
-            pulses.push({
-              source: source,
-              destination: destination,
-              progress: 0,
-              speed: (PULSE_PIXELS_PER_FRAME * 0.8) / distance,
-              depth: 0,
-            });
-          }
-        }
-      }
         
       animationFrameId = requestAnimationFrame(animate);
     };
