@@ -126,15 +126,20 @@ export const NeuralNetworkBackground: React.FC = () => {
     }
 
     // --- CONFIGURACIÓN ---
-    const particleCount = 200;
+    const particleCount = 300;
     const synapseFormationDistance = 90;
-    const synapseBreakDistance = synapseFormationDistance * 2;
+    const synapseBreakDistance = synapseFormationDistance * 1.5;
     const PULSE_PIXELS_PER_FRAME = 2;
     const MAX_CHAIN_REACTION_DEPTH = 1;
-    const MAGNETIC_FORCE = 0.8;
-    const MAGNETIC_RADIUS =120;
+    const MAGNETIC_FORCE = 0.08;
+    const MAGNETIC_RADIUS = 120;
     const BASE_SPEED = 0.1;
     const MAX_PULSES_PER_NODE = 2;
+    const REPULSION_FORCE = 0.2;
+    const REPULSION_RADIUS = 60;
+    const MIN_NODE_DISTANCE = 40;
+    const RANDOM_MOVEMENT_FORCE = 0.02; // Fuerza del movimiento aleatorio
+    const RANDOM_MOVEMENT_CHANGE = 0.1; // Probabilidad de cambio de dirección
 
     // --- ESTADO ---
     const particles: Particle[] = [];
@@ -212,7 +217,79 @@ export const NeuralNetworkBackground: React.FC = () => {
       // --- 1. ACTUALIZAR CONEXIONES ---
       updateConnections();
 
-      // --- 2. DIBUJAR CONEXIONES DE FONDO ---
+      // --- 2. ACTUALIZAR POSICIONES ---
+      particles.forEach((p1) => {
+        // Aplicar movimiento aleatorio suave
+        if (Math.random() < RANDOM_MOVEMENT_CHANGE) {
+          const randomDir = getRandomDirection();
+          p1.vx += randomDir.x * RANDOM_MOVEMENT_FORCE;
+          p1.vy += randomDir.y * RANDOM_MOVEMENT_FORCE;
+        }
+
+        // Aplicar repulsión entre nodos cercanos
+        particles.forEach((p2) => {
+          if (p1.id !== p2.id) {
+            const dx = p2.x - p1.x;
+            const dy = p2.y - p1.y;
+            const distance = Math.hypot(dx, dy);
+
+            if (distance < REPULSION_RADIUS) {
+              const repulsionForce = (1 - distance / REPULSION_RADIUS) * REPULSION_FORCE;
+              const repulsionVx = (-dx / distance) * repulsionForce;
+              const repulsionVy = (-dy / distance) * repulsionForce;
+
+              p1.vx += repulsionVx;
+              p1.vy += repulsionVy;
+            }
+          }
+        });
+
+        // Aplicar atracción magnética al mouse
+        const dx = mouse.current.x - p1.x;
+        const dy = mouse.current.y - p1.y;
+        const distance = Math.hypot(dx, dy);
+
+        if (distance < MAGNETIC_RADIUS) {
+          const force = (1 - distance / MAGNETIC_RADIUS) * MAGNETIC_FORCE;
+          p1.vx += (dx / distance) * force;
+          p1.vy += (dy / distance) * force;
+        }
+
+        // Limitar la velocidad máxima
+        const currentSpeed = Math.hypot(p1.vx, p1.vy);
+        const maxSpeed = BASE_SPEED * 2;
+        if (currentSpeed > maxSpeed) {
+          p1.vx = (p1.vx / currentSpeed) * maxSpeed;
+          p1.vy = (p1.vy / currentSpeed) * maxSpeed;
+        }
+
+        // Actualizar posición
+        p1.x += p1.vx;
+        p1.y += p1.vy;
+
+        // Mantener los nodos dentro del canvas con rebote suave
+        if (p1.x < 0) {
+          p1.x = 0;
+          p1.vx = Math.abs(p1.vx) * 0.5;
+        } else if (p1.x > canvas.width) {
+          p1.x = canvas.width;
+          p1.vx = -Math.abs(p1.vx) * 0.5;
+        }
+
+        if (p1.y < 0) {
+          p1.y = 0;
+          p1.vy = Math.abs(p1.vy) * 0.5;
+        } else if (p1.y > canvas.height) {
+          p1.y = canvas.height;
+          p1.vy = -Math.abs(p1.vy) * 0.5;
+        }
+
+        // Aplicar fricción suave
+        p1.vx *= 0.99;
+        p1.vy *= 0.99;
+      });
+
+      // --- 3. DIBUJAR CONEXIONES DE FONDO ---
       particles.forEach(p => {
         p.neighbors.forEach(neighborId => {
           const neighbor = particles[neighborId];
@@ -224,7 +301,7 @@ export const NeuralNetworkBackground: React.FC = () => {
         });
       });
       
-      // --- 3. DIBUJAR BRILLOS DE CONEXIONES RECIENTES ---
+      // --- 4. DIBUJAR BRILLOS DE CONEXIONES RECIENTES ---
       for (let i = connectionGlows.length - 1; i >= 0; i--) {
         const glow = connectionGlows[i];
         glow.life -= 0.03;
@@ -243,7 +320,7 @@ export const NeuralNetworkBackground: React.FC = () => {
         }
       }
 
-      // --- 4. DIBUJAR PULSOS E INICIAR REACCIONES EN CADENA ---
+      // --- 5. DIBUJAR PULSOS E INICIAR REACCIONES EN CADENA ---
       for (let i = pulses.length - 1; i >= 0; i--) {
         const pulse = pulses[i];
         pulse.progress += pulse.speed;
@@ -288,68 +365,6 @@ export const NeuralNetworkBackground: React.FC = () => {
             ctx.fill();
         }
       }
-      
-      // --- 5. ACTUALIZAR PARTÍCULAS ---
-      particles.forEach((p1) => {
-        // Calcular distancia al mouse
-        const dx = mouse.current.x - p1.x;
-        const dy = mouse.current.y - p1.y;
-        const distanceToMouse = Math.hypot(dx, dy);
-
-        // Aplicar fuerza magnética si está dentro del radio
-        if (distanceToMouse < MAGNETIC_RADIUS) {
-          const force = (1 - distanceToMouse / MAGNETIC_RADIUS) * MAGNETIC_FORCE;
-          const magneticVx = (dx / distanceToMouse) * force;
-          const magneticVy = (dy / distanceToMouse) * force;
-          
-          p1.vx = p1.vx + magneticVx;
-          p1.vy = p1.vy + magneticVy;
-          
-          const currentSpeed = Math.hypot(p1.vx, p1.vy);
-          if (currentSpeed > 0) {
-            p1.vx = (p1.vx / currentSpeed) * BASE_SPEED;
-            p1.vy = (p1.vy / currentSpeed) * BASE_SPEED;
-          }
-        }
-
-        // Actualizar posición
-        p1.x += p1.vx;
-        p1.y += p1.vy;
-
-        // Rebotar en los bordes
-        if (p1.x < 0) {
-          p1.x = 0;
-          p1.vx = Math.abs(p1.vx);
-        } else if (p1.x > canvas.width) {
-          p1.x = canvas.width;
-          p1.vx = -Math.abs(p1.vx);
-        }
-        if (p1.y < 0) {
-          p1.y = 0;
-          p1.vy = Math.abs(p1.vy);
-        } else if (p1.y > canvas.height) {
-          p1.y = canvas.height;
-          p1.vy = -Math.abs(p1.vy);
-        }
-
-        // Iluminación de nodo más sutil
-        if (p1.illumination > 0) p1.illumination -= 0.03;
-
-        const currentSize = p1.size + p1.illumination * 1.5;
-        const opacity = 0.5 + p1.illumination * 0.4;
-        
-        ctx.beginPath();
-        ctx.arc(p1.x, p1.y, currentSize, 0, Math.PI * 2);
-        ctx.fillStyle = `hsla(${p1.hue}, 100%, ${70 + p1.illumination * 15}%, ${opacity})`;
-        
-        if (p1.illumination > 0) {
-          ctx.shadowColor = `hsl(${p1.hue}, 100%, 70%)`;
-          ctx.shadowBlur = 6 * p1.illumination;
-        }
-        
-        ctx.fill();
-        ctx.shadowBlur = 0;
-      });
         
       animationFrameId = requestAnimationFrame(animate);
     };
