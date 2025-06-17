@@ -137,7 +137,6 @@ export const NeuralNetworkBackground: React.FC = () => {
     const MAX_PULSES_PER_NODE = 2;
     const REPULSION_FORCE = 0.2;
     const REPULSION_RADIUS = 60;
-    const MIN_NODE_DISTANCE = 40;
     const RANDOM_MOVEMENT_FORCE = 0.02; // Fuerza del movimiento aleatorio
     const RANDOM_MOVEMENT_CHANGE = 0.1; // Probabilidad de cambio de dirección
 
