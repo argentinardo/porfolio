@@ -4,6 +4,47 @@ import { FadeIn, SlideIn, NeuralNetworkBackground } from './SimpleAnimations';
 import Tilt from './Tilt';
 import '../styles/portfolio.css';
 
+// Componente para texto animado con cursor parpadeante
+const AnimatedText: React.FC<{ text: string; speed?: number; className?: string }> = ({ 
+  text, 
+  speed = 50, 
+  className = '' 
+}) => {
+  const [displayedText, setDisplayedText] = useState('');
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [showCursor, setShowCursor] = useState(true);
+
+  useEffect(() => {
+    setDisplayedText('');
+    setCurrentIndex(0);
+  }, [text]);
+
+  useEffect(() => {
+    if (currentIndex < text.length) {
+      const timer = setTimeout(() => {
+        setDisplayedText(prev => prev + text[currentIndex]);
+        setCurrentIndex(prev => prev + 1);
+      }, speed);
+      return () => clearTimeout(timer);
+    }
+  }, [currentIndex, text, speed]);
+
+  // Cursor parpadeante
+  useEffect(() => {
+    const cursorTimer = setInterval(() => {
+      setShowCursor(prev => !prev);
+    }, 500);
+    return () => clearInterval(cursorTimer);
+  }, []);
+
+  return (
+    <span className={className}>
+      {displayedText}
+      {showCursor && <span className="blinking-cursor">|</span>}
+    </span>
+  );
+};
+
 const PortfolioSimple: React.FC = () => {
   const [activeSection, setActiveSection] = useState(0);
   const [scrollProgress, setScrollProgress] = useState(0);
@@ -13,7 +54,7 @@ const PortfolioSimple: React.FC = () => {
   useEffect(() => {
     if (prevSectionRef.current !== activeSection) {
       setIsAnimating(true);
-      const timer = setTimeout(() => setIsAnimating(false), 1200); // Duración de la animación
+      const timer = setTimeout(() => setIsAnimating(false), 1200);
       return () => clearTimeout(timer);
     }
     prevSectionRef.current = activeSection;
@@ -37,59 +78,46 @@ const PortfolioSimple: React.FC = () => {
 
   const currentSection = profileSections[activeSection];
 
-  const getNotebookContent = () => {
+  const renderWindowContent = () => {
     if (!currentSection.notebookContent) return null;
 
     const { type, code, language, url } = currentSection.notebookContent;
 
+    const windowHeader = (
+      <div className="editor-header">
+        <div className="window-controls">
+          <div className="control-btn red"></div>
+          <div className="control-btn yellow"></div>
+          <div className="control-btn green"></div>
+        </div>
+        <span className="editor-filename">
+          {type === 'terminal' ? 'Terminal' : `${currentSection.id}.${language}`}
+        </span>
+      </div>
+    );
+
     switch (type) {
       case 'code':
-        return (
-          <div className="code-editor">
-            <div className="editor-header">
-              <div className="window-controls">
-                <div className="control-btn red"></div>
-                <div className="control-btn yellow"></div>
-                <div className="control-btn green"></div>
-              </div>
-              <span className="editor-filename">
-                {currentSection.id}.{language}
-              </span>
-            </div>
-            <pre className="code-content">
-              <code>{code}</code>
-            </pre>
-          </div>
-        );
-
       case 'terminal':
         return (
-          <div className="terminal">
-            <div className="editor-header">
-              <div className="window-controls">
-                <div className="control-btn red"></div>
-                <div className="control-btn yellow"></div>
-                <div className="control-btn green"></div>
-              </div>
-              <span className="editor-filename">Terminal</span>
-            </div>
+          <div className={`window-base ${type}`}>
+            {windowHeader}
             <pre className="code-content">
-              <code>{code}</code>
+              <code>
+                <AnimatedText 
+                  text={code || ''} 
+                  speed={30} 
+                  className="animated-code"
+                />
+              </code>
             </pre>
           </div>
         );
 
       case 'browser':
         return (
-          <div className="browser">
-            <div className="editor-header">
-              <div className="window-controls">
-                <div className="control-btn red"></div>
-                <div className="control-btn yellow"></div>
-                <div className="control-btn green"></div>
-              </div>
-              <div className="address-bar">{url}</div>
-            </div>
+          <div className="window-base browser">
+            {windowHeader}
             <div className="browser-content">
               <div className="browser-project">
                 <div className="project-icon">P</div>
@@ -113,13 +141,10 @@ const PortfolioSimple: React.FC = () => {
 
   return (
     <div className="portfolio-container">
-      {/* Fondo de partículas */}
       <NeuralNetworkBackground />
       
-      {/* Layout fijo */}
       <div className="fixed-layout">
         <div className="content-grid">
-          {/* Lado izquierdo - Contenido */}
           <div className="content-section" key={activeSection}>
             <FadeIn delay={100}>
               <p className="subtitle">{currentSection.subtitle}</p>
@@ -133,15 +158,12 @@ const PortfolioSimple: React.FC = () => {
               <div className="content-list">
                 {currentSection.content.map((item, index) => (
                   <SlideIn key={index} delay={500 + index * 100}>
-                    <p className="content-item">
-                      {item}
-                    </p>
+                    <p className="content-item">{item}</p>
                   </SlideIn>
                 ))}
               </div>
             </FadeIn>
 
-            {/* Enlaces sociales en la última sección */}
             {activeSection === profileSections.length - 1 && (
               <FadeIn delay={800}>
                 <div className="social-links">
@@ -166,14 +188,10 @@ const PortfolioSimple: React.FC = () => {
             )}
           </div>
 
-          {/* Lado derecho - Notebook */}
           <Tilt options={{ max: 15, scale: 1.05, speed: 400, glare: true, 'max-glare': 0.5 }}>
             <div className="notebook-container">
               <div className={`notebook ${activeSection >= 0 ? 'active' : 'inactive'}`}>
-                {/* Base del laptop */}
                 <div className="laptop-base"></div>
-                
-                {/* Teclado */}
                 <div className="laptop-keyboard">
                   <div className="keyboard-keys">
                     {Array.from({ length: 48 }).map((_, i) => (
@@ -181,11 +199,9 @@ const PortfolioSimple: React.FC = () => {
                     ))}
                   </div>
                 </div>
-                
-                {/* Pantalla */}
                 <div className={`laptop-screen ${isAnimating ? 'screen-animating' : ''}`}>
                   <div className="screen-content">
-                    {getNotebookContent()}
+                    {renderWindowContent()}
                   </div>
                   <div className="screen-reflection"></div>
                 </div>
@@ -195,18 +211,11 @@ const PortfolioSimple: React.FC = () => {
         </div>
       </div>
 
-      {/* Secciones de scroll */}
-      <div className="scroll-sections">
-        {profileSections.map((section, index) => (
-          <div key={section.id} className="scroll-section">
-            <div className="scroll-placeholder">
-              <h2>{section.title}</h2>
-            </div>
-          </div>
-        ))}
-      </div>
+      {/* Espaciadores para el scroll */}
+      {profileSections.map((_, index) => (
+        <div key={index} style={{ height: '100vh' }} />
+      ))}
 
-      {/* Indicadores de progreso */}
       <div className="progress-indicators">
         {profileSections.map((_, index) => (
           <div
@@ -217,7 +226,6 @@ const PortfolioSimple: React.FC = () => {
         ))}
       </div>
 
-      {/* Barra de progreso */}
       <div 
         className="progress-bar"
         style={{ transform: `scaleX(${scrollProgress})` }}
