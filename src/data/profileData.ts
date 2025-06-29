@@ -96,6 +96,22 @@ $ echo "¡Siempre aprendiendo y evolucionando!"`
     }
   },
   {
+    id: 'services',
+    title: 'Servicios Profesionales',
+    subtitle: 'Soluciones Web Completas',
+    content: [
+      'Desarrollo frontend con React y TypeScript',
+      'Diseño de interfaces modernas y responsivas',
+      'Optimización de performance y SEO',
+      'Mantenimiento y soporte técnico',
+      'Consultoría y arquitectura de proyectos'
+    ],
+    notebookContent: {
+      type: 'browser',
+      url: 'https://services-portfolio.com'
+    }
+  },
+  {
     id: 'freelance',
     title: 'Servicios Freelance',
     subtitle: '¿Qué Puedo Hacer por Ti?',
@@ -153,25 +169,8 @@ export default freelanceServices;`
       '🌍 Trabajo remoto desde Argentina'
     ],
     notebookContent: {
-      type: 'terminal',
-      code: `$ contact --damian-nardini
-
-📧 Email: contacto@damiannardini.com
-💼 LinkedIn: linkedin.com/in/damiannardini
-🐙 GitHub: github.com/damiannardini
-📱 WhatsApp: +54 9 11 XXXX-XXXX
-
-$ echo "¡Conversemos sobre tu proyecto!"
-> ¡Conversemos sobre tu proyecto!
-
-$ echo "Disponible para reuniones virtuales"
-> Disponible para reuniones virtuales
-
-$ echo "Respuesta en menos de 24 horas"
-> Respuesta en menos de 24 horas
-
-$ git status
-> Ready to collaborate! 🚀`
+      type: 'browser',
+      url: 'https://contact-portfolio.com'
     }
   }
 ];

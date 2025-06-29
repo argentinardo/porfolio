@@ -3,6 +3,8 @@ import { profileSections, socialLinks } from '../data/profileData';
 import { NeuralNetworkBackground } from './SimpleAnimations';
 import Tilt from './Tilt';
 import ProjectsShowcase from './ProjectsShowcase';
+import ServiceCards from './ServiceCards';
+import ContactForm from './ContactForm';
 import '../styles/portfolio.css';
 
 // Componente para texto animado con cursor parpadeante
@@ -51,7 +53,9 @@ const PortfolioSimple: React.FC = () => {
   const [scrollProgress, setScrollProgress] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
   const [showPulseEffect, setShowPulseEffect] = useState(false);
+  const [isNotebookElevated, setIsNotebookElevated] = useState(false);
   const prevSectionRef = useRef<number>(0);
+  const notebookContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (prevSectionRef.current !== activeSection) {
@@ -86,6 +90,13 @@ const PortfolioSimple: React.FC = () => {
   }, []);
 
   const currentSection = profileSections[activeSection];
+  
+  // Calcular si estamos en la sección de servicios para mover la notebook
+  const isServicesSection = currentSection.id === 'services';
+  
+  useEffect(() => {
+    setIsNotebookElevated(isServicesSection);
+  }, [isServicesSection]);
 
   const renderWindowContent = () => {
     if (!currentSection.notebookContent) return null;
@@ -130,6 +141,10 @@ const PortfolioSimple: React.FC = () => {
             <div className="browser-content">
               {currentSection.id === 'projects' ? (
                 <ProjectsShowcase isVisible={true} />
+              ) : currentSection.id === 'services' ? (
+                <ServiceCards isVisible={true} />
+              ) : currentSection.id === 'contact' ? (
+                <ContactForm isVisible={true} />
               ) : (
                 <div className="browser-project">
                   <div className="project-icon">P</div>
@@ -164,7 +179,7 @@ const PortfolioSimple: React.FC = () => {
           </div>
 
           <Tilt options={{ max: 15, scale: 1.05, speed: 400, glare: true, 'max-glare': 0.5 }}>
-            <div className="notebook-container">
+            <div ref={notebookContainerRef} className={`notebook-container ${isNotebookElevated ? 'elevated' : ''}`}>
               <div className={`notebook ${activeSection >= 0 ? 'active' : 'inactive'}`}>
                 <div className="laptop-base"></div>
                 <div className={`laptop-screen ${isAnimating ? 'screen-animating' : ''}`}>
@@ -182,37 +197,49 @@ const PortfolioSimple: React.FC = () => {
       {/* Contenido que hace scroll */}
       <div className="scrollable-content">
         {profileSections.map((section, index) => (
-          <div key={index} className="scrollable-section">
-            <div className="scrollable-text">
-              <p className="subtitle">{section.subtitle}</p>
-              <h1 className="main-title">{section.title}</h1>
-              <div className="content-list">
-                {section.content.map((item, itemIndex) => (
-                  <p key={itemIndex} className="content-item">{item}</p>
-                ))}
-              </div>
-              {index === profileSections.length - 1 && (
-                <div className="social-links">
-                  <a
-                    href={socialLinks.linkedin}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="social-link primary"
-                  >
-                    LinkedIn
-                  </a>
-                  <a
-                    href={socialLinks.github}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="social-link secondary"
-                  >
-                    GitHub
-                  </a>
+          <div key={index} className={`scrollable-section ${section.id === 'services' ? 'full-width' : ''}`}>
+            {section.id === 'services' ? (
+              <div className="services-full-section">
+                <div className="services-content">
+                  <p className="subtitle">{section.subtitle}</p>
+                  <h1 className="main-title">{section.title}</h1>
+                  <ServiceCards isVisible={true} />
                 </div>
-              )}
-            </div>
-            <div></div> {/* Columna derecha vacía */}
+              </div>
+            ) : (
+              <>
+                <div className="scrollable-text">
+                  <p className="subtitle">{section.subtitle}</p>
+                  <h1 className="main-title">{section.title}</h1>
+                  <div className="content-list">
+                    {section.content.map((item, itemIndex) => (
+                      <p key={itemIndex} className="content-item">{item}</p>
+                    ))}
+                  </div>
+                  {index === profileSections.length - 1 && (
+                    <div className="social-links">
+                      <a
+                        href={socialLinks.linkedin}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="social-link primary"
+                      >
+                        LinkedIn
+                      </a>
+                      <a
+                        href={socialLinks.github}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="social-link secondary"
+                      >
+                        GitHub
+                      </a>
+                    </div>
+                  )}
+                </div>
+                <div></div> {/* Columna derecha vacía */}
+              </>
+            )}
           </div>
         ))}
       </div>
