@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { profileSections, socialLinks } from '../data/profileData';
-import { FadeIn, SlideIn, NeuralNetworkBackground } from './SimpleAnimations';
+import { NeuralNetworkBackground } from './SimpleAnimations';
 import Tilt from './Tilt';
 import ProjectsShowcase from './ProjectsShowcase';
 import '../styles/portfolio.css';
@@ -90,7 +90,7 @@ const PortfolioSimple: React.FC = () => {
   const renderWindowContent = () => {
     if (!currentSection.notebookContent) return null;
 
-    const { type, code, language, url } = currentSection.notebookContent;
+    const { type, code, language } = currentSection.notebookContent;
 
     const windowHeader = (
       <div className="editor-header">
@@ -156,49 +156,11 @@ const PortfolioSimple: React.FC = () => {
     <div className="portfolio-container">
       <NeuralNetworkBackground />
       
+      {/* Layout fijo con notebook */}
       <div className="fixed-layout">
         <div className="content-grid">
-          <div className="content-section" key={activeSection}>
-            <FadeIn delay={100}>
-              <p className="subtitle">{currentSection.subtitle}</p>
-            </FadeIn>
-            
-            <FadeIn delay={200}>
-              <h1 className="main-title">{currentSection.title}</h1>
-            </FadeIn>
-            
-            <FadeIn delay={400}>
-              <div className="content-list">
-                {currentSection.content.map((item, index) => (
-                  <SlideIn key={index} delay={500 + index * 100}>
-                    <p className="content-item">{item}</p>
-                  </SlideIn>
-                ))}
-              </div>
-            </FadeIn>
-
-            {activeSection === profileSections.length - 1 && (
-              <FadeIn delay={800}>
-                <div className="social-links">
-                  <a
-                    href={socialLinks.linkedin}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="social-link primary"
-                  >
-                    LinkedIn
-                  </a>
-                  <a
-                    href={socialLinks.github}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="social-link secondary"
-                  >
-                    GitHub
-                  </a>
-                </div>
-              </FadeIn>
-            )}
+          <div className="content-section">
+            {/* Columna izquierda vacía en el layout fijo */}
           </div>
 
           <Tilt options={{ max: 15, scale: 1.05, speed: 400, glare: true, 'max-glare': 0.5 }}>
@@ -217,10 +179,43 @@ const PortfolioSimple: React.FC = () => {
         </div>
       </div>
 
-      {/* Espaciadores para el scroll */}
-      {profileSections.map((_, index) => (
-        <div key={index} style={{ height: '100vh' }} />
-      ))}
+      {/* Contenido que hace scroll */}
+      <div className="scrollable-content">
+        {profileSections.map((section, index) => (
+          <div key={index} className="scrollable-section">
+            <div className="scrollable-text">
+              <p className="subtitle">{section.subtitle}</p>
+              <h1 className="main-title">{section.title}</h1>
+              <div className="content-list">
+                {section.content.map((item, itemIndex) => (
+                  <p key={itemIndex} className="content-item">{item}</p>
+                ))}
+              </div>
+              {index === profileSections.length - 1 && (
+                <div className="social-links">
+                  <a
+                    href={socialLinks.linkedin}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="social-link primary"
+                  >
+                    LinkedIn
+                  </a>
+                  <a
+                    href={socialLinks.github}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="social-link secondary"
+                  >
+                    GitHub
+                  </a>
+                </div>
+              )}
+            </div>
+            <div></div> {/* Columna derecha vacía */}
+          </div>
+        ))}
+      </div>
 
       <div className="progress-indicators">
         {/* Checkpoints con efectos de nodos */}
