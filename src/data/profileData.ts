@@ -14,92 +14,164 @@ export interface ProfileSection {
 export const profileSections: ProfileSection[] = [
   {
     id: 'intro',
-    title: 'Frontend Developer',
+    title: 'Desarrollador Frontend Senior',
     subtitle: 'Damian Nardini',
     content: [
-      'Desarrollador Frontend especializado en React, TypeScript y tecnologías web modernas.',
-      'Experiencia en crear interfaces de usuario interactivas y responsivas.',
-      'Apasionado por el diseño UX/UI y las animaciones web.'
+      '20+ años de experiencia en desarrollo web frontend',
+      'Especializado en React, TypeScript y tecnologías modernas',
+      'Disponible para proyectos freelance y colaboraciones',
+      'Enfocado en crear experiencias de usuario excepcionales'
     ],
     notebookContent: {
       type: 'code',
       language: 'typescript',
-      code: `const developer = {
+      code: `const seniorDeveloper = {
   name: "Damian Nardini",
-  role: "Frontend Developer",
-  skills: ["React", "TypeScript", "JavaScript"],
-  passion: "Creating amazing user experiences",
+  experience: "20+ años en Frontend",
+  currentStatus: "Disponible para Freelance",
+  specialization: "React • TypeScript • UI/UX",
+  passion: "Crear experiencias web únicas",
   location: "Argentina",
-  available: true
+  available: true,
+  rate: "Competitiva y flexible"
 };
 
-console.log(developer.passion);`
+console.log("¡Hola! Soy " + seniorDeveloper.name);
+console.log("Con " + seniorDeveloper.experience + " de experiencia");
+console.log("Actualmente: " + seniorDeveloper.currentStatus);`
     }
   },
   {
-    id: 'skills',
-    title: 'Tecnologías',
-    subtitle: 'Stack Tecnológico',
+    id: 'journey',
+    title: 'Mi Trayectoria',
+    subtitle: '20 Años de Evolución Web',
     content: [
-      'React • TypeScript • JavaScript',
-      'HTML5 • CSS3 • Tailwind CSS',
-      'Node.js • Git • Responsive Design',
-      'Animaciones • UX/UI • Performance'
+      'Comencé con HTML estático y JavaScript vanilla',
+      'Evolucioné con jQuery, PHP y bases de datos',
+      'Adapté mis skills a React, TypeScript y frameworks modernos',
+      'Mantuve la pasión por crear interfaces intuitivas y atractivas',
+      'Experiencia en múltiples industrias y tipos de proyectos'
+    ],
+    notebookContent: {
+      type: 'terminal',
+      code: `$ timeline --show "Damian's Web Journey"
+
+📅 2003-2008: HTML/CSS/JavaScript Vanilla
+   - Sitios web estáticos
+   - Efectos con JavaScript
+   - Compatibilidad cross-browser
+
+📅 2008-2015: jQuery + PHP + MySQL
+   - Aplicaciones web dinámicas
+   - Integración con bases de datos
+   - AJAX y interacciones asíncronas
+
+📅 2015-2020: React + Node.js
+   - Aplicaciones SPA modernas
+   - Componentes reutilizables
+   - APIs RESTful
+
+📅 2020-Presente: React + TypeScript
+   - Código más robusto y mantenible
+   - Mejores prácticas modernas
+   - Enfoque en performance y UX
+
+$ echo "¡Siempre aprendiendo y evolucionando!"`
+    }
+  },
+  {
+    id: 'projects',
+    title: 'Proyectos Destacados',
+    subtitle: 'Portfolio de Trabajos',
+    content: [
+      'E-commerce con React y TypeScript',
+      'Dashboards administrativos responsivos',
+      'Sitios web corporativos modernos',
+      'Aplicaciones web progresivas (PWA)',
+      'Integraciones con APIs de terceros'
+    ],
+    notebookContent: {
+      type: 'browser',
+      url: 'https://portfolio-projects.com'
+    }
+  },
+  {
+    id: 'freelance',
+    title: 'Servicios Freelance',
+    subtitle: '¿Qué Puedo Hacer por Ti?',
+    content: [
+      '🖥️ Desarrollo de sitios web completos',
+      '⚛️ Aplicaciones React/TypeScript',
+      '📱 Diseño responsivo y mobile-first',
+      '🔧 Mantenimiento y optimización',
+      '🚀 Migración de tecnologías legacy',
+      '💡 Consultoría técnica y mentoring'
     ],
     notebookContent: {
       type: 'code',
       language: 'javascript',
-      code: `// Mi stack tecnológico favorito
-const techStack = {
-  frontend: {
-    frameworks: ["React", "Next.js"],
-    languages: ["TypeScript", "JavaScript"],
-    styling: ["Tailwind CSS", "Styled Components"],
-    animation: ["Framer Motion", "CSS Animations"]
+      code: `// Servicios que ofrezco como Freelancer
+const freelanceServices = {
+  development: {
+    websites: "Sitios web modernos y responsivos",
+    applications: "Apps React/TypeScript",
+    ecommerce: "Tiendas online completas",
+    dashboards: "Paneles administrativos"
   },
-  tools: ["Git", "VS Code", "Figma"],
-  learning: ["Three.js", "WebGL", "Node.js"]
+  design: {
+    responsive: "Mobile-first design",
+    ux: "Experiencias de usuario",
+    animations: "Interacciones fluidas",
+    accessibility: "Sitios inclusivos"
+  },
+  consulting: {
+    codeReview: "Revisión y optimización",
+    migration: "Actualización de tecnologías",
+    mentoring: "Capacitación de equipos",
+    architecture: "Arquitectura frontend"
+  },
+  rates: {
+    hourly: "Tarifa por hora competitiva",
+    project: "Presupuestos fijos",
+    retainer: "Mantenimiento mensual",
+    flexible: "Negociable según proyecto"
+  }
 };
 
-export default techStack;`
-    }
-  },
-  {
-    id: 'experience',
-    title: 'Experiencia',
-    subtitle: 'Proyectos y Trabajo',
-    content: [
-      'Desarrollo de aplicaciones web modernas y responsivas',
-      'Implementación de interfaces de usuario complejas',
-      'Optimización de performance y SEO',
-      'Colaboración en equipos ágiles'
-    ],
-    notebookContent: {
-      type: 'browser',
-      url: 'https://portfolio-example.com'
+export default freelanceServices;`
     }
   },
   {
     id: 'contact',
-    title: 'Conectemos',
-    subtitle: 'Contacto',
+    title: 'Trabajemos Juntos',
+    subtitle: 'Disponible para Nuevos Proyectos',
     content: [
-      'LinkedIn: linkedin.com/in/damiannardini',
-      'Disponible para nuevos proyectos',
-      'Colaboraciones y oportunidades',
-      'Desarrollo frontend y consultoría'
+      '💼 Busco proyectos freelance interesantes',
+      '🤝 Colaboraciones a largo plazo',
+      '📧 Contacto directo y respuesta rápida',
+      '💻 Disponibilidad inmediata',
+      '🌍 Trabajo remoto desde Argentina'
     ],
     notebookContent: {
       type: 'terminal',
-      code: `$ git clone https://github.com/damiannardini
-$ cd portfolio
-$ npm install
-$ npm start
+      code: `$ contact --damian-nardini
 
-> Ready! Portfolio running at localhost:3000
+📧 Email: contacto@damiannardini.com
+💼 LinkedIn: linkedin.com/in/damiannardini
+🐙 GitHub: github.com/damiannardini
+📱 WhatsApp: +54 9 11 XXXX-XXXX
 
-$ echo "Let's build something amazing together!"
-> Let's build something amazing together!`
+$ echo "¡Conversemos sobre tu proyecto!"
+> ¡Conversemos sobre tu proyecto!
+
+$ echo "Disponible para reuniones virtuales"
+> Disponible para reuniones virtuales
+
+$ echo "Respuesta en menos de 24 horas"
+> Respuesta en menos de 24 horas
+
+$ git status
+> Ready to collaborate! 🚀`
     }
   }
 ];

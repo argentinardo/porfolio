@@ -151,6 +151,10 @@ export const NeuralNetworkBackground: React.FC = () => {
     const connectionGlows: ConnectionGlow[] = [];
     let animationFrameId: number;
     let minDistance: number; // Distancia mínima dinámica
+    let nodesToSpawn = 0; // Contador de nodos por aparecer
+    let spawnTimer = 0; // Timer para spawn progresivo
+    const SPAWN_INTERVAL = 50; // Intervalo entre spawns (ms)
+    const MAX_NODES_TO_SPAWN = 50; // Nodos por spawn
 
     // Función para generar una dirección aleatoria normalizada
     const getRandomDirection = () => {
@@ -203,10 +207,26 @@ export const NeuralNetworkBackground: React.FC = () => {
       };
     };
 
-    // Inicializar partículas con dirección aleatoria fija
-    for (let i = 0; i < particleCount; i++) {
-      particles.push(createNewParticle(i));
-    }
+    // Inicializar nodos progresivamente
+    const initializeProgressiveSpawn = () => {
+      nodesToSpawn = particleCount;
+      spawnTimer = 0;
+    };
+
+    // Función para spawn progresivo de nodos
+    const spawnNodes = () => {
+      if (nodesToSpawn > 0) {
+        const nodesThisFrame = Math.min(MAX_NODES_TO_SPAWN, nodesToSpawn);
+        for (let i = 0; i < nodesThisFrame; i++) {
+          const newId = particleCount - nodesToSpawn + i;
+          particles.push(createNewParticle(newId));
+        }
+        nodesToSpawn -= nodesThisFrame;
+      }
+    };
+
+    // Inicializar spawn progresivo
+    initializeProgressiveSpawn();
 
     const updateConnections = () => {
       for (let i = 0; i < particles.length; i++) {
@@ -239,6 +259,35 @@ export const NeuralNetworkBackground: React.FC = () => {
                 });
               }
             }
+          }
+        }
+      }
+
+      // Asegurar que todos los nodos tengan al menos una conexión
+      for (let i = 0; i < particles.length; i++) {
+        const node = particles[i];
+        if (node.neighbors.length === 0) {
+          // Encontrar el nodo más cercano que no esté conectado
+          let closestIndex = -1;
+          let closestDistance = Infinity;
+          
+          for (let j = 0; j < particles.length; j++) {
+            if (i !== j && particles[j].neighbors.length < 5) {
+              const distance = Math.hypot(node.x - particles[j].x, node.y - particles[j].y);
+              if (distance < closestDistance) {
+                closestDistance = distance;
+                closestIndex = j;
+              }
+            }
+          }
+          
+          // Conectar con el nodo más cercano
+          if (closestIndex !== -1) {
+            node.neighbors.push(closestIndex);
+            particles[closestIndex].neighbors.push(i);
+            
+            // Crear brillo para la nueva conexión
+            connectionGlows.push({ source: node, destination: particles[closestIndex], life: 1 });
           }
         }
       }
@@ -447,7 +496,7 @@ export const NeuralNetworkBackground: React.FC = () => {
           if (isNightMode) {
             ctx.fillStyle = `hsla(180, 100%, 90%, 0.2)`;
           } else {
-            ctx.fillStyle = `hsla(0, 0%, 30%, 0.6)`; // Gris oscuro para modo normal
+            ctx.fillStyle = `hsla(0, 0%, 60%, 0.6)`; // Gris claro para modo normal
           }
           
           ctx.fill();
@@ -466,7 +515,7 @@ export const NeuralNetworkBackground: React.FC = () => {
         if (isNightMode) {
           ctx.fillStyle = `hsla(220, 100%, ${p.illumination > 0 ? '75%' : '60%'}, ${opacity})`;
         } else {
-          ctx.fillStyle = `hsla(0, 0%, ${p.illumination > 0 ? '40%' : '30%'}, ${opacity})`;
+          ctx.fillStyle = `hsla(0, 0%, ${p.illumination > 0 ? '60%' : '50%'}, ${opacity})`;
         }
         
         ctx.textAlign = 'center';
@@ -490,59 +539,69 @@ export const NeuralNetworkBackground: React.FC = () => {
         ctx.fillRect(0, 0, canvas.width, canvas.height);
       }
 
-      updateConnections();
-      updateParticles();
-      updatePulses();
-
-      // Dibujar conexiones de fondo
-      particles.forEach(p => {
-        p.neighbors.forEach(neighborId => {
-          const neighbor = particles[neighborId];
-          ctx.beginPath();
-          ctx.moveTo(p.x, p.y);
-          ctx.lineTo(neighbor.x, neighbor.y);
-          
-          // Colores según el modo
-          if (isNightMode) {
-            ctx.strokeStyle = `hsla(220, 100%, 80%, 0.08)`;
-          } else {
-            ctx.strokeStyle = `hsla(0, 0%, 40%, 0.3)`; // Gris oscuro para modo normal
-          }
-          
-          ctx.lineWidth = 1;
-          ctx.stroke();
-        });
-      });
-
-      // Dibujar brillos de conexiones recientes
-      for (let i = connectionGlows.length - 1; i >= 0; i--) {
-        const glow = connectionGlows[i];
-        glow.life -= 0.03;
-        if (glow.life <= 0) {
-          connectionGlows.splice(i, 1);
-        } else {
-          ctx.beginPath();
-          ctx.moveTo(glow.source.x, glow.source.y);
-          ctx.lineTo(glow.destination.x, glow.destination.y);
-          
-          // Colores según el modo
-          if (isNightMode) {
-            ctx.strokeStyle = `hsla(180, 100%, 90%, ${glow.life * 0.05})`;
-            ctx.shadowColor = `hsl(180, 100%, 80%)`;
-          } else {
-            ctx.strokeStyle = `hsla(0, 0%, 50%, ${glow.life * 0.2})`; // Gris oscuro para modo normal
-            ctx.shadowColor = `hsl(0, 0%, 30%)`;
-          }
-          
-          ctx.lineWidth = 1;
-          ctx.shadowBlur = 1 * glow.life;
-          ctx.stroke();
-          ctx.shadowBlur = 0;
-        }
+      // Spawn progresivo de nodos
+      spawnTimer++;
+      if (spawnTimer >= SPAWN_INTERVAL / 16.67) { // 16.67ms = 60fps
+        spawnNodes();
+        spawnTimer = 0;
       }
 
-      // Dibujar partículas (números)
-      drawParticles();
+      // Solo actualizar si hay nodos
+      if (particles.length > 0) {
+        updateConnections();
+        updateParticles();
+        updatePulses();
+
+        // Dibujar conexiones de fondo
+        particles.forEach(p => {
+          p.neighbors.forEach(neighborId => {
+            const neighbor = particles[neighborId];
+            ctx.beginPath();
+            ctx.moveTo(p.x, p.y);
+            ctx.lineTo(neighbor.x, neighbor.y);
+            
+            // Colores según el modo
+            if (isNightMode) {
+              ctx.strokeStyle = `hsla(220, 100%, 80%, 0.08)`;
+            } else {
+              ctx.strokeStyle = `hsla(0, 0%, 70%, 0.4)`; // Gris claro para modo normal
+            }
+            
+            ctx.lineWidth = 1;
+            ctx.stroke();
+          });
+        });
+
+        // Dibujar brillos de conexiones recientes
+        for (let i = connectionGlows.length - 1; i >= 0; i--) {
+          const glow = connectionGlows[i];
+          glow.life -= 0.03;
+          if (glow.life <= 0) {
+            connectionGlows.splice(i, 1);
+          } else {
+            ctx.beginPath();
+            ctx.moveTo(glow.source.x, glow.source.y);
+            ctx.lineTo(glow.destination.x, glow.destination.y);
+            
+            // Colores según el modo
+            if (isNightMode) {
+              ctx.strokeStyle = `hsla(180, 100%, 90%, ${glow.life * 0.05})`;
+              ctx.shadowColor = `hsl(180, 100%, 80%)`;
+            } else {
+              ctx.strokeStyle = `hsla(0, 0%, 60%, ${glow.life * 0.3})`; // Gris claro para modo normal
+              ctx.shadowColor = `hsl(0, 0%, 50%)`;
+            }
+            
+            ctx.lineWidth = 1;
+            ctx.shadowBlur = 1 * glow.life;
+            ctx.stroke();
+            ctx.shadowBlur = 0;
+          }
+        }
+
+        // Dibujar partículas (números)
+        drawParticles();
+      }
       
       animationFrameId = requestAnimationFrame(animate);
     };

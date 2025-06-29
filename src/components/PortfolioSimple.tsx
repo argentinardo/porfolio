@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { profileSections, socialLinks } from '../data/profileData';
 import { FadeIn, SlideIn, NeuralNetworkBackground } from './SimpleAnimations';
 import Tilt from './Tilt';
+import ProjectsShowcase from './ProjectsShowcase';
 import '../styles/portfolio.css';
 
 // Componente para texto animado con cursor parpadeante
@@ -49,13 +50,21 @@ const PortfolioSimple: React.FC = () => {
   const [activeSection, setActiveSection] = useState(0);
   const [scrollProgress, setScrollProgress] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
+  const [showPulseEffect, setShowPulseEffect] = useState(false);
   const prevSectionRef = useRef<number>(0);
 
   useEffect(() => {
     if (prevSectionRef.current !== activeSection) {
       setIsAnimating(true);
+      setShowPulseEffect(true);
+      
       const timer = setTimeout(() => setIsAnimating(false), 1200);
-      return () => clearTimeout(timer);
+      const pulseTimer = setTimeout(() => setShowPulseEffect(false), 2000);
+      
+      return () => {
+        clearTimeout(timer);
+        clearTimeout(pulseTimer);
+      };
     }
     prevSectionRef.current = activeSection;
   }, [activeSection]);
@@ -106,7 +115,7 @@ const PortfolioSimple: React.FC = () => {
               <code>
                 <AnimatedText 
                   text={code || ''} 
-                  speed={30} 
+                  speed={5} 
                   className="animated-code"
                 />
               </code>
@@ -119,11 +128,15 @@ const PortfolioSimple: React.FC = () => {
           <div className="window-base browser">
             {windowHeader}
             <div className="browser-content">
-              <div className="browser-project">
-                <div className="project-icon">P</div>
-                <h3 className="project-title">Portfolio</h3>
-                <p className="project-description">Proyecto en desarrollo</p>
-              </div>
+              {currentSection.id === 'projects' ? (
+                <ProjectsShowcase isVisible={true} />
+              ) : (
+                <div className="browser-project">
+                  <div className="project-icon">P</div>
+                  <h3 className="project-title">Portfolio</h3>
+                  <p className="project-description">Proyecto en desarrollo</p>
+                </div>
+              )}
             </div>
           </div>
         );
@@ -192,13 +205,6 @@ const PortfolioSimple: React.FC = () => {
             <div className="notebook-container">
               <div className={`notebook ${activeSection >= 0 ? 'active' : 'inactive'}`}>
                 <div className="laptop-base"></div>
-                <div className="laptop-keyboard">
-                  <div className="keyboard-keys">
-                    {Array.from({ length: 48 }).map((_, i) => (
-                      <div key={i} className="key"></div>
-                    ))}
-                  </div>
-                </div>
                 <div className={`laptop-screen ${isAnimating ? 'screen-animating' : ''}`}>
                   <div className="screen-content">
                     {renderWindowContent()}
@@ -217,12 +223,21 @@ const PortfolioSimple: React.FC = () => {
       ))}
 
       <div className="progress-indicators">
+        {/* Checkpoints con efectos de nodos */}
         {profileSections.map((_, index) => (
           <div
             key={index}
             className={`progress-dot ${index === activeSection ? 'active' : ''}`}
             onClick={() => scrollToSection(index)}
-          />
+          >
+            {/* Efecto de pulso similar a los nodos */}
+            {showPulseEffect && index === activeSection && (
+              <>
+                <div className="progress-pulse"></div>
+                <div className="progress-glow"></div>
+              </>
+            )}
+          </div>
         ))}
       </div>
 
