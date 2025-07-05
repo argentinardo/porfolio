@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&family=Audiowide&family=Chakra+Petch:wght@300;400;500;600;700&family=Anton&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&family=Fira+Code:wght@300;400;500;600;700&display=swap');
 
 /* Variables */
 :root {
@@ -10,7 +10,7 @@
   --text-secondary: #cbd5e1;
   --border-color: #374151;
   --shadow-color: rgba(0, 0, 0, 0.4);
-  --font-title: 'Anton', sans-serif;
+  --font-title: 'Fira Code', monospace;
   --font-subtitle: 'Space Grotesk', sans-serif;
   --font-body: 'Poppins', sans-serif;
   --font-code: 'JetBrains Mono', monospace;
@@ -54,12 +54,11 @@ body {
 }
 
 .content-grid {
-  max-width: 1200px;
+  max-width: 1440px;
   margin: 0 auto;
   padding: 0 2rem;
-  display: grid;
-  grid-template-columns: 400px 600px;
-  gap: 2rem;
+  display: flex;
+  justify-content: flex-end;
   align-items: center;
   width: 100%;
   height: 100vh;
@@ -101,21 +100,23 @@ body {
 .subtitle {
   font-family: var(--font-subtitle);
   color: var(--primary-color);
-  font-size: 1.125rem;
-  font-weight: 500;
-  letter-spacing: 0.1em;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
   text-transform: uppercase;
+  margin-bottom: 0.5rem;
 }
 
 .main-title {
   font-family: var(--font-title);
-  font-size: clamp(2.5rem, 7vw, 4.5rem);
-  font-weight: 400;
-  line-height: 1.1;
-  letter-spacing: 0.05em;
+  font-size: clamp(2.2rem, 6.5vw, 4rem);
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: 0.005em;
   color: transparent;
-  -webkit-text-stroke: 2px var(--primary-color);
-  text-stroke: 2px var(--primary-color);
+  -webkit-text-stroke: 1.5px var(--primary-color);
+  text-stroke: 1.5px var(--primary-color);
+  text-transform: uppercase;
 }
 
 .content-list {
@@ -129,6 +130,27 @@ body {
   color: var(--text-secondary);
   font-size: 1.125rem;
   line-height: 1.6;
+}
+
+.content-item-with-icon {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.content-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary-color);
+  flex-shrink: 0;
+  margin-top: 0.125rem;
+}
+
+.content-icon svg {
+  width: 1.25rem;
+  height: 1.25rem;
 }
 
 /* Botones sociales */
@@ -174,58 +196,66 @@ body {
   align-items: center;
   justify-content: center;
   width: 100%;
-  padding: 1rem;
-  max-width: 550px;
+  padding: 2rem;
+  max-width: 800px;
+  min-width: 700px;
   margin: 0 auto;
   height: 100vh;
   position: sticky;
   top: 0;
-  transition: all 0.8s ease-in-out;
+  transition: all 0.4s ease-in-out;
+  background: transparent;
 }
 
 .notebook-container.elevated {
-  transform: translateY(-40px) scale(1.05);
+  position: relative;
+  transform: translateY(-60px) scale(1.1);
+  z-index: 10;
 }
 
 .notebook {
   position: relative;
   width: 100%;
-  max-width: 500px;
-  height: 26rem;
-  transition: all 0.8s ease-in-out;
+  max-width: 700px;
+  min-width: 600px;
+  height: 32rem;
+  transition: all 0.4s ease-in-out;
+  filter: drop-shadow(0 30px 60px rgba(0, 0, 0, 0.3));
 }
 
 .notebook.active {
-  transform: scale(1);
+  transform: scale(1.05);
   opacity: 1;
 }
 
 .notebook.inactive {
-  transform: scale(0.95);
-  opacity: 0.8;
+  transform: scale(0.9);
+  opacity: 0.7;
 }
 
 /* Componentes del laptop */
 .laptop-base {
   position: absolute;
-  bottom: 32px;
-  width: 100%;
-  height: 2rem;
-  background: linear-gradient(to right, #d1d5db, #9ca3af);
-  border-radius: 0 0 1.5rem 1.5rem;
-  box-shadow: 0 15px 35px var(--shadow-color);
+  bottom: -82px;
+  width: 127%;
+  height: 5rem;
+  background-image: url('/assets/images/base.svg');
+  background-size: 100% auto;
+  background-repeat: no-repeat;
+  background-position: center bottom;
+  left: -13%;
 }
 
 .laptop-screen {
   position: absolute;
   top: 0;
   width: 100%;
-  height: 26rem;
+  height: 32rem;
   background-color: #111827;
   border-radius: 0.5rem 0.5rem 0 0;
-  box-shadow: 0 20px 40px var(--shadow-color);
+  box-shadow: 0 25px 50px var(--shadow-color);
   overflow: hidden;
-  border: 6px solid var(--border-color);
+  border: 8px solid var(--border-color);
   transform-origin: bottom center;
 }
 
@@ -239,7 +269,7 @@ body {
 }
 
 .screen-animating {
-  animation: screen-cycle 1.2s ease-in-out;
+  animation: screen-cycle 0.6s ease-in-out;
 }
 
 .notebook.active .screen-content {
@@ -256,7 +286,7 @@ body {
 .screen-content {
   width: 100%;
   height: 100%;
-  transition: all 0.6s ease;
+  transition: all 0.3s ease;
 }
 
 .screen-reflection {
@@ -302,13 +332,76 @@ body {
 }
 
 .code-content {
-  padding: 1rem;
-  font-size: 0.875rem;
+  padding: 1.5rem;
+  font-size: 0.95rem;
   font-family: 'JetBrains Mono', monospace;
   color: #10b981;
   overflow: auto;
   height: calc(100% - 3rem);
   white-space: pre-wrap;
+}
+
+/* Estilos para terminal con iconos */
+.terminal-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.terminal-line-with-icon {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  padding: 0.125rem 0;
+}
+
+.terminal-icon {
+  color: #10b981;
+  flex-shrink: 0;
+  margin-top: 0.125rem;
+  width: 1rem;
+  height: 1rem;
+  min-width: 1rem;
+  min-height: 1rem;
+  max-width: 1rem;
+  max-height: 1rem;
+}
+
+.terminal-text {
+  color: #10b981;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.875rem;
+  line-height: 1.4;
+}
+
+.terminal-year {
+  color: #f59e0b;
+  font-weight: 500;
+}
+
+.terminal-command {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.125rem 0;
+}
+
+.terminal-prompt {
+  color: #3b82f6;
+  font-weight: bold;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.terminal-echo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.125rem 0;
+}
+
+.terminal-line {
+  padding: 0.125rem 0;
+  padding-left: 1.5rem;
 }
 
 /* Navegación */
@@ -323,30 +416,41 @@ body {
   transform: translateY(-50%);
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-  z-index: 10;
+  gap: 1.5rem;
+  z-index: 1000;
+  padding: 1.5rem;
 }
 
+
+
 .progress-dot {
-  width: 0.75rem;
-  height: 0.75rem;
-  border-radius: 50%;
-  background-color: var(--border-color);
+  background: none;
+  border: none;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   position: relative;
-  z-index: 2;
+  z-index: 10;
+  padding: 0.75rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-subtitle);
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: rgba(59, 130, 246, 0.7);
+  text-align: center;
+  min-width: 120px;
+  transform-origin: center;
+  border-radius: 8px;
 }
 
 .progress-dot:hover {
-  background-color: var(--primary-color);
-  transform: scale(1.2);
+  color: rgba(59, 130, 246, 0.9);
 }
 
 .progress-dot.active {
-  background-color: var(--primary-color);
-  transform: scale(1.2);
-  box-shadow: 0 0 12px var(--primary-color);
+  color: rgba(59, 130, 246, 1);
+  transform: scale(1.1);
 }
 
 /* Efecto de pulso similar a los nodos */
@@ -355,22 +459,25 @@ body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 100%;
-  height: 100%;
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
-  background-color: var(--primary-color);
-  opacity: 0;
-  animation: progressPulse 2s ease-out;
+  background: rgba(59, 130, 246, 0.1);
+  animation: progressPulse 1.5s ease-out;
+  pointer-events: none;
 }
 
 @keyframes progressPulse {
   0% {
-    opacity: 0.7;
-    transform: translate(-50%, -50%) scale(1);
+    transform: translate(-50%, -50%) scale(0.5);
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 0.1;
   }
   100% {
+    transform: translate(-50%, -50%) scale(2);
     opacity: 0;
-    transform: translate(-50%, -50%) scale(3);
   }
 }
 
@@ -380,12 +487,12 @@ body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 100%;
-  height: 100%;
+  width: 16px;
+  height: 16px;
   border-radius: 50%;
-  background: radial-gradient(circle, var(--primary-color) 0%, transparent 70%);
-  opacity: 0;
-  transition: opacity 0.3s ease;
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.2) 0%, transparent 70%);
+  animation: progressPulse 2s ease-out infinite;
+  pointer-events: none;
 }
 
 .progress-dot.active .progress-glow {
@@ -444,9 +551,24 @@ body {
 /* Media queries */
 @media (max-width: 1024px) {
   .content-grid {
-    grid-template-columns: 1fr;
-    gap: 2rem;
+    justify-content: center;
     text-align: center;
+  }
+  
+  .notebook-container {
+    height: 50vh;
+    min-width: auto;
+  }
+  
+  .scrollable-content {
+    width: 100%;
+    position: relative;
+    padding-top: 50vh;
+  }
+  
+  .scrollable-section {
+    max-width: none;
+    padding: 0 2rem;
   }
 }
 
@@ -456,7 +578,13 @@ body {
   }
   
   .main-title {
-    font-size: clamp(2rem, 6vw, 3rem);
+    font-size: clamp(1.8rem, 5.5vw, 2.8rem);
+    letter-spacing: 0.003em;
+  }
+  
+  .subtitle {
+    font-size: 0.875rem;
+    letter-spacing: 0.12em;
   }
   
   .social-links {
@@ -465,6 +593,21 @@ body {
   
   .progress-indicators {
     right: 1rem;
+    gap: 1rem;
+  }
+  
+  .progress-dot {
+    min-width: 100px;
+    font-size: 0.75rem;
+  }
+  
+  .progress-dot:hover {
+    color: rgba(59, 130, 246, 0.9);
+  }
+  
+  .progress-dot.active {
+    color: rgba(59, 130, 246, 1);
+    transform: scale(1.05);
   }
 }
 
@@ -531,6 +674,10 @@ body.light-mode .content-item {
   font-family: var(--font-body);
 }
 
+body.light-mode .content-icon {
+  color: var(--primary-color);
+}
+
 body.light-mode .social-link.secondary {
   border: 1px solid #64748b;
   color: #475569;
@@ -574,11 +721,12 @@ body.light-mode .content-item {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 4px;
-  background-color: var(--primary-color);
+  height: 2px;
+  background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
   transform-origin: left;
-  z-index: 10;
+  z-index: 1000;
+  opacity: 0.3; /* Reducir opacidad */
+  transition: transform 0.1s ease;
 }
 
 /* Estilos para el showcase de proyectos */
@@ -729,8 +877,6 @@ body.light-mode .content-item {
   background: var(--bg-primary);
   border: 1px solid var(--border-color);
   border-radius: 1rem;
-  max-width: 600px;
-  width: 90%;
   max-height: 80vh;
   overflow-y: auto;
   position: relative;
@@ -910,20 +1056,22 @@ body.light-mode .tech-item {
 
 /* Contenedor para el contenido que hace scroll */
 .scrollable-content {
-  position: relative;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50%;
   z-index: 2;
-  padding-top: 100vh;
-  min-height: 200vh;
+  padding-top: 0;
+  min-height: 100vh;
   scroll-snap-type: y mandatory;
 }
 
 .scrollable-section {
-  max-width: 1200px;
-  margin: 0 auto;
+  max-width: none;
+  margin: 0;
   padding: 0 2rem;
-  display: grid;
-  grid-template-columns: 400px 600px;
-  gap: 2rem;
+  display: flex;
+  justify-content: flex-start;
   align-items: center;
   width: 100%;
   min-height: 100vh;
@@ -936,9 +1084,9 @@ body.light-mode .tech-item {
   justify-content: flex-start;
   gap: 2rem;
   padding: 2rem 0;
-  padding-right: 1rem;
   scrollbar-width: thin;
   scrollbar-color: var(--border-color) transparent;
+  max-width: 600px;
 }
 
 /* Estilos para las cards de servicios */
@@ -958,7 +1106,7 @@ body.light-mode .tech-item {
 
 .services-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  grid-template-columns: repeat(2, 1fr);
   gap: 1rem;
   margin-bottom: 1rem;
 }
@@ -988,9 +1136,16 @@ body.light-mode .tech-item {
 }
 
 .service-icon {
-  font-size: 2.5rem;
   margin-bottom: 1rem;
-  display: block;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: var(--primary-color);
+}
+
+.service-icon svg {
+  width: 2.5rem;
+  height: 2.5rem;
 }
 
 .service-title {
@@ -1058,10 +1213,10 @@ body.light-mode .tech-item {
   border: none;
   padding: 0.5rem 1rem;
   border-radius: 0.5rem;
-  font-size: 0.875rem;
-  font-weight: 500;
   cursor: pointer;
   transition: all 0.3s ease;
+  font-size: 0.875rem;
+  font-weight: 500;
   font-family: var(--font-body);
 }
 
@@ -1084,6 +1239,10 @@ body.light-mode .service-card:hover {
 
 body.light-mode .service-title {
   color: #1f2937;
+}
+
+body.light-mode .service-icon {
+  color: var(--primary-color);
 }
 
 body.light-mode .service-description,
@@ -1110,34 +1269,6 @@ body.light-mode .service-features li {
   .learn-more-btn {
     width: 100%;
   }
-}
-
-/* Sección de servicios de ancho completo */
-.scrollable-section.full-width {
-  grid-template-columns: 1fr;
-  text-align: center;
-}
-
-.services-full-section {
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 2rem;
-}
-
-.services-content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2rem;
-}
-
-.services-content .subtitle {
-  text-align: center;
-}
-
-.services-content .main-title {
-  text-align: center;
 }
 
 /* Estilos para el formulario de contacto */
@@ -1184,9 +1315,16 @@ body.light-mode .service-features li {
   margin-bottom: 1.5rem;
 }
 
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
 .form-group {
   display: flex;
   flex-direction: column;
+  position: relative;
 }
 
 .form-group label {
@@ -1209,10 +1347,23 @@ body.light-mode .service-features li {
   outline: none;
 }
 
+.form-group input.error,
+.form-group textarea.error {
+  border-color: #ef4444;
+  color: #ef4444;
+}
+
 .form-group input:focus,
 .form-group textarea:focus {
   border-color: #059669;
   background: rgba(16, 185, 129, 0.1);
+  outline: none;
+}
+
+.form-group input.error:focus,
+.form-group textarea.error:focus {
+  border-color: #ef4444;
+  background: rgba(239, 68, 68, 0.1);
 }
 
 .form-group input::placeholder,
@@ -1222,9 +1373,22 @@ body.light-mode .service-features li {
   font-family: 'JetBrains Mono', monospace;
 }
 
+.form-group input.error::placeholder,
+.form-group textarea.error::placeholder {
+  color: #ef4444;
+  opacity: 0.7;
+}
+
 .form-group textarea {
   resize: vertical;
   min-height: 80px;
+}
+
+.error-message {
+  color: #ef4444;
+  font-size: 0.75rem;
+  margin-top: 0.25rem;
+  font-family: 'JetBrains Mono', monospace;
 }
 
 .form-actions {
@@ -1306,6 +1470,7 @@ body.light-mode .form-group input:focus,
 body.light-mode .form-group textarea:focus {
   border-color: #047857;
   background: rgba(5, 150, 105, 0.1);
+  outline: none;
 }
 
 body.light-mode .form-group input::placeholder,
@@ -1331,13 +1496,116 @@ body.light-mode .submit-btn:hover:not(:disabled) {
   color: white;
 }
 
+
+
+
+
 /* Responsive para el formulario */
 @media (max-width: 768px) {
   .contact-form {
     padding: 0;
   }
   
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+  
+  .form-header p {
+    font-size: 0.875rem;
+  }
+  
   .submit-btn {
     width: auto;
+  }
+}
+
+/* Elementos de accesibilidad */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+
+
+.progress-dot-label {
+  flex: 1;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  pointer-events: none;
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.progress-dot.active .progress-dot-label {
+  color: #1d4ed8;
+  font-size: 1.3rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-shadow: 0 0 20px rgba(59,130,246,0.5);
+}
+
+
+
+/* Skip Link para accesibilidad */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 6px;
+  background: var(--primary-color);
+  color: white;
+  padding: 8px;
+  text-decoration: none;
+  border-radius: 4px;
+  z-index: 1000;
+  transition: top 0.3s ease;
+}
+
+.skip-link:focus {
+  top: 6px;
+}
+
+/* Mejoras de focus para accesibilidad */
+button:focus,
+a:focus,
+input:focus,
+textarea:focus {
+  outline: none;
+}
+
+/* Reducir animaciones para usuarios que lo prefieren */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Mejoras de contraste para modo oscuro */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --text-color: #f8fafc;
+    --text-secondary: #cbd5e1;
+    --border-color: #374151;
+  }
+}
+
+/* Mejoras de contraste para modo claro */
+@media (prefers-color-scheme: light) {
+  :root {
+    --text-color: #1f2937;
+    --text-secondary: #4b5563;
+    --border-color: #d1d5db;
   }
 }

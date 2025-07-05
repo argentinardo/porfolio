@@ -1,9 +1,15 @@
 import React from 'react';
+import { 
+  CodeBracketIcon, 
+  PaintBrushIcon, 
+  BoltIcon, 
+  LightBulbIcon 
+} from '@heroicons/react/24/outline';
 
 interface ServiceCard {
   title: string;
   description: string;
-  icon: string;
+  icon: React.ElementType;
   features: string[];
   price: string;
 }
@@ -17,7 +23,7 @@ const ServiceCards: React.FC<ServiceCardsProps> = ({ isVisible }) => {
     {
       title: "Desarrollo Frontend",
       description: "Aplicaciones web modernas con React y TypeScript",
-      icon: "⚛️",
+      icon: CodeBracketIcon,
       features: [
         "Componentes reutilizables",
         "TypeScript para código robusto",
@@ -29,7 +35,7 @@ const ServiceCards: React.FC<ServiceCardsProps> = ({ isVisible }) => {
     {
       title: "Diseño UI/UX",
       description: "Interfaces intuitivas y experiencias memorables",
-      icon: "🎨",
+      icon: PaintBrushIcon,
       features: [
         "Diseño responsivo",
         "Prototipado interactivo",
@@ -41,7 +47,7 @@ const ServiceCards: React.FC<ServiceCardsProps> = ({ isVisible }) => {
     {
       title: "Optimización Web",
       description: "Mejora de velocidad y posicionamiento SEO",
-      icon: "⚡",
+      icon: BoltIcon,
       features: [
         "Optimización de Core Web Vitals",
         "SEO técnico avanzado",
@@ -53,7 +59,7 @@ const ServiceCards: React.FC<ServiceCardsProps> = ({ isVisible }) => {
     {
       title: "Consultoría Técnica",
       description: "Asesoramiento experto para tu proyecto",
-      icon: "💡",
+      icon: LightBulbIcon,
       features: [
         "Arquitectura frontend",
         "Revisión de código",
@@ -73,19 +79,23 @@ const ServiceCards: React.FC<ServiceCardsProps> = ({ isVisible }) => {
 
   return (
     <div className={`services-showcase ${isVisible ? 'visible' : ''}`}>
-      <div className="services-grid">
-        {services.map((service, index) => (
-          <div key={index} className="service-card">
+      <div className="services-grid" role="grid" aria-label="Servicios profesionales">
+        {services.map((service, index) => {
+          const IconComponent = service.icon;
+          return (
+          <article key={index} className="service-card" role="gridcell">
             <div className="service-header">
-              <div className="service-icon">{service.icon}</div>
+                <div className="service-icon" aria-hidden="true">
+                  <IconComponent className="w-10 h-10" />
+                </div>
               <h3 className="service-title">{service.title}</h3>
               <p className="service-description">{service.description}</p>
             </div>
             
             <div className="service-features">
-              <ul>
+              <ul role="list">
                 {service.features.map((feature, featureIndex) => (
-                  <li key={featureIndex}>{feature}</li>
+                  <li key={featureIndex} role="listitem">{feature}</li>
                 ))}
               </ul>
             </div>
@@ -95,12 +105,14 @@ const ServiceCards: React.FC<ServiceCardsProps> = ({ isVisible }) => {
               <button 
                 className="learn-more-btn"
                 onClick={() => handleLearnMore(service)}
+                aria-label={`Saber más sobre ${service.title}`}
               >
                 Saber más
               </button>
             </div>
-          </div>
-        ))}
+          </article>
+          );
+        })}
       </div>
     </div>
   );

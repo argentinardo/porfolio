@@ -1,11 +1,29 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { profileSections, socialLinks } from '../data/profileData';
 import { NeuralNetworkBackground } from './SimpleAnimations';
-import Tilt from './Tilt';
 import ProjectsShowcase from './ProjectsShowcase';
 import ServiceCards from './ServiceCards';
 import ContactForm from './ContactForm';
+import { profileSections, socialLinks } from '../data/profileData';
+import { 
+  ComputerDesktopIcon,
+  CodeBracketIcon,
+  DevicePhoneMobileIcon,
+  WrenchScrewdriverIcon,
+  RocketLaunchIcon,
+  LightBulbIcon,
+  BriefcaseIcon,
+  UserGroupIcon,
+  EnvelopeIcon,
+  ComputerDesktopIcon as LaptopIcon,
+  GlobeAltIcon,
+  CalendarIcon,
+  DocumentTextIcon,
+  CpuChipIcon,
+  ServerIcon,
+  SparklesIcon
+} from '@heroicons/react/24/outline';
 import '../styles/portfolio.css';
+import { SkipLink } from './SkipLink';
 
 // Componente para texto animado con cursor parpadeante
 const AnimatedText: React.FC<{ text: string; speed?: number; className?: string }> = ({ 
@@ -48,11 +66,145 @@ const AnimatedText: React.FC<{ text: string; speed?: number; className?: string 
   );
 };
 
+// Componente para renderizar elementos de lista con iconos
+const ListItemWithIcon: React.FC<{ text: string; index: number; sectionId: string }> = ({ text, index, sectionId }) => {
+  const getIconForSection = (sectionId: string, index: number) => {
+    if (sectionId === 'freelance') {
+      const icons = [
+        ComputerDesktopIcon,
+        CodeBracketIcon,
+        DevicePhoneMobileIcon,
+        WrenchScrewdriverIcon,
+        RocketLaunchIcon,
+        LightBulbIcon
+      ];
+      return icons[index] || ComputerDesktopIcon;
+    } else if (sectionId === 'contact') {
+             const icons = [
+         BriefcaseIcon,
+         UserGroupIcon,
+         EnvelopeIcon,
+         LaptopIcon,
+         GlobeAltIcon
+       ];
+      return icons[index] || BriefcaseIcon;
+    }
+    return null;
+  };
+
+  const IconComponent = getIconForSection(sectionId, index);
+
+  if (!IconComponent) {
+    return <p className="content-item" role="listitem">{text}</p>;
+  }
+
+  return (
+    <div className="content-item-with-icon" role="listitem">
+      <div className="content-icon">
+        <IconComponent className="w-5 h-5" />
+      </div>
+      <p className="content-item">{text}</p>
+    </div>
+  );
+};
+
+// Componente para renderizar contenido de terminal con iconos
+const TerminalContent: React.FC<{ code: string }> = ({ code }) => {
+  const renderTerminalLine = (line: string, index: number) => {
+    // Líneas que contienen fechas con iconos
+    if (line.includes('📅')) {
+      const yearMatch = line.match(/(\d{4}-\d{4}|\d{4}-Presente):/);
+      if (yearMatch) {
+        const year = yearMatch[1];
+        const tech = line.split(':')[1]?.trim() || '';
+        return (
+          <div key={index} className="terminal-line-with-icon">
+            <CalendarIcon className="w-4 h-4 terminal-icon" />
+            <span className="terminal-text">
+              <span className="terminal-year">{year}:</span> {tech}
+            </span>
+          </div>
+        );
+      }
+    }
+    
+    // Líneas que contienen tecnologías específicas
+    if (line.includes('HTML/CSS/JavaScript')) {
+      return (
+        <div key={index} className="terminal-line-with-icon">
+          <DocumentTextIcon className="w-4 h-4 terminal-icon" />
+          <span className="terminal-text">{line.replace('📅', '').trim()}</span>
+        </div>
+      );
+    }
+    
+    if (line.includes('jQuery + PHP + MySQL')) {
+      return (
+        <div key={index} className="terminal-line-with-icon">
+          <ServerIcon className="w-4 h-4 terminal-icon" />
+          <span className="terminal-text">{line.replace('📅', '').trim()}</span>
+        </div>
+      );
+    }
+    
+    if (line.includes('React + Node.js')) {
+      return (
+        <div key={index} className="terminal-line-with-icon">
+          <CpuChipIcon className="w-4 h-4 terminal-icon" />
+          <span className="terminal-text">{line.replace('📅', '').trim()}</span>
+        </div>
+      );
+    }
+    
+    if (line.includes('React + TypeScript')) {
+      return (
+        <div key={index} className="terminal-line-with-icon">
+          <SparklesIcon className="w-4 h-4 terminal-icon" />
+          <span className="terminal-text">{line.replace('📅', '').trim()}</span>
+        </div>
+      );
+    }
+    
+    // Líneas de comando
+    if (line.startsWith('$')) {
+      return (
+        <div key={index} className="terminal-command">
+          <span className="terminal-prompt">$</span>
+          <span className="terminal-text">{line.substring(1).trim()}</span>
+        </div>
+      );
+    }
+    
+    // Líneas de echo
+    if (line.startsWith('echo')) {
+      return (
+        <div key={index} className="terminal-echo">
+          <span className="terminal-prompt">$</span>
+          <span className="terminal-text">{line}</span>
+        </div>
+      );
+    }
+    
+    // Líneas normales
+    return (
+      <div key={index} className="terminal-line">
+        <span className="terminal-text">{line}</span>
+      </div>
+    );
+  };
+
+  return (
+    <div className="terminal-content">
+      {code.split('\n').map((line, index) => renderTerminalLine(line, index))}
+    </div>
+  );
+};
+
 const PortfolioSimple: React.FC = () => {
   const [activeSection, setActiveSection] = useState(0);
+  const [displaySection, setDisplaySection] = useState(0);
   const [scrollProgress, setScrollProgress] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
-  const [showPulseEffect, setShowPulseEffect] = useState(false);
   const [isNotebookElevated, setIsNotebookElevated] = useState(false);
   const prevSectionRef = useRef<number>(0);
   const notebookContainerRef = useRef<HTMLDivElement>(null);
@@ -60,18 +212,27 @@ const PortfolioSimple: React.FC = () => {
   useEffect(() => {
     if (prevSectionRef.current !== activeSection) {
       setIsAnimating(true);
-      setShowPulseEffect(true);
       
-      const timer = setTimeout(() => setIsAnimating(false), 1200);
-      const pulseTimer = setTimeout(() => setShowPulseEffect(false), 2000);
+      // Actualizar el contenido en el medio de la animación (cuando se abre)
+      const contentTimer = setTimeout(() => {
+        setDisplaySection(activeSection);
+      }, 600);
+      
+      // Terminar la animación
+      const animationTimer = setTimeout(() => {
+        setIsAnimating(false);
+      }, 1200);
       
       return () => {
-        clearTimeout(timer);
-        clearTimeout(pulseTimer);
+        clearTimeout(contentTimer);
+        clearTimeout(animationTimer);
       };
+    } else if (prevSectionRef.current === activeSection && displaySection !== activeSection) {
+      // Inicializar displaySection si no coincide
+      setDisplaySection(activeSection);
     }
     prevSectionRef.current = activeSection;
-  }, [activeSection]);
+  }, [activeSection, displaySection]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -89,13 +250,18 @@ const PortfolioSimple: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const currentSection = profileSections[activeSection];
+  const currentSection = profileSections[displaySection];
   
   // Calcular si estamos en la sección de servicios para mover la notebook
-  const isServicesSection = currentSection.id === 'services';
+  const isServicesSection = profileSections[activeSection].id === 'services';
   
   useEffect(() => {
-    setIsNotebookElevated(isServicesSection);
+    if (isServicesSection) {
+      // Cuando estamos en servicios, la notebook deja de estar fija
+      setIsNotebookElevated(true);
+    } else {
+      setIsNotebookElevated(false);
+    }
   }, [isServicesSection]);
 
   const renderWindowContent = () => {
@@ -118,7 +284,6 @@ const PortfolioSimple: React.FC = () => {
 
     switch (type) {
       case 'code':
-      case 'terminal':
         return (
           <div className={`window-base ${type}`}>
             {windowHeader}
@@ -126,11 +291,21 @@ const PortfolioSimple: React.FC = () => {
               <code>
                 <AnimatedText 
                   text={code || ''} 
-                  speed={5} 
+                  speed={2} 
                   className="animated-code"
                 />
               </code>
             </pre>
+          </div>
+        );
+
+      case 'terminal':
+        return (
+          <div className={`window-base ${type}`}>
+            {windowHeader}
+            <div className="code-content">
+              <TerminalContent code={code || ''} />
+            </div>
           </div>
         );
 
@@ -146,11 +321,11 @@ const PortfolioSimple: React.FC = () => {
               ) : currentSection.id === 'contact' ? (
                 <ContactForm isVisible={true} />
               ) : (
-                <div className="browser-project">
-                  <div className="project-icon">P</div>
-                  <h3 className="project-title">Portfolio</h3>
-                  <p className="project-description">Proyecto en desarrollo</p>
-                </div>
+              <div className="browser-project">
+                <div className="project-icon">P</div>
+                <h3 className="project-title">Portfolio</h3>
+                <p className="project-description">Proyecto en desarrollo</p>
+              </div>
               )}
             </div>
           </div>
@@ -168,61 +343,66 @@ const PortfolioSimple: React.FC = () => {
   };
 
   return (
-    <div className="portfolio-container">
+    <div className="portfolio-container" role="main" aria-label="Portfolio de Damian Nardini">
+      <SkipLink />
       <NeuralNetworkBackground />
       
       {/* Layout fijo con notebook */}
-      <div className="fixed-layout">
+      <div className="fixed-layout" aria-hidden="true">
         <div className="content-grid">
-          <div className="content-section">
-            {/* Columna izquierda vacía en el layout fijo */}
-          </div>
-
-          <Tilt options={{ max: 15, scale: 1.05, speed: 400, glare: true, 'max-glare': 0.5 }}>
-            <div ref={notebookContainerRef} className={`notebook-container ${isNotebookElevated ? 'elevated' : ''}`}>
-              <div className={`notebook ${activeSection >= 0 ? 'active' : 'inactive'}`}>
-                <div className="laptop-base"></div>
-                <div className={`laptop-screen ${isAnimating ? 'screen-animating' : ''}`}>
-                  <div className="screen-content">
-                    {renderWindowContent()}
-                  </div>
-                  <div className="screen-reflection"></div>
+          {/* Notebook */}
+          <div 
+            ref={notebookContainerRef} 
+            className={`notebook-container ${isNotebookElevated ? 'elevated' : ''}`}
+            aria-label="Pantalla de notebook mostrando contenido del portfolio"
+          >
+            <div className={`notebook ${activeSection >= 0 ? 'active' : 'inactive'}`}>
+              <div className="laptop-base"></div>
+              <div className={`laptop-screen ${isAnimating ? 'screen-animating' : ''}`}>
+                <div className="screen-content">
+                  {renderWindowContent()}
                 </div>
+                <div className="screen-reflection"></div>
               </div>
             </div>
-          </Tilt>
+          </div>
         </div>
       </div>
 
       {/* Contenido que hace scroll */}
       <div className="scrollable-content">
         {profileSections.map((section, index) => (
-          <div key={index} className={`scrollable-section ${section.id === 'services' ? 'full-width' : ''}`}>
-            {section.id === 'services' ? (
-              <div className="services-full-section">
-                <div className="services-content">
-                  <p className="subtitle">{section.subtitle}</p>
-                  <h1 className="main-title">{section.title}</h1>
-                  <ServiceCards isVisible={true} />
-                </div>
-              </div>
-            ) : (
-              <>
-                <div className="scrollable-text">
-                  <p className="subtitle">{section.subtitle}</p>
-                  <h1 className="main-title">{section.title}</h1>
-                  <div className="content-list">
+          <section 
+            key={index} 
+            className="scrollable-section"
+            id={`section-${section.id}`}
+            aria-labelledby={`title-${section.id}`}
+          >
+            <div className="scrollable-text">
+              <p className="subtitle" id={`subtitle-${section.id}`}>{section.subtitle}</p>
+              <h1 className="main-title" id={`title-${section.id}`}>{section.title}</h1>
+              {section.id === 'services' ? (
+                <ServiceCards isVisible={true} />
+              ) : (
+                <>
+                  <div className="content-list" role="list">
                     {section.content.map((item, itemIndex) => (
-                      <p key={itemIndex} className="content-item">{item}</p>
+                      <ListItemWithIcon 
+                        key={itemIndex} 
+                        text={item} 
+                        index={itemIndex}
+                        sectionId={section.id}
+                      />
                     ))}
                   </div>
                   {index === profileSections.length - 1 && (
-                    <div className="social-links">
+                    <nav className="social-links" aria-label="Enlaces sociales">
                       <a
                         href={socialLinks.linkedin}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="social-link primary"
+                        aria-label="Visitar perfil de LinkedIn"
                       >
                         LinkedIn
                       </a>
@@ -231,41 +411,42 @@ const PortfolioSimple: React.FC = () => {
                         target="_blank"
                         rel="noopener noreferrer"
                         className="social-link secondary"
+                        aria-label="Visitar perfil de GitHub"
                       >
                         GitHub
                       </a>
-                    </div>
+                    </nav>
                   )}
-                </div>
-                <div></div> {/* Columna derecha vacía */}
-              </>
-            )}
-          </div>
+                </>
+              )}
+            </div>
+          </section>
         ))}
       </div>
 
-      <div className="progress-indicators">
+      <nav className="progress-indicators" aria-label="Navegación por secciones">
         {/* Checkpoints con efectos de nodos */}
-        {profileSections.map((_, index) => (
-          <div
+        {profileSections.map((section, index) => (
+          <button
             key={index}
             className={`progress-dot ${index === activeSection ? 'active' : ''}`}
             onClick={() => scrollToSection(index)}
+            aria-label={`Ir a sección: ${section.title}`}
+            aria-current={index === activeSection ? 'true' : 'false'}
           >
-            {/* Efecto de pulso similar a los nodos */}
-            {showPulseEffect && index === activeSection && (
-              <>
-                <div className="progress-pulse"></div>
-                <div className="progress-glow"></div>
-              </>
-            )}
-          </div>
+            <span className="progress-dot-label">{section.title}</span>
+          </button>
         ))}
-      </div>
+      </nav>
 
       <div 
         className="progress-bar"
         style={{ transform: `scaleX(${scrollProgress})` }}
+        aria-label={`Progreso de navegación: ${Math.round(scrollProgress * 100)}%`}
+        role="progressbar"
+        aria-valuenow={Math.round(scrollProgress * 100)}
+        aria-valuemin={0}
+        aria-valuemax={100}
       />
     </div>
   );

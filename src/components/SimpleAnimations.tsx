@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 
+
 interface SimpleAnimationsProps {
   children: React.ReactNode;
   delay?: number;
@@ -92,23 +93,25 @@ export const NeuralNetworkBackground: React.FC = () => {
     if (!ctx) return;
 
     // --- INTERFACES ---
-    interface Particle {
-      id: number;
-      x: number;
-      y: number;
-      vx: number;
-      vy: number;
-      size: number;
-      hue: number;
-      illumination: number;
-      neighbors: number[];
-      lastPulseTime: number;
-      activePulses: number;
-      value: number; // 0 o 1
-      life: number; // Vida del nodo (0-1)
-      maxLife: number; // Vida máxima en frames
-      age: number; // Edad actual en frames
-    }
+          interface Particle {
+        id: number;
+        x: number;
+        y: number;
+        z: number; // Profundidad en el eje Z (0 = fondo, 1 = frente)
+        vx: number;
+        vy: number;
+        vz: number; // Velocidad en el eje Z
+        size: number;
+        hue: number;
+        illumination: number;
+        neighbors: number[];
+        lastPulseTime: number;
+        activePulses: number;
+        value: number; // Contador que se incrementa hasta 1
+        life: number; // Vida del nodo (0-1)
+        maxLife: number; // Vida máxima en frames
+        age: number; // Edad actual en frames
+      }
 
     interface Pulse {
       source: Particle;
@@ -125,36 +128,73 @@ export const NeuralNetworkBackground: React.FC = () => {
     }
 
     // --- CONFIGURACIÓN ---
-    const particleCount = 300;
-    const synapseFormationDistance = 90;
-    const synapseBreakDistance = synapseFormationDistance * 2.5; // Distancia máxima antes de aplicar fuerza elástica
-    const REPULSION_FORCE_GLOBAL = 0.8; // Fuerza de repulsión global entre nodos
-    const TOLERANCE_FACTOR = 0.8; // Factor de tolerancia para irregularidad (0-1)
-    const RANDOM_MOVEMENT_CHANCE = 0.02; // Probabilidad de cambio aleatorio de dirección
-    const RANDOM_MOVEMENT_FORCE = 0.2; // Fuerza del movimiento aleatorio (reducida)
-    const MIN_LIFE_FRAMES = 1800; // Vida mínima en frames (30 segundos a 60fps)
-    const MAX_LIFE_FRAMES = 3600; // Vida máxima en frames (60 segundos a 60fps)
-    const PULSE_PIXELS_PER_FRAME = 2;
+    // Calcular número de partículas basado en el tamaño de la pantalla
+    const getParticleCount = () => {
+      const screenArea = window.innerWidth * window.innerHeight;
+      const baseParticleCount = 250;
+      
+      // Reducir partículas en pantallas pequeñas
+      if (screenArea < 500000) { // Pantallas muy pequeñas (< 500k píxeles)
+        return Math.floor(baseParticleCount * 0.3); // 30% de las partículas
+      } else if (screenArea < 1000000) { // Pantallas pequeñas (< 1M píxeles)
+        return Math.floor(baseParticleCount * 0.5); // 50% de las partículas
+      } else if (screenArea < 2000000) { // Pantallas medianas (< 2M píxeles)
+        return Math.floor(baseParticleCount * 0.7); // 70% de las partículas
+      } else {
+        return baseParticleCount; // Pantallas grandes, usar todas las partículas
+      }
+    };
+    
+    const particleCount = getParticleCount();
+    
+    // Calcular parámetros adaptativos basados en el tamaño de la pantalla
+    const getAdaptiveParams = () => {
+      const screenArea = window.innerWidth * window.innerHeight;
+      const scaleFactor = Math.min(1, screenArea / (1920 * 1080)); // Factor de escala basado en Full HD
+      
+      return {
+        synapseFormationDistance: Math.max(60, Math.floor(90 * scaleFactor)),
+        synapseBreakDistance: Math.max(120, Math.floor(225 * scaleFactor)),
+        mouseInfluenceRadius: Math.max(100, Math.floor(150 * scaleFactor)),
+        connectionPullRadius: Math.max(50, Math.floor(80 * scaleFactor)),
+        maxPulsesPerNode: screenArea < 500000 ? 1 : 2, // Menos pulsos en pantallas pequeñas
+        pulsePixelsPerFrame: screenArea < 500000 ? 1.5 : 2, // Pulsos más lentos en pantallas pequeñas
+        baseSpeed: screenArea < 500000 ? 0.08 : 0.1, // Movimiento más lento en pantallas pequeñas
+      };
+    };
+    
+    const adaptiveParams = getAdaptiveParams();
+    const synapseFormationDistance = adaptiveParams.synapseFormationDistance;
+    const synapseBreakDistance = adaptiveParams.synapseBreakDistance;
+    const REPULSION_FORCE_GLOBAL = 0.8;
+    const TOLERANCE_FACTOR = 0.8;
+    const RANDOM_MOVEMENT_CHANCE = 0.02;
+    const RANDOM_MOVEMENT_FORCE = 0.2;
+    const MIN_LIFE_FRAMES = 1800;
+    const MAX_LIFE_FRAMES = 3600;
+    const PULSE_PIXELS_PER_FRAME = adaptiveParams.pulsePixelsPerFrame;
     const MAX_CHAIN_REACTION_DEPTH = 3;
-    const MAGNETIC_FORCE = 0.1; // Fuerza magnética reducida
-    const MAGNETIC_RADIUS = 120;
-    const BASE_SPEED = 0.1; // Velocidad base más lenta
-    const MAX_PULSES_PER_NODE = 1;
-    const REPULSION_FORCE = 1.5; // Fuerza de repulsión reducida
+    const BASE_SPEED = adaptiveParams.baseSpeed;
+    const MAX_PULSES_PER_NODE = adaptiveParams.maxPulsesPerNode;
+    const REPULSION_FORCE = 1.5;
     const REPULSION_RADIUS = 3;
-    const INERTIA = 0.95; // Factor de inercia más bajo para movimiento más lento
-    const RESISTANCE = 0.98; // Factor de resistencia más alto para movimiento más lento
+    const INERTIA = 0.95;
+    const RESISTANCE = 0.98;
+    const MOUSE_INFLUENCE_RADIUS = adaptiveParams.mouseInfluenceRadius;
+    const CONNECTION_PULL_FORCE = 0.02;
+    const CONNECTION_PULL_RADIUS = adaptiveParams.connectionPullRadius;
 
     // --- ESTADO ---
     const particles: Particle[] = [];
     const pulses: Pulse[] = [];
     const connectionGlows: ConnectionGlow[] = [];
-    let animationFrameId: number;
-    let minDistance: number; // Distancia mínima dinámica
+    let animationFrameId: number = 0;
+    let minDistance: number = 0; // Distancia mínima dinámica
     let nodesToSpawn = 0; // Contador de nodos por aparecer
     let spawnTimer = 0; // Timer para spawn progresivo
     const SPAWN_INTERVAL = 50; // Intervalo entre spawns (ms)
-    const MAX_NODES_TO_SPAWN = 50; // Nodos por spawn
+    const MAX_NODES_TO_SPAWN = Math.min(50, Math.max(10, Math.floor(particleCount * 0.2))); // Adaptativo al número de partículas
+    let breathingTime = 0; // Para el efecto de respiración
 
     // Función para generar una dirección aleatoria normalizada
     const getRandomDirection = () => {
@@ -174,6 +214,17 @@ export const NeuralNetworkBackground: React.FC = () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
       updateMinDistance(); // Actualizar distancia mínima cuando cambie el tamaño
+      
+      // Recalcular parámetros adaptativos si es necesario
+      const newParticleCount = getParticleCount();
+      if (newParticleCount !== particleCount) {
+        // Si el número de partículas cambió significativamente, reinicializar
+        particles.length = 0;
+        pulses.length = 0;
+        connectionGlows.length = 0;
+        nodesToSpawn = newParticleCount;
+        spawnTimer = 0;
+      }
     };
     resizeCanvas();
     window.addEventListener('resize', resizeCanvas);
@@ -184,6 +235,58 @@ export const NeuralNetworkBackground: React.FC = () => {
     };
     window.addEventListener('mousemove', handleMouseMove);
 
+    // Función para encontrar el nodo más cercano al cursor
+    const findNodeAtPosition = (x: number, y: number) => {
+      let closestNode = null;
+      let closestDistance = Infinity;
+      
+      particles.forEach(particle => {
+        const distance = Math.hypot(x - particle.x, y - particle.y);
+        // Considerar el tamaño del nodo para la detección
+        const nodeRadius = particle.size * (0.7 + particle.value * 0.3) * 8; // Radio basado en el tamaño del nodo
+        
+        if (distance <= nodeRadius && distance < closestDistance) {
+          closestDistance = distance;
+          closestNode = particle;
+        }
+      });
+      
+      return closestNode;
+    };
+
+    // Función para emitir pulsos desde un nodo
+    const emitPulsesFromNode = (sourceNode: Particle) => {
+      // Emitir pulsos a todos los vecinos
+      sourceNode.neighbors.forEach(neighborId => {
+        const neighbor = particles[neighborId];
+        if (neighbor) {
+          const distance = Math.hypot(sourceNode.x - neighbor.x, sourceNode.y - neighbor.y);
+          if (distance > 0) {
+            pulses.push({
+              source: sourceNode,
+              destination: neighbor,
+              progress: 0,
+              speed: PULSE_PIXELS_PER_FRAME / distance,
+              depth: 0,
+            });
+          }
+        }
+      });
+      
+      // Añadir efecto de iluminación al nodo clickeado
+      sourceNode.illumination = 1;
+    };
+
+    const handleMouseClick = (event: MouseEvent) => {
+      const clickedNode = findNodeAtPosition(event.clientX, event.clientY);
+      if (clickedNode) {
+        emitPulsesFromNode(clickedNode);
+      }
+    };
+    window.addEventListener('click', handleMouseClick);
+
+
+
     // Función para crear un nuevo nodo
     const createNewParticle = (id: number) => {
       const direction = getRandomDirection();
@@ -192,15 +295,17 @@ export const NeuralNetworkBackground: React.FC = () => {
         id: id,
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
+        z: Math.random(),
         vx: direction.x * BASE_SPEED,
         vy: direction.y * BASE_SPEED,
+        vz: 0,
         size: Math.random() * 0.5 + 2,
         hue: 220,
         illumination: 0,
         neighbors: [],
         lastPulseTime: 0,
         activePulses: 0,
-        value: Math.round(Math.random()),
+        value: Math.random(), // Valor aleatorio entre 0 y 1 al inicio
         life: 1, // Vida inicial al 100%
         maxLife: maxLife,
         age: 0
@@ -229,10 +334,21 @@ export const NeuralNetworkBackground: React.FC = () => {
     initializeProgressiveSpawn();
 
     const updateConnections = () => {
+      // Optimización: limitar el número de conexiones por nodo en pantallas pequeñas
+      const maxConnectionsPerNode = window.innerWidth * window.innerHeight < 500000 ? 3 : 5;
+      
       for (let i = 0; i < particles.length; i++) {
+        const p1 = particles[i];
+        
+        // Saltar si ya tiene demasiadas conexiones
+        if (p1.neighbors.length >= maxConnectionsPerNode) continue;
+        
         for (let j = i + 1; j < particles.length; j++) {
-          const p1 = particles[i];
           const p2 = particles[j];
+          
+          // Saltar si ya tiene demasiadas conexiones
+          if (p2.neighbors.length >= maxConnectionsPerNode) continue;
+          
           const distance = Math.hypot(p1.x - p2.x, p1.y - p2.y);
           const areNeighbors = p1.neighbors.includes(j);
 
@@ -272,7 +388,7 @@ export const NeuralNetworkBackground: React.FC = () => {
           let closestDistance = Infinity;
           
           for (let j = 0; j < particles.length; j++) {
-            if (i !== j && particles[j].neighbors.length < 5) {
+            if (i !== j && particles[j].neighbors.length < maxConnectionsPerNode) {
               const distance = Math.hypot(node.x - particles[j].x, node.y - particles[j].y);
               if (distance < closestDistance) {
                 closestDistance = distance;
@@ -300,8 +416,9 @@ export const NeuralNetworkBackground: React.FC = () => {
         particle.age++;
         particle.life = 1 - (particle.age / particle.maxLife);
         
-        // Si el nodo ha muerto por edad o tiene más de 5 conexiones, reemplazarlo
-        if (particle.life <= 0 || particle.neighbors.length > 5) {
+        // Si el nodo ha muerto por edad o tiene demasiadas conexiones, reemplazarlo
+        const maxConnectionsForReplacement = window.innerWidth * window.innerHeight < 500000 ? 4 : 5;
+        if (particle.life <= 0 || particle.neighbors.length > maxConnectionsForReplacement) {
           // Eliminar todas las conexiones del nodo muerto
           particle.neighbors.forEach(neighborId => {
             const neighbor = particles[neighborId];
@@ -384,19 +501,48 @@ export const NeuralNetworkBackground: React.FC = () => {
           }
         });
 
-        // Aplicar atracción magnética al mouse (esto puede cambiar la dirección)
+        // Aplicar efecto de ondas de profundidad
+        applyDepthWaveEffect(p1);
+
+        // Efecto 3D: acercar nodos conectados al nodo que está siendo agrandado por el mouse
         const dx = mouse.current.x - p1.x;
         const dy = mouse.current.y - p1.y;
-        const distance = Math.hypot(dx, dy);
+        const mouseDistance = Math.hypot(dx, dy);
+        
+        if (mouseDistance < CONNECTION_PULL_RADIUS) {
+          const mouseInfluence = Math.max(0, 1 - (mouseDistance / CONNECTION_PULL_RADIUS));
+          
+          // Si este nodo está siendo afectado por el mouse, atraer a sus vecinos
+          if (mouseDistance < MOUSE_INFLUENCE_RADIUS) {
+            p1.neighbors.forEach(neighborId => {
+              const neighbor = particles[neighborId];
+              if (neighbor) {
+                const neighborDx = p1.x - neighbor.x;
+                const neighborDy = p1.y - neighbor.y;
+                const neighborDistance = Math.hypot(neighborDx, neighborDy);
+                
+                if (neighborDistance > 0) {
+                  // Calcular fuerza de atracción basada en la influencia del mouse
+                  const pullForce = mouseInfluence * CONNECTION_PULL_FORCE;
+                                     const targetDistance = Math.max(neighborDistance * 1.0, neighborDistance * 0.85); // Reducir distancia entre 85% y 100%
+                  const currentDistance = neighborDistance;
+                  
+                  if (currentDistance > targetDistance) {
+                    const moveDistance = (currentDistance - targetDistance) * pullForce;
+                    const moveRatio = moveDistance / currentDistance;
+                    
+                    // Mover el vecino hacia este nodo
+                    neighbor.x += neighborDx * moveRatio;
+                    neighbor.y += neighborDy * moveRatio;
+                  }
+                }
+              }
+            });
+          }
+        }
 
-        if (distance < MAGNETIC_RADIUS) {
-          // Aplicar factor de tolerancia para irregularidad en la atracción magnética
-          const tolerance = 1 + (Math.random() - 0.5) * TOLERANCE_FACTOR;
-          const force = (1 - distance / MAGNETIC_RADIUS) * MAGNETIC_FORCE * tolerance;
-          p1.vx += (dx / distance) * force;
-          p1.vy += (dy / distance) * force;
-        } else if (hasRepulsion) {
-          // Si hay repulsión pero no atracción magnética, cambiar dirección base
+        // Manejar repulsión
+        if (hasRepulsion) {
           const repulsionMagnitude = Math.hypot(totalRepulsionVx, totalRepulsionVy);
           if (repulsionMagnitude > 0) {
             // Aplicar factor de tolerancia para irregularidad en el cambio de dirección
@@ -415,7 +561,7 @@ export const NeuralNetworkBackground: React.FC = () => {
             p1.vy = baseVy;
           }
         } else {
-          // Si no hay atracción magnética ni repulsión, mantener la dirección base
+          // Si no hay repulsión, mantener la dirección base
           p1.vx = baseVx;
           p1.vy = baseVy;
         }
@@ -424,10 +570,15 @@ export const NeuralNetworkBackground: React.FC = () => {
         const inertiaTolerance = 1 + (Math.random() - 0.5) * TOLERANCE_FACTOR * 0.5; // Menos tolerancia para inercia
         p1.vx *= INERTIA * RESISTANCE * inertiaTolerance;
         p1.vy *= INERTIA * RESISTANCE * inertiaTolerance;
+        p1.vz *= INERTIA * RESISTANCE * inertiaTolerance; // Aplicar inercia también al eje Z
 
         // Actualizar posición
         p1.x += p1.vx;
         p1.y += p1.vy;
+        p1.z += p1.vz; // Actualizar posición Z
+
+        // Limitar la profundidad Z entre 0 y 1
+        p1.z = Math.max(0, Math.min(1, p1.z));
 
         // Mantener los nodos dentro del canvas con rebote suave
         if (p1.x < 0) {
@@ -449,6 +600,9 @@ export const NeuralNetworkBackground: React.FC = () => {
     };
 
     const updatePulses = () => {
+      // Optimización: limitar el número total de pulsos en pantallas pequeñas
+      const maxTotalPulses = window.innerWidth * window.innerHeight < 500000 ? 20 : 50;
+      
       for (let i = pulses.length - 1; i >= 0; i--) {
         const pulse = pulses[i];
         pulse.progress += pulse.speed;
@@ -456,11 +610,19 @@ export const NeuralNetworkBackground: React.FC = () => {
         if (pulse.progress >= 1) {
           const sourceNode = pulse.source;
           const destNode = pulse.destination;
-          destNode.illumination = 1; // Máxima iluminación al recibir el pulso
-          destNode.value = destNode.value === 0 ? 1 : 0;
+          destNode.illumination = 0.6; // Aumentar iluminación al recibir el pulso
+          
+          // Incrementar el contador hasta 1, luego resetear
+          if (destNode.value < 1) {
+            destNode.value += 0.1; // Incrementar en pasos de 0.1 (0, 0.1, 0.2, 0.3, ..., 1)
+            if (destNode.value > 1) destNode.value = 1; // Limitar a 1
+          } else {
+            destNode.value = 0; // Resetear a 0 si ya está en 1
+          }
+          
           sourceNode.activePulses--;
 
-          if (pulse.depth < MAX_CHAIN_REACTION_DEPTH) {
+          if (pulse.depth < MAX_CHAIN_REACTION_DEPTH && pulses.length < maxTotalPulses) {
             const potentialTargets = destNode.neighbors.filter(id => id !== sourceNode.id);
             const maxNewPulses = Math.min(3, MAX_PULSES_PER_NODE - destNode.activePulses);
             
@@ -472,7 +634,7 @@ export const NeuralNetworkBackground: React.FC = () => {
               selectedTargets.forEach(targetId => {
                 const newTargetNode = particles[targetId];
                 const distance = Math.hypot(destNode.x - newTargetNode.x, destNode.y - newTargetNode.y);
-                if (distance > 0) {
+                if (distance > 0 && pulses.length < maxTotalPulses) {
                   destNode.activePulses++;
                   pulses.push({
                     source: destNode,
@@ -492,11 +654,11 @@ export const NeuralNetworkBackground: React.FC = () => {
           ctx.beginPath();
           ctx.arc(x, y, 1.5, 0, Math.PI * 2);
           
-          // Colores de pulsos según el modo
+          // Colores de pulsos ajustados - más contraste en modo oscuro
           if (isNightMode) {
-            ctx.fillStyle = `hsla(180, 100%, 90%, 0.2)`;
+            ctx.fillStyle = `hsla(220, 40%, 75%, 0.15)`; // Aumentar saturación y opacidad
           } else {
-            ctx.fillStyle = `hsla(0, 0%, 60%, 0.6)`; // Gris claro para modo normal
+            ctx.fillStyle = `hsla(0, 0%, 40%, 0.15)`; // Mantener sutil en modo claro
           }
           
           ctx.fill();
@@ -504,26 +666,83 @@ export const NeuralNetworkBackground: React.FC = () => {
       }
     };
 
+    const updateDepthWaves = () => {
+      // Función vacía ya que no usamos ondas de profundidad
+    };
+
+    const applyDepthWaveEffect = (particle: Particle) => {
+      // Función vacía ya que no aplicamos efectos de ondas
+    };
+
     const drawParticles = () => {
-      particles.forEach(p => {
+      // Ordenar partículas por profundidad Z para dibujar las más lejanas primero
+      const sortedParticles = [...particles].sort((a, b) => a.z - b.z);
+      
+      // Actualizar tiempo de respiración
+      breathingTime += 0.02;
+      
+      sortedParticles.forEach((p, index) => {
         ctx.beginPath();
-        ctx.font = `${p.size * 5}px monospace`;
-        // La opacidad disminuye con la vida del nodo
-        const opacity = 0.3 + (p.life * 0.6); // Entre 0.3 y 0.9
         
-        // Colores según el modo
+        // Efecto de respiración: variación sutil de tamaño y opacidad
+        const breathingPhase = breathingTime + (index * 0.1); // Fase diferente para cada nodo
+        const breathingFactor = 1 + Math.sin(breathingPhase) * 0.1; // ±10% de variación
+        
+        // Calcular influencia del mouse en el tamaño
+        const dx = mouse.current.x - p.x;
+        const dy = mouse.current.y - p.y;
+        const mouseDistance = Math.hypot(dx, dy);
+        const mouseInfluence = Math.max(0, 1 - (mouseDistance / MOUSE_INFLUENCE_RADIUS));
+        const mouseSizeMultiplier = 1 + (mouseInfluence * 0.5); // Máximo 1.5x el tamaño base - más sutil
+        
+        // Calcular tamaño base basado en el valor del nodo + efecto de mouse
+        const valueSizeMultiplier = 0.7 + (p.value * 0.3); // El valor afecta el tamaño (0.7x a 1.0x) - más sutil
+        const baseSize = p.size * (0.8 + p.z * 0.4) * valueSizeMultiplier; // Tamaño mínimo aumentado
+        const perspectiveSize = baseSize * breathingFactor * mouseSizeMultiplier;
+        
+        // Tamaño de fuente basado en el valor del nodo
+        const numberFontSize = Math.max(perspectiveSize * 6, 12); // Reducir multiplicador de fuente
+        ctx.font = `${numberFontSize}px monospace`;
+        
+        // Calcular opacidad basada en profundidad Z + respiración + valor del nodo
+        const baseOpacity = isNightMode ? 0.15 : 0.1;
+        const depthOpacity = p.z * 0.3; // Nodos más adelante son más opacos
+        const lifeOpacity = p.life * (isNightMode ? 0.25 : 0.15);
+        const valueOpacity = p.value * 0.2; // Nodos con valores más altos son más opacos
+        const breathingOpacity = Math.sin(breathingPhase) * 0.05; // Variación sutil de opacidad
+        const totalOpacity = baseOpacity + depthOpacity + lifeOpacity + valueOpacity + breathingOpacity;
+        
+        // Colores ajustados con efecto de profundidad, respiración y valor del nodo
         if (isNightMode) {
-          ctx.fillStyle = `hsla(220, 100%, ${p.illumination > 0 ? '75%' : '60%'}, ${opacity})`;
+          const baseBrightness = p.illumination > 0 ? 66 : 65; // Efecto de color más sutil cuando está iluminado
+          const valueBrightness = p.value * 15; // Nodos con valores más altos son más brillantes
+          const brightness = Math.min(85, baseBrightness + valueBrightness); // Limitar brillo máximo
+          const saturation = 30 + (p.z * 20) + (Math.sin(breathingPhase) * 10) + (p.value * 20); // Saturación variable + valor
+          ctx.fillStyle = `hsla(220, ${saturation}%, ${brightness}%, ${totalOpacity})`;
         } else {
-          ctx.fillStyle = `hsla(0, 0%, ${p.illumination > 0 ? '60%' : '50%'}, ${opacity})`;
+          const baseBrightness = p.illumination > 0 ? 36 : 35; // Efecto de color más sutil cuando está iluminado
+          const valueBrightness = p.value * 10; // Nodos con valores más altos son más brillantes
+          const brightness = Math.min(50, baseBrightness + valueBrightness); // Limitar brillo máximo
+          ctx.fillStyle = `hsla(0, 0%, ${brightness}%, ${totalOpacity})`;
         }
         
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
-        ctx.fillText(p.value.toString(), p.x, p.y);
+        
+        // Mostrar el valor del contador redondeado a 1 decimal
+        const displayValue = Math.round(p.value * 10) / 10;
+        ctx.fillText(displayValue.toString(), p.x, p.y);
+        
+        // Efecto de brillo más visible
+        if (p.illumination > 0.3) {
+          ctx.shadowColor = isNightMode ? 'rgba(100, 150, 255, 0.15)' : 'rgba(0, 0, 0, 0.08)';
+          ctx.shadowBlur = p.illumination * 2;
+          ctx.fillText(displayValue.toString(), p.x, p.y);
+          ctx.shadowBlur = 0;
+        }
         
         if (p.illumination > 0) {
-          p.illumination -= 0.2;
+          p.illumination -= 0.15; // Decay más lento para que dure más el efecto
         }
       });
     };
@@ -551,23 +770,33 @@ export const NeuralNetworkBackground: React.FC = () => {
         updateConnections();
         updateParticles();
         updatePulses();
+        updateDepthWaves();
 
-        // Dibujar conexiones de fondo
+        // Dibujar conexiones de fondo con efecto de profundidad
         particles.forEach(p => {
           p.neighbors.forEach(neighborId => {
             const neighbor = particles[neighborId];
+            
+            // Calcular profundidad promedio de la conexión
+            const avgZ = (p.z + neighbor.z) / 2;
+            
             ctx.beginPath();
             ctx.moveTo(p.x, p.y);
             ctx.lineTo(neighbor.x, neighbor.y);
             
-            // Colores según el modo
+            // Opacidad basada en profundidad
+            const connectionOpacity = 0.08 + (avgZ * 0.12); // Conexiones más adelante son más visibles
+            
+            // Colores de conexiones ajustados con efecto de profundidad
             if (isNightMode) {
-              ctx.strokeStyle = `hsla(220, 100%, 80%, 0.08)`;
+              const saturation = 25 + (avgZ * 15);
+              ctx.strokeStyle = `hsla(220, ${saturation}%, 70%, ${connectionOpacity})`;
             } else {
-              ctx.strokeStyle = `hsla(0, 0%, 70%, 0.4)`; // Gris claro para modo normal
+              ctx.strokeStyle = `hsla(0, 0%, 30%, ${connectionOpacity})`;
             }
             
-            ctx.lineWidth = 1;
+            // Grosor de línea basado en profundidad
+            ctx.lineWidth = 0.5 + (avgZ * 1.5);
             ctx.stroke();
           });
         });
@@ -583,17 +812,17 @@ export const NeuralNetworkBackground: React.FC = () => {
             ctx.moveTo(glow.source.x, glow.source.y);
             ctx.lineTo(glow.destination.x, glow.destination.y);
             
-            // Colores según el modo
+            // Colores de brillos ajustados - más contraste en modo oscuro
             if (isNightMode) {
-              ctx.strokeStyle = `hsla(180, 100%, 90%, ${glow.life * 0.05})`;
-              ctx.shadowColor = `hsl(180, 100%, 80%)`;
+              ctx.strokeStyle = `hsla(220, 35%, 75%, ${glow.life * 0.04})`; // Aumentar opacidad y saturación
+              ctx.shadowColor = `hsla(220, 30%, 70%, 0.2)`; // Sombra más visible
             } else {
-              ctx.strokeStyle = `hsla(0, 0%, 60%, ${glow.life * 0.3})`; // Gris claro para modo normal
-              ctx.shadowColor = `hsl(0, 0%, 50%)`;
+              ctx.strokeStyle = `hsla(0, 0%, 35%, ${glow.life * 0.08})`; // Mantener sutil en modo claro
+              ctx.shadowColor = `hsla(0, 0%, 30%, 0.05)`; // Sombra sutil
             }
             
             ctx.lineWidth = 1;
-            ctx.shadowBlur = 1 * glow.life;
+            ctx.shadowBlur = isNightMode ? 1 * glow.life : 0.5 * glow.life; // Más blur en modo oscuro
             ctx.stroke();
             ctx.shadowBlur = 0;
           }
@@ -612,6 +841,7 @@ export const NeuralNetworkBackground: React.FC = () => {
       cancelAnimationFrame(animationFrameId);
       window.removeEventListener('resize', resizeCanvas);
       window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('click', handleMouseClick);
     };
   }, [isNightMode]);
 
@@ -626,8 +856,9 @@ export const NeuralNetworkBackground: React.FC = () => {
           left: 0,
           width: '100%',
           height: '100%',
-          pointerEvents: 'none',
+          pointerEvents: 'auto',
           zIndex: 0,
+          cursor: 'crosshair',
         }}
       />
       <div style={{

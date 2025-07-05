@@ -1,6 +1,7 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Damian Nardini",
+  "name": "Damian Nardini - Desarrollador Frontend ",
+  "description": "Portfolio de Damian Nardini - Desarrollador Frontend  con 20+ años de experiencia en React, TypeScript y tecnologías modernas",
   "icons": [
     {
       "src": "favicon.ico",
@@ -20,6 +21,9 @@
   ],
   "start_url": ".",
   "display": "standalone",
-  "theme_color": "#000000",
-  "background_color": "#ffffff"
+  "theme_color": "#0f172a",
+  "background_color": "#0f172a",
+  "orientation": "portrait-primary",
+  "categories": ["business", "productivity", "technology"],
+  "lang": "es"
 }

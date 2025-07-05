@@ -1,3 +1,5 @@
+
+
 export interface ProfileSection {
   id: string;
   title: string;
@@ -14,7 +16,7 @@ export interface ProfileSection {
 export const profileSections: ProfileSection[] = [
   {
     id: 'intro',
-    title: 'Desarrollador Frontend Senior',
+    title: 'Desarrollador Frontend ',
     subtitle: 'Damian Nardini',
     content: [
       '20+ años de experiencia en desarrollo web frontend',
@@ -25,20 +27,20 @@ export const profileSections: ProfileSection[] = [
     notebookContent: {
       type: 'code',
       language: 'typescript',
-      code: `const seniorDeveloper = {
+      code: `const Developer = {
   name: "Damian Nardini",
-  experience: "20+ años en Frontend",
-  currentStatus: "Disponible para Freelance",
+  experience: "10+ años en Frontend",
+  currentStatus: "Freelance",
   specialization: "React • TypeScript • UI/UX",
   passion: "Crear experiencias web únicas",
-  location: "Argentina",
+  location: "Barcelona",
   available: true,
-  rate: "Competitiva y flexible"
 };
 
-console.log("¡Hola! Soy " + seniorDeveloper.name);
-console.log("Con " + seniorDeveloper.experience + " de experiencia");
-console.log("Actualmente: " + seniorDeveloper.currentStatus);`
+console.log("¡Hola! Soy " + developer.name);
+console.log("Con " + developer.experience + " de experiencia");
+console.log("Actualmente: " + developer.currentStatus);
+HOLA PAOLO QUE ESTAS HACIENDO?`
     }
   },
   {
@@ -116,12 +118,12 @@ $ echo "¡Siempre aprendiendo y evolucionando!"`
     title: 'Servicios Freelance',
     subtitle: '¿Qué Puedo Hacer por Ti?',
     content: [
-      '🖥️ Desarrollo de sitios web completos',
-      '⚛️ Aplicaciones React/TypeScript',
-      '📱 Diseño responsivo y mobile-first',
-      '🔧 Mantenimiento y optimización',
-      '🚀 Migración de tecnologías legacy',
-      '💡 Consultoría técnica y mentoring'
+      'Desarrollo de sitios web completos',
+      'Aplicaciones React/TypeScript',
+      'Diseño responsivo y mobile-first',
+      'Mantenimiento y optimización',
+      'Migración de tecnologías legacy',
+      'Consultoría técnica y mentoring'
     ],
     notebookContent: {
       type: 'code',
@@ -162,11 +164,11 @@ export default freelanceServices;`
     title: 'Trabajemos Juntos',
     subtitle: 'Disponible para Nuevos Proyectos',
     content: [
-      '💼 Busco proyectos freelance interesantes',
-      '🤝 Colaboraciones a largo plazo',
-      '📧 Contacto directo y respuesta rápida',
-      '💻 Disponibilidad inmediata',
-      '🌍 Trabajo remoto desde Argentina'
+      'Busco proyectos freelance interesantes',
+      'Colaboraciones a largo plazo',
+      'Contacto directo y respuesta rápida',
+      'Disponibilidad inmediata',
+      'Trabajo remoto desde Argentina'
     ],
     notebookContent: {
       type: 'browser',

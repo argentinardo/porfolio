@@ -23,12 +23,15 @@ const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({ isVisible }) => {
   return (
     <div className="projects-showcase">
       {/* Filtros de categorías */}
-      <div className="project-filters">
+      <div className="project-filters" role="tablist" aria-label="Filtrar proyectos por categoría">
         {categories.map(category => (
           <button
             key={category.id}
             className={`filter-btn ${selectedCategory === category.id ? 'active' : ''}`}
             onClick={() => setSelectedCategory(category.id)}
+            role="tab"
+            aria-selected={selectedCategory === category.id}
+            aria-controls="projects-grid"
           >
             {category.name}
           </button>
@@ -36,12 +39,21 @@ const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({ isVisible }) => {
       </div>
 
       {/* Grid de proyectos */}
-      <div className="projects-grid">
+      <div className="projects-grid" id="projects-grid" role="tabpanel" aria-label="Lista de proyectos">
         {filteredProjects.map(project => (
-          <div
+          <article
             key={project.id}
             className="project-card"
             onClick={() => setSelectedProject(project)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                setSelectedProject(project);
+              }
+            }}
+            tabIndex={0}
+            role="button"
+            aria-label={`Ver detalles de ${project.title}`}
           >
             <div className="project-header">
               <h3 className="project-title">{project.title}</h3>
@@ -50,7 +62,7 @@ const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({ isVisible }) => {
             
             <p className="project-description">{project.description}</p>
             
-            <div className="project-technologies">
+            <div className="project-technologies" aria-label="Tecnologías utilizadas">
               {project.technologies.slice(0, 3).map(tech => (
                 <span key={tech} className="tech-tag">{tech}</span>
               ))}
@@ -62,34 +74,42 @@ const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({ isVisible }) => {
             <div className="project-category">
               <span className="category-badge">{projectCategories[project.category]}</span>
             </div>
-          </div>
+          </article>
         ))}
       </div>
 
       {/* Modal de proyecto detallado */}
       {selectedProject && (
-        <div className="project-modal-overlay" onClick={() => setSelectedProject(null)}>
+        <div 
+          className="project-modal-overlay" 
+          onClick={() => setSelectedProject(null)}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="modal-title"
+          aria-describedby="modal-description"
+        >
           <div className="project-modal" onClick={e => e.stopPropagation()}>
             <button 
               className="modal-close"
               onClick={() => setSelectedProject(null)}
+              aria-label="Cerrar modal"
             >
               ×
             </button>
             
             <div className="modal-content">
               <div className="modal-header">
-                <h2>{selectedProject.title}</h2>
+                <h2 id="modal-title">{selectedProject.title}</h2>
                 <span className="modal-year">{selectedProject.year}</span>
               </div>
               
-              <p className="modal-description">{selectedProject.description}</p>
+              <p className="modal-description" id="modal-description">{selectedProject.description}</p>
               
               <div className="modal-technologies">
                 <h4>Tecnologías utilizadas:</h4>
-                <div className="tech-list">
+                <div className="tech-list" role="list">
                   {selectedProject.technologies.map(tech => (
-                    <span key={tech} className="tech-item">{tech}</span>
+                    <span key={tech} className="tech-item" role="listitem">{tech}</span>
                   ))}
                 </div>
               </div>
@@ -101,6 +121,7 @@ const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({ isVisible }) => {
                     target="_blank" 
                     rel="noopener noreferrer"
                     className="modal-link live"
+                    aria-label={`Ver demo de ${selectedProject.title}`}
                   >
                     🌐 Ver Demo
                   </a>
@@ -111,6 +132,7 @@ const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({ isVisible }) => {
                     target="_blank" 
                     rel="noopener noreferrer"
                     className="modal-link github"
+                    aria-label={`Ver código de ${selectedProject.title} en GitHub`}
                   >
                     📁 Ver Código
                   </a>
