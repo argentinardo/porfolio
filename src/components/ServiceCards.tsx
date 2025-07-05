@@ -71,8 +71,6 @@ const ServiceCards: React.FC<ServiceCardsProps> = ({ isVisible }) => {
   ];
 
   const handleLearnMore = (service: ServiceCard) => {
-    // Aquí puedes agregar la lógica para abrir un modal o navegar a una página de detalles
-    console.log(`Saber más sobre: ${service.title}`);
     // Por ahora solo mostraremos un alert
     alert(`Servicio: ${service.title}\n\n${service.description}\n\nPrecio: ${service.price}\n\nCaracterísticas:\n${service.features.join('\n')}`);
   };
@@ -93,9 +91,9 @@ const ServiceCards: React.FC<ServiceCardsProps> = ({ isVisible }) => {
             </div>
             
             <div className="service-features">
-              <ul role="list">
+              <ul>
                 {service.features.map((feature, featureIndex) => (
-                  <li key={featureIndex} role="listitem">{feature}</li>
+                  <li key={featureIndex}>{feature}</li>
                 ))}
               </ul>
             </div>

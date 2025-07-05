@@ -20,7 +20,8 @@ import {
   DocumentTextIcon,
   CpuChipIcon,
   ServerIcon,
-  SparklesIcon
+  SparklesIcon,
+  ChevronRightIcon
 } from '@heroicons/react/24/outline';
 import '../styles/portfolio.css';
 import { SkipLink } from './SkipLink';
@@ -425,7 +426,7 @@ const PortfolioSimple: React.FC = () => {
       </div>
 
       <nav className="progress-indicators" aria-label="Navegación por secciones">
-        {/* Checkpoints con efectos de nodos */}
+                {/* Checkpoints con efectos de nodos */}
         {profileSections.map((section, index) => (
           <button
             key={index}
@@ -434,6 +435,9 @@ const PortfolioSimple: React.FC = () => {
             aria-label={`Ir a sección: ${section.title}`}
             aria-current={index === activeSection ? 'true' : 'false'}
           >
+            {index === activeSection && (
+              <ChevronRightIcon className="progress-indicator-icon" />
+            )}
             <span className="progress-dot-label">{section.title}</span>
           </button>
         ))}

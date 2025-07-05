@@ -442,6 +442,7 @@ body {
   min-width: 120px;
   transform-origin: center;
   border-radius: 8px;
+  gap: 0.5rem;
 }
 
 .progress-dot:hover {
@@ -1550,6 +1551,25 @@ body.light-mode .submit-btn:hover:not(:disabled) {
   font-weight: 700;
   letter-spacing: 0.02em;
   text-shadow: 0 0 20px rgba(59,130,246,0.5);
+}
+
+.progress-indicator-icon {
+  width: 1.2rem;
+  height: 1.2rem;
+  color: #3b82f6;
+  margin-right: 0.5rem;
+  animation: slideInLeft 0.3s ease-out;
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 

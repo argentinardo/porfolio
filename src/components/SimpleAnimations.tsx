@@ -684,24 +684,15 @@ export const NeuralNetworkBackground: React.FC = () => {
       sortedParticles.forEach((p, index) => {
         ctx.beginPath();
         
-        // Efecto de respiración: variación sutil de tamaño y opacidad
+        // Efecto de respiración: variación sutil de opacidad (no afecta tamaño)
         const breathingPhase = breathingTime + (index * 0.1); // Fase diferente para cada nodo
-        const breathingFactor = 1 + Math.sin(breathingPhase) * 0.1; // ±10% de variación
         
-        // Calcular influencia del mouse en el tamaño
-        const dx = mouse.current.x - p.x;
-        const dy = mouse.current.y - p.y;
-        const mouseDistance = Math.hypot(dx, dy);
-        const mouseInfluence = Math.max(0, 1 - (mouseDistance / MOUSE_INFLUENCE_RADIUS));
-        const mouseSizeMultiplier = 1 + (mouseInfluence * 0.5); // Máximo 1.5x el tamaño base - más sutil
+        // Calcular tamaño base basado ÚNICAMENTE en el valor del nodo
+        const valueSizeMultiplier = 0.5 + (p.value * 0.5); // El valor afecta el tamaño (0.5x a 1.0x) - 0 = más pequeño, 1 = más grande
+        const baseSize = p.size * valueSizeMultiplier; // Solo el valor del nodo determina el tamaño
         
-        // Calcular tamaño base basado en el valor del nodo + efecto de mouse
-        const valueSizeMultiplier = 0.7 + (p.value * 0.3); // El valor afecta el tamaño (0.7x a 1.0x) - más sutil
-        const baseSize = p.size * (0.8 + p.z * 0.4) * valueSizeMultiplier; // Tamaño mínimo aumentado
-        const perspectiveSize = baseSize * breathingFactor * mouseSizeMultiplier;
-        
-        // Tamaño de fuente basado en el valor del nodo
-        const numberFontSize = Math.max(perspectiveSize * 6, 12); // Reducir multiplicador de fuente
+        // Tamaño de fuente basado ÚNICAMENTE en el valor del nodo
+        const numberFontSize = Math.max(baseSize * 5.5, 9); // Tamaño intermedio
         ctx.font = `${numberFontSize}px monospace`;
         
         // Calcular opacidad basada en profundidad Z + respiración + valor del nodo

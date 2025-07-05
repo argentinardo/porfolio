@@ -87,7 +87,6 @@ const ContactForm: React.FC<ContactFormProps> = ({ isVisible }) => {
 
     try {
       await new Promise(resolve => setTimeout(resolve, 1500));
-      console.log('Datos del formulario:', formData);
       
       setSubmitStatus('success');
       setFormData({
@@ -102,7 +101,6 @@ const ContactForm: React.FC<ContactFormProps> = ({ isVisible }) => {
       }, 3000);
       
     } catch (error) {
-      console.error('Error al enviar formulario:', error);
       setSubmitStatus('error');
     } finally {
       setIsSubmitting(false);
