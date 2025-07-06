@@ -3,9 +3,10 @@ import { projects, projectCategories, Project } from '../data/projectsData';
 
 interface ProjectsShowcaseProps {
   isVisible: boolean;
+  minimal?: boolean;
 }
 
-const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({ isVisible }) => {
+const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({ isVisible, minimal = false }) => {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
 
@@ -19,6 +20,39 @@ const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({ isVisible }) => {
   ];
 
   if (!isVisible) return null;
+
+  if (minimal) {
+    return (
+      <div className="projects-minimal">
+        <h2 className="projects-minimal-title">Proyectos Personales</h2>
+        <div className="project-minimal-card">
+          <div className="project-minimal-header">
+            <h3 className="project-minimal-title">Mecano Game</h3>
+            <span className="project-minimal-year">2025</span>
+          </div>
+          <p className="project-minimal-description">
+            Juego web interactivo desarrollado con JavaScript vanilla. 
+            Una experiencia de juego mecánico con física y animaciones fluidas.
+          </p>
+          <div className="project-minimal-tech">
+            <span className="tech-tag">JavaScript</span>
+            <span className="tech-tag">HTML5</span>
+            <span className="tech-tag">CSS3</span>
+          </div>
+          <div className="project-minimal-links">
+            <a 
+              href="https://mecano-game.netlify.app" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="project-minimal-link"
+            >
+              🌐 Jugar Demo
+            </a>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="projects-showcase">

@@ -27,10 +27,9 @@ export const profileSections: ProfileSection[] = [
     notebookContent: {
       type: 'code',
       language: 'typescript',
-      code: `const Developer = {
+      code: `const developer = {
   name: "Damian Nardini",
   experience: "10+ años en Frontend",
-  currentStatus: "Freelance",
   specialization: "React • TypeScript • UI/UX",
   passion: "Crear experiencias web únicas",
   location: "Barcelona",
@@ -39,62 +38,98 @@ export const profileSections: ProfileSection[] = [
 
 console.log("¡Hola! Soy " + developer.name);
 console.log("Con " + developer.experience + " de experiencia");
-console.log("Actualmente: " + developer.currentStatus);
-HOLA PAOLO QUE ESTAS HACIENDO?`
+console.log("¿Trabajamos juntos?");
+
+ ¡Hola! Soy Damian Nardini
+ Con 10+ años en Frontend de experiencia  
+¿Trabajamos juntos?
+`
     }
   },
   {
     id: 'journey',
-    title: 'Mi Trayectoria',
-    subtitle: '20 Años de Evolución Web',
+    title: 'Experiencia Laboral',
+    subtitle: 'Trayectoria Profesional',
     content: [
-      'Comencé con HTML estático y JavaScript vanilla',
-      'Evolucioné con jQuery, PHP y bases de datos',
-      'Adapté mis skills a React, TypeScript y frameworks modernos',
-      'Mantuve la pasión por crear interfaces intuitivas y atractivas',
-      'Experiencia en múltiples industrias y tipos de proyectos'
+      'Frontend Developer en empresas multinacionales',
+      'Especializado en React, Vue.js y arquitectura CSS',
+      'Experiencia con metodologías ágiles y equipos multidisciplinarios',
+      'Trabajo con clientes de renombre como Aedas, Occident, Balearia',
+      'Desarrollo de aplicaciones web de alto impacto'
     ],
     notebookContent: {
       type: 'terminal',
-      code: `$ timeline --show "Damian's Web Journey"
+      code: `console.log(damian.experience)
 
-📅 2003-2008: HTML/CSS/JavaScript Vanilla
-   - Sitios web estáticos
-   - Efectos con JavaScript
-   - Compatibilidad cross-browser
+📅 2019-2024: FRONT-END DEVELOPER
+   🏢 MULTIPLICA | BARCELONA
+   • Colaboré con equipos multidisciplinarios para diseñar interfaces
+   • Optimicé rendimiento de aplicaciones web
+   • Trabajé con clientes: Aedas, Occident, Balearia
+   • Implementé metodologías ágiles
 
-📅 2008-2015: jQuery + PHP + MySQL
-   - Aplicaciones web dinámicas
-   - Integración con bases de datos
-   - AJAX y interacciones asíncronas
+📅 2019: FRONT-END / ARQUITECTO CSS
+   🏢 SUNTRANSFERS | BARCELONA
+   • Arquitectura BEMIT (BEM + ITCSS)
+   • Tecnologías: GIT, GitHub, JavaScript, CSS (Less, Sass)
+   • Metodología Agile (Scrum, Jira, Slack)
 
-📅 2015-2020: React + Node.js
-   - Aplicaciones SPA modernas
-   - Componentes reutilizables
-   - APIs RESTful
+📅 2018-2019: FRONT-END /JS - CSS
+   🏢 GLOBAL PLANNING SOLUTIONS | BARCELONA
+   • Desarrollo frontend con Vue.js
+   • Maquetado en Vuefy
+   • Configuración de webpack
+   • Diseño visual de componentes
 
-📅 2020-Presente: React + TypeScript
-   - Código más robusto y mantenible
-   - Mejores prácticas modernas
-   - Enfoque en performance y UX
+📅 2017: FRONT-END / ARQUITECTO CSS
+   🏢 SPENTA BEEZY | BARCELONA
+   • Maquetación CSS/HTML
+   • Tecnologías: Sass, Handlebars, Webpack, Git
+   • Maquetación para e-mail
 
-$ echo "¡Siempre aprendiendo y evolucionando!"`
+📅 2015-2016: FRONT-END / WEB UI
+   🏢 FREELANCE | ROSARIO
+   • Diseño y maquetado de themes WordPress
+   • Proyectos con Less, Bootstrap, WordPressCSS
+
+📅 2012-2014: FRONT-END / PLD
+   🏢 GLOBANT | ROSARIO
+   • Clientes: Blackberry, EMC, Mastercard, MercedesBenz
+   • HTML5/CSS3, JavaScript, jQuery
+   • Frameworks: Bootstrap, Foundation
+   • Preprocesadores: Sass, Less
+
+📅 2008-2012: MAQUETADOR / DISEÑADOR MULTIMEDIA
+   🏢 VISIONGRAF | ROSARIO
+   • Presentaciones multimedia
+   • Desarrollo de páginas web
+
+📅 2006-2007: MAQUETADOR CSS
+   🏢 ESTUDIO HORMIGA | ROSARIO
+   • Clientes: La Segunda, Los Pumas
+   • Maquetación PSD a XHTML/CSS
+
+📅 2006-2007: MAQUETADOR - DISEÑADOR WEB
+   🏢 ESTUDIO QUADRA | ROSARIO
+   • Maquetación, Diseño Web, Animación Flash
+
+console.log(+10 años de experiencia)`
     }
   },
   {
     id: 'projects',
-    title: 'Proyectos Destacados',
-    subtitle: 'Portfolio de Trabajos',
+    title: 'Proyectos Personales',
+    subtitle: 'Desarrollo Creativo',
     content: [
-      'E-commerce con React y TypeScript',
-      'Dashboards administrativos responsivos',
-      'Sitios web corporativos modernos',
-      'Aplicaciones web progresivas (PWA)',
-      'Integraciones con APIs de terceros'
+      'Juegos web interactivos con JavaScript',
+      'Aplicaciones React con animaciones avanzadas',
+      'Proyectos experimentales de UI/UX',
+      'Herramientas de desarrollo personal',
+      'Demostraciones de tecnologías modernas'
     ],
     notebookContent: {
       type: 'browser',
-      url: 'https://portfolio-projects.com'
+      url: 'https://mecano-game.netlify.app'
     }
   },
   {
@@ -102,11 +137,10 @@ $ echo "¡Siempre aprendiendo y evolucionando!"`
     title: 'Servicios Profesionales',
     subtitle: 'Soluciones Web Completas',
     content: [
-      'Desarrollo frontend con React y TypeScript',
-      'Diseño de interfaces modernas y responsivas',
-      'Optimización de performance y SEO',
-      'Mantenimiento y soporte técnico',
-      'Consultoría y arquitectura de proyectos'
+      'Desarrollo frontend especializado',
+      'Diseño de interfaces modernas',
+      'Optimización y mantenimiento',
+      'Consultoría técnica'
     ],
     notebookContent: {
       type: 'browser',
@@ -123,7 +157,8 @@ $ echo "¡Siempre aprendiendo y evolucionando!"`
       'Diseño responsivo y mobile-first',
       'Mantenimiento y optimización',
       'Migración de tecnologías legacy',
-      'Consultoría técnica y mentoring'
+      'Consultoría técnica y mentoring',
+      'Implementación de IA en local'
     ],
     notebookContent: {
       type: 'code',
@@ -141,6 +176,12 @@ const freelanceServices = {
     ux: "Experiencias de usuario",
     animations: "Interacciones fluidas",
     accessibility: "Sitios inclusivos"
+  },
+  ai: {
+    localImplementation: "Implementación de IA en local",
+    models: "Integración de modelos LLM",
+    apis: "APIs de inteligencia artificial",
+    automation: "Automatización con IA"
   },
   consulting: {
     codeReview: "Revisión y optimización",
@@ -167,8 +208,7 @@ export default freelanceServices;`
       'Busco proyectos freelance interesantes',
       'Colaboraciones a largo plazo',
       'Contacto directo y respuesta rápida',
-      'Disponibilidad inmediata',
-      'Trabajo remoto desde Argentina'
+      'Disponibilidad inmediata'
     ],
     notebookContent: {
       type: 'browser',
@@ -180,5 +220,5 @@ export default freelanceServices;`
 export const socialLinks = {
   linkedin: 'https://www.linkedin.com/in/damiannardini',
   github: 'https://github.com/damiannardini',
-  email: 'contacto@damiannardini.com'
+  email: 'damiannardini@gmail.com'
 }; 

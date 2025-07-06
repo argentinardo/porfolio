@@ -21,7 +21,10 @@ import {
   CpuChipIcon,
   ServerIcon,
   SparklesIcon,
-  ChevronRightIcon
+  ChevronRightIcon,
+  XMarkIcon,
+  WindowIcon,
+  ChevronDownIcon
 } from '@heroicons/react/24/outline';
 import '../styles/portfolio.css';
 import { SkipLink } from './SkipLink';
@@ -204,30 +207,28 @@ const TerminalContent: React.FC<{ code: string }> = ({ code }) => {
 const PortfolioSimple: React.FC = () => {
   const [activeSection, setActiveSection] = useState(0);
   const [displaySection, setDisplaySection] = useState(0);
-  const [scrollProgress, setScrollProgress] = useState(0);
-  const [isAnimating, setIsAnimating] = useState(false);
   const [isNotebookElevated, setIsNotebookElevated] = useState(false);
+  const [isNotebookClosed, setIsNotebookClosed] = useState(false);
+  const [isWindowMinimized, setIsWindowMinimized] = useState(false);
+  const [isWindowMaximized, setIsWindowMaximized] = useState(false);
   const prevSectionRef = useRef<number>(0);
   const notebookContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (prevSectionRef.current !== activeSection) {
-      setIsAnimating(true);
+      // Iniciar animación de cierre
+      setIsNotebookClosed(true);
       
-      // Actualizar el contenido en el medio de la animación (cuando se abre)
-      const contentTimer = setTimeout(() => {
+      // Cambiar contenido a mitad de la animación
+      setTimeout(() => {
         setDisplaySection(activeSection);
+      }, 300);
+      
+      // Terminar animación
+      setTimeout(() => {
+        setIsNotebookClosed(false);
       }, 600);
       
-      // Terminar la animación
-      const animationTimer = setTimeout(() => {
-        setIsAnimating(false);
-      }, 1200);
-      
-      return () => {
-        clearTimeout(contentTimer);
-        clearTimeout(animationTimer);
-      };
     } else if (prevSectionRef.current === activeSection && displaySection !== activeSection) {
       // Inicializar displaySection si no coincide
       setDisplaySection(activeSection);
@@ -240,8 +241,6 @@ const PortfolioSimple: React.FC = () => {
       const scrollTop = window.scrollY;
       const docHeight = document.documentElement.scrollHeight - window.innerHeight;
       const progress = scrollTop / docHeight;
-      
-      setScrollProgress(progress);
       
       const sectionIndex = Math.round(progress * (profileSections.length - 1));
       setActiveSection(Math.max(0, Math.min(sectionIndex, profileSections.length - 1)));
@@ -268,17 +267,35 @@ const PortfolioSimple: React.FC = () => {
   const renderWindowContent = () => {
     if (!currentSection.notebookContent) return null;
 
-    const { type, code, language } = currentSection.notebookContent;
+    const { type, code } = currentSection.notebookContent;
 
     const windowHeader = (
       <div className="editor-header">
         <div className="window-controls">
-          <div className="control-btn red"></div>
-          <div className="control-btn yellow"></div>
-          <div className="control-btn green"></div>
+          <button 
+            className="control-btn red" 
+            aria-label="Cerrar ventana"
+            onClick={() => handleWindowControl('close')}
+          >
+            <XMarkIcon className="control-icon" />
+          </button>
+          <button 
+            className="control-btn yellow" 
+            aria-label="Minimizar ventana"
+            onClick={() => handleWindowControl('minimize')}
+          >
+            <ChevronDownIcon className="control-icon" />
+          </button>
+          <button 
+            className="control-btn green" 
+            aria-label="Maximizar ventana"
+            onClick={() => handleWindowControl('maximize')}
+          >
+            <WindowIcon className="control-icon" />
+          </button>
         </div>
         <span className="editor-filename">
-          {type === 'terminal' ? 'Terminal' : `${currentSection.id}.${language}`}
+          {currentSection.title}
         </span>
       </div>
     );
@@ -316,9 +333,9 @@ const PortfolioSimple: React.FC = () => {
             {windowHeader}
             <div className="browser-content">
               {currentSection.id === 'projects' ? (
-                <ProjectsShowcase isVisible={true} />
+                <ProjectsShowcase isVisible={true} minimal={true} />
               ) : currentSection.id === 'services' ? (
-                <ServiceCards isVisible={true} />
+                <ServiceCards isVisible={true} minimal={true} />
               ) : currentSection.id === 'contact' ? (
                 <ContactForm isVisible={true} />
               ) : (
@@ -334,6 +351,35 @@ const PortfolioSimple: React.FC = () => {
 
       default:
         return null;
+    }
+  };
+
+  const handleWindowControl = (action: 'close' | 'minimize' | 'maximize') => {
+    switch (action) {
+      case 'close':
+        setIsNotebookClosed(true);
+        // Reabrir después de la animación de cierre
+        setTimeout(() => {
+          setIsNotebookClosed(false);
+        }, 600);
+        break;
+      case 'minimize':
+        if (isWindowMaximized) {
+          // Si está maximizada, restaurar al tamaño original
+          setIsWindowMaximized(false);
+          setIsWindowMinimized(false);
+        } else {
+          // Si no está maximizada, minimizar
+          setIsWindowMinimized(!isWindowMinimized);
+        }
+        break;
+      case 'maximize':
+        setIsWindowMaximized(!isWindowMaximized);
+        // Si está minimizado, también lo desminimiza
+        if (isWindowMinimized) {
+          setIsWindowMinimized(false);
+        }
+        break;
     }
   };
 
@@ -357,9 +403,11 @@ const PortfolioSimple: React.FC = () => {
             className={`notebook-container ${isNotebookElevated ? 'elevated' : ''}`}
             aria-label="Pantalla de notebook mostrando contenido del portfolio"
           >
-            <div className={`notebook ${activeSection >= 0 ? 'active' : 'inactive'}`}>
+            <div className={`notebook ${
+              currentSection.notebookContent ? 'active' : 'inactive'
+            } ${isWindowMinimized ? 'minimized' : ''} ${isWindowMaximized ? 'maximized' : ''}`}>
               <div className="laptop-base"></div>
-              <div className={`laptop-screen ${isAnimating ? 'screen-animating' : ''}`}>
+              <div className={`laptop-screen ${isNotebookClosed ? 'animating' : ''}`}>
                 <div className="screen-content">
                   {renderWindowContent()}
                 </div>
@@ -384,6 +432,39 @@ const PortfolioSimple: React.FC = () => {
               <h1 className="main-title" id={`title-${section.id}`}>{section.title}</h1>
               {section.id === 'services' ? (
                 <ServiceCards isVisible={true} />
+              ) : section.id === 'contact' ? (
+                <>
+                  <div className="content-list" role="list">
+                    {section.content.map((item, itemIndex) => (
+                      <ListItemWithIcon 
+                        key={itemIndex} 
+                        text={item} 
+                        index={itemIndex}
+                        sectionId={section.id}
+                      />
+                    ))}
+                  </div>
+                  <nav className="social-links" aria-label="Enlaces sociales">
+                    <a
+                      href={socialLinks.linkedin}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="social-link primary"
+                      aria-label="Visitar perfil de LinkedIn"
+                    >
+                      LinkedIn
+                    </a>
+                    <a
+                      href={socialLinks.github}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="social-link secondary"
+                      aria-label="Visitar perfil de GitHub"
+                    >
+                      GitHub
+                    </a>
+                  </nav>
+                </>
               ) : (
                 <>
                   <div className="content-list" role="list">
@@ -435,23 +516,13 @@ const PortfolioSimple: React.FC = () => {
             aria-label={`Ir a sección: ${section.title}`}
             aria-current={index === activeSection ? 'true' : 'false'}
           >
-            {index === activeSection && (
-              <ChevronRightIcon className="progress-indicator-icon" />
-            )}
+            <ChevronRightIcon className="progress-indicator-icon" />
             <span className="progress-dot-label">{section.title}</span>
           </button>
         ))}
       </nav>
 
-      <div 
-        className="progress-bar"
-        style={{ transform: `scaleX(${scrollProgress})` }}
-        aria-label={`Progreso de navegación: ${Math.round(scrollProgress * 100)}%`}
-        role="progressbar"
-        aria-valuenow={Math.round(scrollProgress * 100)}
-        aria-valuemin={0}
-        aria-valuemax={100}
-      />
+
     </div>
   );
 };

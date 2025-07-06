@@ -3,7 +3,8 @@ import {
   CodeBracketIcon, 
   PaintBrushIcon, 
   BoltIcon, 
-  LightBulbIcon 
+  LightBulbIcon,
+  CpuChipIcon
 } from '@heroicons/react/24/outline';
 
 interface ServiceCard {
@@ -16,9 +17,10 @@ interface ServiceCard {
 
 interface ServiceCardsProps {
   isVisible: boolean;
+  minimal?: boolean;
 }
 
-const ServiceCards: React.FC<ServiceCardsProps> = ({ isVisible }) => {
+const ServiceCards: React.FC<ServiceCardsProps> = ({ isVisible, minimal = false }) => {
   const services: ServiceCard[] = [
     {
       title: "Desarrollo Frontend",
@@ -57,6 +59,18 @@ const ServiceCards: React.FC<ServiceCardsProps> = ({ isVisible }) => {
       price: "Desde $40/hora"
     },
     {
+      title: "Inteligencia Artificial",
+      description: "Implementación de IA en entornos locales",
+      icon: CpuChipIcon,
+      features: [
+        "Integración de modelos LLM",
+        "APIs de inteligencia artificial",
+        "Automatización con IA",
+        "Despliegue local seguro"
+      ],
+      price: "Desde $65/hora"
+    },
+    {
       title: "Consultoría Técnica",
       description: "Asesoramiento experto para tu proyecto",
       icon: LightBulbIcon,
@@ -70,48 +84,31 @@ const ServiceCards: React.FC<ServiceCardsProps> = ({ isVisible }) => {
     }
   ];
 
-  const handleLearnMore = (service: ServiceCard) => {
-    // Por ahora solo mostraremos un alert
-    alert(`Servicio: ${service.title}\n\n${service.description}\n\nPrecio: ${service.price}\n\nCaracterísticas:\n${service.features.join('\n')}`);
-  };
+
+  if (minimal) {
+    return (
+      <div className="services-minimal">
+        <div className="services-minimal-grid">
+          {services.map((service, index) => {
+            const IconComponent = service.icon;
+            return (
+              <div key={index} className="service-minimal-item">
+                <IconComponent className="service-minimal-icon" />
+                <div className="service-minimal-content">
+                  <h3 className="service-minimal-title">{service.title}</h3>
+                  <p className="service-minimal-description">{service.description}</p>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={`services-showcase ${isVisible ? 'visible' : ''}`}>
-      <div className="services-grid" role="grid" aria-label="Servicios profesionales">
-        {services.map((service, index) => {
-          const IconComponent = service.icon;
-          return (
-          <article key={index} className="service-card" role="gridcell">
-            <div className="service-header">
-                <div className="service-icon" aria-hidden="true">
-                  <IconComponent className="w-10 h-10" />
-                </div>
-              <h3 className="service-title">{service.title}</h3>
-              <p className="service-description">{service.description}</p>
-            </div>
-            
-            <div className="service-features">
-              <ul>
-                {service.features.map((feature, featureIndex) => (
-                  <li key={featureIndex}>{feature}</li>
-                ))}
-              </ul>
-            </div>
-            
-            <div className="service-footer">
-              <div className="service-price">{service.price}</div>
-              <button 
-                className="learn-more-btn"
-                onClick={() => handleLearnMore(service)}
-                aria-label={`Saber más sobre ${service.title}`}
-              >
-                Saber más
-              </button>
-            </div>
-          </article>
-          );
-        })}
-      </div>
+
     </div>
   );
 };

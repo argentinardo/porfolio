@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { SunIcon, MoonIcon } from '@heroicons/react/24/outline';
 
 
 interface SimpleAnimationsProps {
@@ -658,7 +659,7 @@ export const NeuralNetworkBackground: React.FC = () => {
           if (isNightMode) {
             ctx.fillStyle = `hsla(220, 40%, 75%, 0.15)`; // Aumentar saturación y opacidad
           } else {
-            ctx.fillStyle = `hsla(0, 0%, 40%, 0.15)`; // Mantener sutil en modo claro
+            ctx.fillStyle = `hsla(0, 0%, 75%, 0.15)`; // Mantener sutil en modo claro
           }
           
           ctx.fill();
@@ -696,9 +697,9 @@ export const NeuralNetworkBackground: React.FC = () => {
         ctx.font = `${numberFontSize}px monospace`;
         
         // Calcular opacidad basada en profundidad Z + respiración + valor del nodo
-        const baseOpacity = isNightMode ? 0.15 : 0.1;
+        const baseOpacity = isNightMode ? 0.15 : 0.15;
         const depthOpacity = p.z * 0.3; // Nodos más adelante son más opacos
-        const lifeOpacity = p.life * (isNightMode ? 0.25 : 0.15);
+        const lifeOpacity = p.life * (isNightMode ? 0.25 : 0.25);
         const valueOpacity = p.value * 0.2; // Nodos con valores más altos son más opacos
         const breathingOpacity = Math.sin(breathingPhase) * 0.05; // Variación sutil de opacidad
         const totalOpacity = baseOpacity + depthOpacity + lifeOpacity + valueOpacity + breathingOpacity;
@@ -711,9 +712,9 @@ export const NeuralNetworkBackground: React.FC = () => {
           const saturation = 30 + (p.z * 20) + (Math.sin(breathingPhase) * 10) + (p.value * 20); // Saturación variable + valor
           ctx.fillStyle = `hsla(220, ${saturation}%, ${brightness}%, ${totalOpacity})`;
         } else {
-          const baseBrightness = p.illumination > 0 ? 36 : 35; // Efecto de color más sutil cuando está iluminado
+          const baseBrightness = p.illumination > 0 ? 66 : 65; // Efecto de color más sutil cuando está iluminado
           const valueBrightness = p.value * 10; // Nodos con valores más altos son más brillantes
-          const brightness = Math.min(50, baseBrightness + valueBrightness); // Limitar brillo máximo
+          const brightness = Math.min(85, baseBrightness + valueBrightness); // Limitar brillo máximo
           ctx.fillStyle = `hsla(0, 0%, ${brightness}%, ${totalOpacity})`;
         }
         
@@ -726,7 +727,7 @@ export const NeuralNetworkBackground: React.FC = () => {
         
         // Efecto de brillo más visible
         if (p.illumination > 0.3) {
-          ctx.shadowColor = isNightMode ? 'rgba(100, 150, 255, 0.15)' : 'rgba(0, 0, 0, 0.08)';
+          ctx.shadowColor = isNightMode ? 'rgba(100, 150, 255, 0.15)' : 'rgba(255, 255, 255, 0.08)';
           ctx.shadowBlur = p.illumination * 2;
           ctx.fillText(displayValue.toString(), p.x, p.y);
           ctx.shadowBlur = 0;
@@ -778,13 +779,13 @@ export const NeuralNetworkBackground: React.FC = () => {
             // Opacidad basada en profundidad
             const connectionOpacity = 0.08 + (avgZ * 0.12); // Conexiones más adelante son más visibles
             
-            // Colores de conexiones ajustados con efecto de profundidad
-            if (isNightMode) {
-              const saturation = 25 + (avgZ * 15);
-              ctx.strokeStyle = `hsla(220, ${saturation}%, 70%, ${connectionOpacity})`;
-            } else {
-              ctx.strokeStyle = `hsla(0, 0%, 30%, ${connectionOpacity})`;
-            }
+                    // Colores de conexiones ajustados con efecto de profundidad
+        if (isNightMode) {
+          const saturation = 25 + (avgZ * 15);
+          ctx.strokeStyle = `hsla(220, ${saturation}%, 70%, ${connectionOpacity})`;
+        } else {
+          ctx.strokeStyle = `hsla(0, 0%, 70%, ${connectionOpacity})`;
+        }
             
             // Grosor de línea basado en profundidad
             ctx.lineWidth = 0.5 + (avgZ * 1.5);
@@ -808,8 +809,8 @@ export const NeuralNetworkBackground: React.FC = () => {
               ctx.strokeStyle = `hsla(220, 35%, 75%, ${glow.life * 0.04})`; // Aumentar opacidad y saturación
               ctx.shadowColor = `hsla(220, 30%, 70%, 0.2)`; // Sombra más visible
             } else {
-              ctx.strokeStyle = `hsla(0, 0%, 35%, ${glow.life * 0.08})`; // Mantener sutil en modo claro
-              ctx.shadowColor = `hsla(0, 0%, 30%, 0.05)`; // Sombra sutil
+              ctx.strokeStyle = `hsla(0, 0%, 75%, ${glow.life * 0.08})`; // Mantener sutil en modo claro
+              ctx.shadowColor = `hsla(0, 0%, 70%, 0.05)`; // Sombra sutil
             }
             
             ctx.lineWidth = 1;
@@ -904,24 +905,32 @@ export const NeuralNetworkBackground: React.FC = () => {
               top: '50%',
               left: '4px',
               transform: 'translateY(-50%)',
-              fontSize: '12px',
               color: isNightMode ? 'rgba(255, 255, 255, 0.9)' : 'rgba(255, 255, 255, 0.7)',
               transition: 'all 0.3s ease',
-              filter: isNightMode ? 'none' : 'brightness(0.8)'
+              filter: isNightMode ? 'none' : 'brightness(0.8)',
+              width: '12px',
+              height: '12px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
             }}>
-              ☀️
+              <SunIcon />
             </div>
             <div style={{
               position: 'absolute',
               top: '50%',
               right: '4px',
               transform: 'translateY(-50%)',
-              fontSize: '12px',
               color: isNightMode ? 'rgba(255, 255, 255, 0.7)' : 'rgba(255, 255, 255, 0.9)',
               transition: 'all 0.3s ease',
-              filter: isNightMode ? 'brightness(0.8)' : 'none'
+              filter: isNightMode ? 'brightness(0.8)' : 'none',
+              width: '12px',
+              height: '12px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
             }}>
-              🌙
+              <MoonIcon />
             </div>
           </div>
         </div>
