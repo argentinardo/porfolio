@@ -19,7 +19,7 @@ export const profileSections: ProfileSection[] = [
     title: 'Desarrollador Frontend ',
     subtitle: 'Damian Nardini',
     content: [
-      '20+ años de experiencia en desarrollo web frontend',
+      '10+ años de experiencia en desarrollo web frontend',
       'Especializado en React, TypeScript y tecnologías modernas',
       'Disponible para proyectos freelance y colaboraciones',
       'Enfocado en crear experiencias de usuario excepcionales'

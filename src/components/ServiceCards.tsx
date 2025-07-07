@@ -134,8 +134,11 @@ const ServiceCards: React.FC<ServiceCardsProps> = ({ isVisible, minimal = false 
           <div className="service-modal-overlay">
             <div className="service-modal" ref={modalRef}>
               <div className="service-modal-header">
-                <div className="service-modal-icon">
-                  {React.createElement(selectedService.icon)}
+                <div className="service-modal-title-section">
+                  <div className="service-modal-icon">
+                    {React.createElement(selectedService.icon)}
+                  </div>
+                  <h2 className="service-modal-title">{selectedService.title}</h2>
                 </div>
                 <button 
                   className="service-modal-close"
@@ -146,7 +149,6 @@ const ServiceCards: React.FC<ServiceCardsProps> = ({ isVisible, minimal = false 
                 </button>
               </div>
               <div className="service-modal-content">
-                <h2 className="service-modal-title">{selectedService.title}</h2>
                 <p className="service-modal-description">{selectedService.description}</p>
                 <div className="service-modal-features">
                   <h4>Características:</h4>
@@ -156,8 +158,20 @@ const ServiceCards: React.FC<ServiceCardsProps> = ({ isVisible, minimal = false 
                     ))}
                   </ul>
                 </div>
-                <div className="service-modal-price">
-                  <strong>{selectedService.price}</strong>
+                <div className="service-modal-actions">
+                  <button 
+                    className="service-modal-contact-btn"
+                    onClick={() => {
+                      setSelectedService(null);
+                      // Scroll a la sección de contacto
+                      const contactSection = document.getElementById('section-contact');
+                      if (contactSection) {
+                        contactSection.scrollIntoView({ behavior: 'smooth' });
+                      }
+                    }}
+                  >
+                    Estoy interesado en este servicio
+                  </button>
                 </div>
               </div>
             </div>
