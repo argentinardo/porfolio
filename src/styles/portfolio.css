@@ -141,14 +141,14 @@ body {
 .main-title::before {
   color: #ff0000;
   clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%);
-  transform: translate(-2px, -2px);
+  transform: translate(-1px, -1px);
   opacity: 0.8;
 }
 
 .main-title::after {
   color: #00ffff;
   clip-path: polygon(0 55%, 100% 55%, 100% 100%, 0 100%);
-  transform: translate(2px, 2px);
+  transform: translate(1px, 1px);
   opacity: 0.8;
 }
 
@@ -162,6 +162,20 @@ body {
 
 .main-title:hover {
   animation: glitch-hover 0.3s ease-in-out;
+}
+
+@media (max-width: 768px) {
+  .main-title:hover::before {
+    animation: glitch-1-hover-mobile 0.3s ease-in-out;
+  }
+  
+  .main-title:hover::after {
+    animation: glitch-2-hover-mobile 0.3s ease-in-out;
+  }
+  
+  .main-title:hover {
+    animation: glitch-hover-mobile 0.3s ease-in-out;
+  }
 }
 
 .content-list {
@@ -626,17 +640,11 @@ body {
 
 @media (max-width: 768px) {
   .fixed-layout {
-    position: static;
-    height: auto;
+    display: none;
   }
   
   .content-grid {
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
-    padding: 1rem;
-    height: auto;
-    width: 100%;
+    display: none;
   }
   
   .notebook-container {
@@ -646,7 +654,10 @@ body {
     min-width: auto;
     height: auto;
     margin: 2rem 0;
-    order: 2;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
   
   .notebook {
@@ -654,23 +665,78 @@ body {
     max-width: 100%;
     min-width: auto;
     height: 25rem;
+    transform: none !important;
+    opacity: 1 !important;
+  }
+  
+  /* Ocultar notebook móvil en desktop */
+  .scrollable-content .notebook-container {
+    display: none;
+  }
+  
+  /* Mostrar notebook móvil solo en móvil */
+  @media (max-width: 768px) {
+    .scrollable-content .notebook-container {
+      display: flex;
+      width: 100%;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    .scrollable-content .notebook {
+      width: 100%;
+      max-width: 100%;
+      height: 20rem;
+    }
+    
+    .scrollable-content .laptop-screen {
+      border: 4px solid var(--border-color);
+      margin: 0;
+    }
   }
   
   .scrollable-content {
     width: 100%;
     position: static;
     padding: 0;
-    order: 1;
   }
   
   .scrollable-section {
     max-width: 100%;
-    padding: 2rem 1rem;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .scrollable-text {
+    order: 1;
+  }
+  
+  .scrollable-section .notebook-container {
+    order: 2;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
   }
   
   .main-title {
-    font-size: clamp(1.8rem, 5.5vw, 2.8rem);
+    font-size: clamp(2.4rem, 7.3vw, 3.7rem);
     letter-spacing: 0.003em;
+    -webkit-text-stroke: 1px var(--primary-color);
+    text-stroke: 1px var(--primary-color);
+  }
+  
+  .main-title::before,
+  .main-title::after {
+    font-size: clamp(2.4rem, 7.3vw, 3.7rem);
+    letter-spacing: 0.003em;
+  }
+  
+  .main-title::before {
+    transform: translate(-0.5px, -0.5px);
+  }
+  
+  .main-title::after {
+    transform: translate(0.5px, 0.5px);
   }
   
   .subtitle {
@@ -2325,6 +2391,137 @@ textarea:focus {
   }
   100% {
     transform: translate(2px, 2px);
+    opacity: 0;
+  }
+}
+
+/* Animaciones de glitch específicas para móvil */
+@keyframes glitch-hover-mobile {
+  0% {
+    transform: translate(0);
+  }
+  10% {
+    transform: translate(-1px, 1px);
+  }
+  20% {
+    transform: translate(-1px, -1px);
+  }
+  30% {
+    transform: translate(1px, 1px);
+  }
+  40% {
+    transform: translate(-1px, 1px);
+  }
+  50% {
+    transform: translate(1px, -1px);
+  }
+  60% {
+    transform: translate(1px, 1px);
+  }
+  70% {
+    transform: translate(-1px, -1px);
+  }
+  80% {
+    transform: translate(1px, -1px);
+  }
+  90% {
+    transform: translate(-1px, 1px);
+  }
+  100% {
+    transform: translate(0);
+  }
+}
+
+@keyframes glitch-1-hover-mobile {
+  0% {
+    transform: translate(-0.5px, -0.5px);
+    opacity: 0;
+  }
+  10% {
+    transform: translate(-1px, 0.5px);
+    opacity: 1;
+  }
+  20% {
+    transform: translate(-0.5px, -1px);
+    opacity: 0.8;
+  }
+  30% {
+    transform: translate(0.5px, 0.5px);
+    opacity: 1;
+  }
+  40% {
+    transform: translate(-1px, 0.5px);
+    opacity: 0.9;
+  }
+  50% {
+    transform: translate(1px, -0.5px);
+    opacity: 1;
+  }
+  60% {
+    transform: translate(0.5px, 0.5px);
+    opacity: 0.8;
+  }
+  70% {
+    transform: translate(-1px, -0.5px);
+    opacity: 0.9;
+  }
+  80% {
+    transform: translate(1px, -0.5px);
+    opacity: 1;
+  }
+  90% {
+    transform: translate(-1px, 0.5px);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translate(-0.5px, -0.5px);
+    opacity: 0;
+  }
+}
+
+@keyframes glitch-2-hover-mobile {
+  0% {
+    transform: translate(0.5px, 0.5px);
+    opacity: 0;
+  }
+  10% {
+    transform: translate(1px, -0.5px);
+    opacity: 1;
+  }
+  20% {
+    transform: translate(0.5px, 1px);
+    opacity: 0.8;
+  }
+  30% {
+    transform: translate(-0.5px, -0.5px);
+    opacity: 1;
+  }
+  40% {
+    transform: translate(1px, -0.5px);
+    opacity: 0.9;
+  }
+  50% {
+    transform: translate(-1px, 0.5px);
+    opacity: 1;
+  }
+  60% {
+    transform: translate(-0.5px, -0.5px);
+    opacity: 0.8;
+  }
+  70% {
+    transform: translate(1px, 0.5px);
+    opacity: 0.9;
+  }
+  80% {
+    transform: translate(-1px, 0.5px);
+    opacity: 1;
+  }
+  90% {
+    transform: translate(1px, -0.5px);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translate(0.5px, 0.5px);
     opacity: 0;
   }
 }

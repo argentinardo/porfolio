@@ -354,6 +354,96 @@ const PortfolioSimple: React.FC = () => {
     }
   };
 
+  const renderMobileNotebook = (section: any) => {
+    if (!section.notebookContent) return null;
+
+    const { type, code } = section.notebookContent;
+
+    const windowHeader = (
+      <div className="editor-header">
+        <div className="window-controls">
+          <button 
+            className="control-btn red" 
+            aria-label="Cerrar ventana"
+            disabled
+          >
+            <XMarkIcon className="control-icon" />
+          </button>
+          <button 
+            className="control-btn yellow" 
+            aria-label="Minimizar ventana"
+            disabled
+          >
+            <ChevronDownIcon className="control-icon" />
+          </button>
+          <button 
+            className="control-btn green" 
+            aria-label="Maximizar ventana"
+            disabled
+          >
+            <WindowIcon className="control-icon" />
+          </button>
+        </div>
+        <span className="editor-filename">
+          {section.title}
+        </span>
+      </div>
+    );
+
+    switch (type) {
+      case 'code':
+        return (
+          <div className={`window-base ${type}`}>
+            {windowHeader}
+            <pre className="code-content">
+              <code>
+                <AnimatedText 
+                  text={code || ''} 
+                  speed={2} 
+                  className="animated-code"
+                />
+              </code>
+            </pre>
+          </div>
+        );
+
+      case 'terminal':
+        return (
+          <div className={`window-base ${type}`}>
+            {windowHeader}
+            <div className="code-content">
+              <TerminalContent code={code || ''} />
+            </div>
+          </div>
+        );
+
+      case 'browser':
+        return (
+          <div className="window-base browser">
+            {windowHeader}
+            <div className="browser-content">
+              {section.id === 'projects' ? (
+                <ProjectsShowcase isVisible={true} minimal={true} />
+              ) : section.id === 'services' ? (
+                <ServiceCards isVisible={true} minimal={true} />
+              ) : section.id === 'contact' ? (
+                <ContactForm isVisible={true} />
+              ) : (
+              <div className="browser-project">
+                <div className="project-icon">P</div>
+                <h3 className="project-title">Portfolio</h3>
+                <p className="project-description">Proyecto en desarrollo</p>
+              </div>
+              )}
+            </div>
+          </div>
+        );
+
+      default:
+        return null;
+    }
+  };
+
   const handleWindowControl = (action: 'close' | 'minimize' | 'maximize') => {
     switch (action) {
       case 'close':
@@ -533,6 +623,19 @@ const PortfolioSimple: React.FC = () => {
                   )}
                 </>
               )}
+            </div>
+            
+            {/* Notebook móvil */}
+            <div className="notebook-container">
+              <div className="notebook active">
+                <div className="laptop-base"></div>
+                <div className="laptop-screen">
+                  <div className="screen-content">
+                    {renderMobileNotebook(section)}
+                  </div>
+                  <div className="screen-reflection"></div>
+                </div>
+              </div>
             </div>
           </section>
         ))}
