@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { SunIcon, MoonIcon } from '@heroicons/react/24/outline';
+import { SunIcon, MoonIcon, Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 
 
 interface SimpleAnimationsProps {
@@ -79,6 +79,7 @@ export const NeuralNetworkBackground: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const mouse = useRef({ x: -1000, y: -1000 });
   const [isNightMode, setIsNightMode] = useState(true);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     // Aplicar clase al body según el modo
@@ -160,7 +161,7 @@ export const NeuralNetworkBackground: React.FC = () => {
         connectionPullRadius: Math.max(50, Math.floor(80 * scaleFactor)),
         maxPulsesPerNode: screenArea < 500000 ? 1 : 2, // Menos pulsos en pantallas pequeñas
         pulsePixelsPerFrame: screenArea < 500000 ? 1.5 : 2, // Pulsos más lentos en pantallas pequeñas
-        baseSpeed: screenArea < 500000 ? 0.08 : 0.1, // Movimiento más lento en pantallas pequeñas
+        baseSpeed: screenArea < 500000 ? 0.04 : 0.05, // Movimiento más lento en pantallas pequeñas
       };
     };
     
@@ -169,10 +170,10 @@ export const NeuralNetworkBackground: React.FC = () => {
     const synapseBreakDistance = adaptiveParams.synapseBreakDistance;
     const REPULSION_FORCE_GLOBAL = 0.8;
     const TOLERANCE_FACTOR = 0.8;
-    const RANDOM_MOVEMENT_CHANCE = 0.02;
+    const RANDOM_MOVEMENT_CHANCE = 0.005; // Reducir movimiento aleatorio
     const RANDOM_MOVEMENT_FORCE = 0.2;
-    const MIN_LIFE_FRAMES = 1800;
-    const MAX_LIFE_FRAMES = 3600;
+    const MIN_LIFE_FRAMES = 3600; // Duplicar la vida mínima
+    const MAX_LIFE_FRAMES = 7200; // Duplicar la vida máxima
     const PULSE_PIXELS_PER_FRAME = adaptiveParams.pulsePixelsPerFrame;
     const MAX_CHAIN_REACTION_DEPTH = 3;
     const BASE_SPEED = adaptiveParams.baseSpeed;
@@ -193,8 +194,8 @@ export const NeuralNetworkBackground: React.FC = () => {
     let minDistance: number = 0; // Distancia mínima dinámica
     let nodesToSpawn = 0; // Contador de nodos por aparecer
     let spawnTimer = 0; // Timer para spawn progresivo
-    const SPAWN_INTERVAL = 50; // Intervalo entre spawns (ms)
-    const MAX_NODES_TO_SPAWN = Math.min(50, Math.max(10, Math.floor(particleCount * 0.2))); // Adaptativo al número de partículas
+    const SPAWN_INTERVAL = 150; // Intervalo entre spawns (ms) - más lento
+    const MAX_NODES_TO_SPAWN = Math.min(30, Math.max(5, Math.floor(particleCount * 0.1))); // Menos nodos por spawn
     let breathingTime = 0; // Para el efecto de respiración
 
     // Función para generar una dirección aleatoria normalizada
@@ -418,7 +419,7 @@ export const NeuralNetworkBackground: React.FC = () => {
         particle.life = 1 - (particle.age / particle.maxLife);
         
         // Si el nodo ha muerto por edad o tiene demasiadas conexiones, reemplazarlo
-        const maxConnectionsForReplacement = window.innerWidth * window.innerHeight < 500000 ? 4 : 5;
+        const maxConnectionsForReplacement = window.innerWidth * window.innerHeight < 500000 ? 6 : 8;
         if (particle.life <= 0 || particle.neighbors.length > maxConnectionsForReplacement) {
           // Eliminar todas las conexiones del nodo muerto
           particle.neighbors.forEach(neighborId => {
@@ -657,7 +658,7 @@ export const NeuralNetworkBackground: React.FC = () => {
           
           // Colores de pulsos ajustados - más contraste en modo oscuro
           if (isNightMode) {
-            ctx.fillStyle = `hsla(220, 40%, 75%, 0.15)`; // Aumentar saturación y opacidad
+            ctx.fillStyle = `hsla(160, 40%, 75%, 0.15)`; // Aumentar saturación y opacidad
           } else {
             ctx.fillStyle = `hsla(0, 0%, 75%, 0.15)`; // Mantener sutil en modo claro
           }
@@ -710,7 +711,7 @@ export const NeuralNetworkBackground: React.FC = () => {
           const valueBrightness = p.value * 15; // Nodos con valores más altos son más brillantes
           const brightness = Math.min(85, baseBrightness + valueBrightness); // Limitar brillo máximo
           const saturation = 30 + (p.z * 20) + (Math.sin(breathingPhase) * 10) + (p.value * 20); // Saturación variable + valor
-          ctx.fillStyle = `hsla(220, ${saturation}%, ${brightness}%, ${totalOpacity})`;
+          ctx.fillStyle = `hsla(160, ${saturation}%, ${brightness}%, ${totalOpacity})`;
         } else {
           const baseBrightness = p.illumination > 0 ? 66 : 65; // Efecto de color más sutil cuando está iluminado
           const valueBrightness = p.value * 10; // Nodos con valores más altos son más brillantes
@@ -727,7 +728,7 @@ export const NeuralNetworkBackground: React.FC = () => {
         
         // Efecto de brillo más visible
         if (p.illumination > 0.3) {
-          ctx.shadowColor = isNightMode ? 'rgba(100, 150, 255, 0.15)' : 'rgba(255, 255, 255, 0.08)';
+          ctx.shadowColor = isNightMode ? 'rgba(16, 185, 129, 0.15)' : 'rgba(255, 255, 255, 0.08)';
           ctx.shadowBlur = p.illumination * 2;
           ctx.fillText(displayValue.toString(), p.x, p.y);
           ctx.shadowBlur = 0;
@@ -746,7 +747,7 @@ export const NeuralNetworkBackground: React.FC = () => {
       if (isNightMode) {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
       } else {
-        ctx.fillStyle = 'white';
+        ctx.fillStyle = '#f8fafc'; // Gris muy claro en lugar de blanco puro
         ctx.fillRect(0, 0, canvas.width, canvas.height);
       }
 
@@ -782,7 +783,7 @@ export const NeuralNetworkBackground: React.FC = () => {
                     // Colores de conexiones ajustados con efecto de profundidad
         if (isNightMode) {
           const saturation = 25 + (avgZ * 15);
-          ctx.strokeStyle = `hsla(220, ${saturation}%, 70%, ${connectionOpacity})`;
+          ctx.strokeStyle = `hsla(160, ${saturation}%, 70%, ${connectionOpacity})`;
         } else {
           ctx.strokeStyle = `hsla(0, 0%, 70%, ${connectionOpacity})`;
         }
@@ -806,8 +807,8 @@ export const NeuralNetworkBackground: React.FC = () => {
             
             // Colores de brillos ajustados - más contraste en modo oscuro
             if (isNightMode) {
-              ctx.strokeStyle = `hsla(220, 35%, 75%, ${glow.life * 0.04})`; // Aumentar opacidad y saturación
-              ctx.shadowColor = `hsla(220, 30%, 70%, 0.2)`; // Sombra más visible
+              ctx.strokeStyle = `hsla(160, 35%, 75%, ${glow.life * 0.04})`; // Aumentar opacidad y saturación
+              ctx.shadowColor = `hsla(160, 30%, 70%, 0.2)`; // Sombra más visible
             } else {
               ctx.strokeStyle = `hsla(0, 0%, 75%, ${glow.life * 0.08})`; // Mantener sutil en modo claro
               ctx.shadowColor = `hsla(0, 0%, 70%, 0.05)`; // Sombra sutil
@@ -829,11 +830,19 @@ export const NeuralNetworkBackground: React.FC = () => {
 
     animationFrameId = requestAnimationFrame(animate);
 
+    // Event listener para cerrar el menú móvil
+    const handleCloseMobileMenu = () => {
+      setIsMobileMenuOpen(false);
+    };
+
+    window.addEventListener('closeMobileMenu', handleCloseMobileMenu);
+
     return () => {
       cancelAnimationFrame(animationFrameId);
       window.removeEventListener('resize', resizeCanvas);
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('click', handleMouseClick);
+      window.removeEventListener('closeMobileMenu', handleCloseMobileMenu);
     };
   }, [isNightMode]);
 
@@ -853,7 +862,9 @@ export const NeuralNetworkBackground: React.FC = () => {
           cursor: 'crosshair',
         }}
       />
-      <div style={{
+      
+      {/* Switch de día/noche para desktop */}
+      <div className="desktop-controls" style={{
         position: 'fixed',
         top: '20px',
         right: '20px',
@@ -883,7 +894,7 @@ export const NeuralNetworkBackground: React.FC = () => {
             width: '48px',
             height: '24px',
             borderRadius: '12px',
-            background: isNightMode ? '#3b82f6' : '#9ca3af',
+            background: isNightMode ? '#10b981' : '#9ca3af',
             transition: 'all 0.3s ease',
             cursor: 'pointer'
           }}>
@@ -932,6 +943,159 @@ export const NeuralNetworkBackground: React.FC = () => {
             }}>
               <MoonIcon />
             </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Botón de menú móvil */}
+      <div className="mobile-menu-button" style={{
+        position: 'fixed',
+        top: '20px',
+        right: '20px',
+        zIndex: 15,
+        pointerEvents: 'auto',
+        display: 'none'
+      }}>
+        <button
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          style={{
+            width: '50px',
+            height: '50px',
+            borderRadius: '50%',
+            background: isNightMode 
+              ? 'rgba(255, 255, 255, 0.1)' 
+              : 'rgba(0, 0, 0, 0.1)',
+            backdropFilter: 'blur(10px)',
+            border: `1px solid ${isNightMode ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.2)'}`,
+            cursor: 'pointer',
+            transition: 'all 0.3s ease',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: isNightMode ? '#ffffff' : '#000000'
+          }}
+        >
+          {isMobileMenuOpen ? <XMarkIcon width={24} height={24} /> : <Bars3Icon width={24} height={24} />}
+        </button>
+      </div>
+
+      {/* Menú móvil desplegable */}
+      <div className="mobile-menu" style={{
+        position: 'fixed',
+        top: '80px',
+        right: '20px',
+        zIndex: 14,
+        pointerEvents: 'auto',
+        display: 'none',
+        flexDirection: 'column',
+        gap: '1rem',
+        padding: '1.5rem',
+        background: isNightMode 
+          ? 'rgba(17, 24, 39, 0.8)' 
+          : 'rgba(255, 255, 255, 0.8)',
+        backdropFilter: 'blur(15px)',
+        borderRadius: '1rem',
+        border: `1px solid ${isNightMode ? 'rgba(75, 85, 99, 0.3)' : 'rgba(0, 0, 0, 0.1)'}`,
+        minWidth: '250px',
+        transform: isMobileMenuOpen ? 'translateX(0)' : 'translateX(100%)',
+        transition: 'all 0.3s ease',
+        opacity: isMobileMenuOpen ? 1 : 0
+      }}>
+        {/* Switch de día/noche para móvil */}
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          padding: '0.5rem 0'
+        }}>
+          <span style={{
+            color: isNightMode ? '#ffffff' : '#000000',
+            fontSize: '0.875rem',
+            fontWeight: '500'
+          }}>
+            {isNightMode ? 'Modo Oscuro' : 'Modo Claro'}
+          </span>
+          <div style={{
+            position: 'relative',
+            width: '48px',
+            height: '24px',
+            borderRadius: '12px',
+            background: isNightMode ? '#10b981' : '#9ca3af',
+            transition: 'all 0.3s ease',
+            cursor: 'pointer'
+          }}
+          onClick={() => setIsNightMode(!isNightMode)}
+          >
+            <div style={{
+              position: 'absolute',
+              top: '2px',
+              left: isNightMode ? '26px' : '2px',
+              width: '20px',
+              height: '20px',
+              borderRadius: '50%',
+              background: '#ffffff',
+              boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2)',
+              transition: 'all 0.3s ease'
+            }} />
+            <div style={{
+              position: 'absolute',
+              top: '50%',
+              left: '4px',
+              transform: 'translateY(-50%)',
+              color: isNightMode ? 'rgba(255, 255, 255, 0.9)' : 'rgba(255, 255, 255, 0.7)',
+              transition: 'all 0.3s ease',
+              filter: isNightMode ? 'none' : 'brightness(0.8)',
+              width: '12px',
+              height: '12px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}>
+              <SunIcon />
+            </div>
+            <div style={{
+              position: 'absolute',
+              top: '50%',
+              right: '4px',
+              transform: 'translateY(-50%)',
+              color: isNightMode ? 'rgba(255, 255, 255, 0.7)' : 'rgba(255, 255, 255, 0.9)',
+              transition: 'all 0.3s ease',
+              filter: isNightMode ? 'brightness(0.8)' : 'none',
+              width: '12px',
+              height: '12px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}>
+              <MoonIcon />
+            </div>
+          </div>
+        </div>
+
+        {/* Separador */}
+        <div style={{
+          height: '1px',
+          background: isNightMode ? 'rgba(75, 85, 99, 0.3)' : 'rgba(0, 0, 0, 0.1)',
+          margin: '0.5rem 0'
+        }} />
+
+        {/* Marcadores de navegación para móvil */}
+        <div style={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '0.75rem'
+        }}>
+          <span style={{
+            color: isNightMode ? '#ffffff' : '#000000',
+            fontSize: '0.875rem',
+            fontWeight: '600',
+            marginBottom: '0.5rem'
+          }}>
+            Navegación
+          </span>
+          {/* Aquí se insertarán los marcadores dinámicamente */}
+          <div id="mobile-navigation-markers">
+            {/* Los marcadores se agregarán aquí desde el componente principal */}
           </div>
         </div>
       </div>

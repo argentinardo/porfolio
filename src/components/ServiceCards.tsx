@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { 
   CodeBracketIcon, 
   PaintBrushIcon, 
   BoltIcon, 
   LightBulbIcon,
-  CpuChipIcon
+  CpuChipIcon,
+  XMarkIcon
 } from '@heroicons/react/24/outline';
 
 interface ServiceCard {
@@ -21,6 +22,9 @@ interface ServiceCardsProps {
 }
 
 const ServiceCards: React.FC<ServiceCardsProps> = ({ isVisible, minimal = false }) => {
+  const [selectedService, setSelectedService] = useState<ServiceCard | null>(null);
+  const modalRef = useRef<HTMLDivElement>(null);
+
   const services: ServiceCard[] = [
     {
       title: "Desarrollo Frontend",
@@ -85,6 +89,23 @@ const ServiceCards: React.FC<ServiceCardsProps> = ({ isVisible, minimal = false 
   ];
 
 
+  // Cerrar modal al hacer click fuera
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
+        setSelectedService(null);
+      }
+    };
+
+    if (selectedService) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [selectedService]);
+
   if (minimal) {
     return (
       <div className="services-minimal">
@@ -92,7 +113,12 @@ const ServiceCards: React.FC<ServiceCardsProps> = ({ isVisible, minimal = false 
           {services.map((service, index) => {
             const IconComponent = service.icon;
             return (
-              <div key={index} className="service-minimal-item">
+              <div 
+                key={index} 
+                className="service-minimal-item"
+                onClick={() => setSelectedService(service)}
+                style={{ cursor: 'pointer' }}
+              >
                 <IconComponent className="service-minimal-icon" />
                 <div className="service-minimal-content">
                   <h3 className="service-minimal-title">{service.title}</h3>
@@ -102,6 +128,41 @@ const ServiceCards: React.FC<ServiceCardsProps> = ({ isVisible, minimal = false 
             );
           })}
         </div>
+
+        {/* Modal para servicio seleccionado */}
+        {selectedService && (
+          <div className="service-modal-overlay">
+            <div className="service-modal" ref={modalRef}>
+              <div className="service-modal-header">
+                <div className="service-modal-icon">
+                  {React.createElement(selectedService.icon)}
+                </div>
+                <button 
+                  className="service-modal-close"
+                  onClick={() => setSelectedService(null)}
+                  aria-label="Cerrar modal"
+                >
+                  <XMarkIcon />
+                </button>
+              </div>
+              <div className="service-modal-content">
+                <h2 className="service-modal-title">{selectedService.title}</h2>
+                <p className="service-modal-description">{selectedService.description}</p>
+                <div className="service-modal-features">
+                  <h4>Características:</h4>
+                  <ul>
+                    {selectedService.features.map((feature, index) => (
+                      <li key={index}>{feature}</li>
+                    ))}
+                  </ul>
+                </div>
+                <div className="service-modal-price">
+                  <strong>{selectedService.price}</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     );
   }

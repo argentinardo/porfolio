@@ -86,19 +86,35 @@ const ContactForm: React.FC<ContactFormProps> = ({ isVisible }) => {
     setSubmitStatus('idle');
 
     try {
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      // Crear el formulario para enviar a Netlify
+      const form = e.target as HTMLFormElement;
       
-      setSubmitStatus('success');
-      setFormData({
-        name: '',
-        email: '',
-        message: ''
+      // Enviar el formulario usando fetch a Netlify
+      const formData = new FormData(form);
+      formData.append('form-name', 'contact');
+      
+      const response = await fetch('/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams(formData as unknown as Record<string, string>).toString()
       });
-      setErrors({});
-      
-      setTimeout(() => {
-        setSubmitStatus('idle');
-      }, 3000);
+
+      if (response.ok) {
+        setSubmitStatus('success');
+        setFormData({
+          name: '',
+          email: '',
+          message: ''
+        });
+        setErrors({});
+        
+        // Redirigir a la página de éxito después de 2 segundos
+        setTimeout(() => {
+          window.location.href = '/form-success';
+        }, 2000);
+      } else {
+        throw new Error('Error al enviar el formulario');
+      }
       
     } catch (error) {
       setSubmitStatus('error');
@@ -109,7 +125,17 @@ const ContactForm: React.FC<ContactFormProps> = ({ isVisible }) => {
 
   return (
     <div className={`contact-form-container ${isVisible ? 'visible' : ''}`}>
-      <form onSubmit={handleSubmit} className="contact-form" aria-label="Formulario de contacto">
+      <form 
+        onSubmit={handleSubmit} 
+        className="contact-form" 
+        aria-label="Formulario de contacto" 
+        noValidate
+        method="POST"
+        data-netlify="true"
+        name="contact"
+      >
+        {/* Campo oculto para Netlify */}
+        <input type="hidden" name="form-name" value="contact" />
         <div className="form-header">
           <p>Envíame un mensaje</p>
         </div>
@@ -129,9 +155,10 @@ const ContactForm: React.FC<ContactFormProps> = ({ isVisible }) => {
                 placeholder="Tu nombre"
                 aria-describedby={errors.name ? 'name-error' : undefined}
                 aria-invalid={!!errors.name}
-                required
               />
-              {errors.name && <span className="error-message" id="name-error" role="alert">{errors.name}</span>}
+              <span className={`error-message ${errors.name ? 'has-error' : ''}`} id="name-error" role="alert">
+                {errors.name || '\u00A0'}
+              </span>
             </div>
 
             <div className="form-group">
@@ -146,9 +173,10 @@ const ContactForm: React.FC<ContactFormProps> = ({ isVisible }) => {
                 placeholder="tu@email.com"
                 aria-describedby={errors.email ? 'email-error' : undefined}
                 aria-invalid={!!errors.email}
-                required
               />
-              {errors.email && <span className="error-message" id="email-error" role="alert">{errors.email}</span>}
+              <span className={`error-message ${errors.email ? 'has-error' : ''}`} id="email-error" role="alert">
+                {errors.email || '\u00A0'}
+              </span>
             </div>
           </div>
 
@@ -164,9 +192,10 @@ const ContactForm: React.FC<ContactFormProps> = ({ isVisible }) => {
               placeholder="Cuéntame sobre tu proyecto..."
               aria-describedby={errors.message ? 'message-error' : undefined}
               aria-invalid={!!errors.message}
-              required
             />
-            {errors.message && <span className="error-message" id="message-error" role="alert">{errors.message}</span>}
+            <span className={`error-message ${errors.message ? 'has-error' : ''}`} id="message-error" role="alert">
+              {errors.message || '\u00A0'}
+            </span>
           </div>
         </div>
 

@@ -389,6 +389,38 @@ const PortfolioSimple: React.FC = () => {
     window.scrollTo({ top: targetScroll, behavior: 'smooth' });
   };
 
+  // Insertar marcadores en el menú móvil
+  useEffect(() => {
+    const mobileMarkersContainer = document.getElementById('mobile-navigation-markers');
+    if (mobileMarkersContainer) {
+      mobileMarkersContainer.innerHTML = '';
+      profileSections.forEach((section, index) => {
+        const marker = document.createElement('button');
+        marker.className = `mobile-progress-dot ${index === activeSection ? 'active' : ''}`;
+        marker.onclick = () => {
+          scrollToSection(index);
+          // Cerrar el menú móvil después de hacer click
+          const mobileMenu = document.querySelector('.mobile-menu') as HTMLElement;
+          const mobileMenuButton = document.querySelector('.mobile-menu-button button') as HTMLElement;
+          if (mobileMenu && mobileMenuButton) {
+            mobileMenu.style.transform = 'translateX(100%)';
+            mobileMenu.style.opacity = '0';
+            // Actualizar el estado del menú (esto se maneja en el componente SimpleAnimations)
+            setTimeout(() => {
+              const event = new CustomEvent('closeMobileMenu');
+              window.dispatchEvent(event);
+            }, 300);
+          }
+        };
+        marker.innerHTML = `
+          <ChevronRightIcon class="mobile-progress-indicator-icon" />
+          <span class="mobile-progress-dot-label">${section.title}</span>
+        `;
+        mobileMarkersContainer.appendChild(marker);
+      });
+    }
+  }, [activeSection, profileSections]);
+
   return (
     <div className="portfolio-container" role="main" aria-label="Portfolio de Damian Nardini">
       <SkipLink />
@@ -429,7 +461,7 @@ const PortfolioSimple: React.FC = () => {
           >
             <div className="scrollable-text">
               <p className="subtitle" id={`subtitle-${section.id}`}>{section.subtitle}</p>
-              <h1 className="main-title" id={`title-${section.id}`}>{section.title}</h1>
+              <h1 className="main-title" id={`title-${section.id}`} data-text={section.title}>{section.title}</h1>
               {section.id === 'services' ? (
                 <ServiceCards isVisible={true} />
               ) : section.id === 'contact' ? (
