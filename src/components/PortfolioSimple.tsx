@@ -419,7 +419,7 @@ const PortfolioSimple: React.FC = () => {
         mobileMarkersContainer.appendChild(marker);
       });
     }
-  }, [activeSection, profileSections]);
+  }, [activeSection]);
 
   return (
     <div className="portfolio-container" role="main" aria-label="Portfolio de Damian Nardini">
