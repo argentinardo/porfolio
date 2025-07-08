@@ -86,17 +86,17 @@ const ContactForm: React.FC<ContactFormProps> = ({ isVisible }) => {
     setSubmitStatus('idle');
 
     try {
-      // Crear el formulario para enviar a Netlify
-      const form = e.target as HTMLFormElement;
-      
-      // Enviar el formulario usando fetch a Netlify
-      const formData = new FormData(form);
-      formData.append('form-name', 'contact');
-      
-      const response = await fetch('/', {
+      // Enviar email usando Resend API
+      const response = await fetch('/api/send-email', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: new URLSearchParams(formData as unknown as Record<string, string>).toString()
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          message: formData.message
+        })
       });
 
       if (response.ok) {
@@ -107,13 +107,9 @@ const ContactForm: React.FC<ContactFormProps> = ({ isVisible }) => {
           message: ''
         });
         setErrors({});
-        
-        // Redirigir a la página de éxito después de 2 segundos
-        setTimeout(() => {
-          window.location.href = '/form-success';
-        }, 2000);
       } else {
-        throw new Error('Error al enviar el formulario');
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Error al enviar el formulario');
       }
       
     } catch (error) {
@@ -130,12 +126,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ isVisible }) => {
         className="contact-form" 
         aria-label="Formulario de contacto" 
         noValidate
-        method="POST"
-        data-netlify="true"
-        name="contact"
       >
-        {/* Campo oculto para Netlify */}
-        <input type="hidden" name="form-name" value="contact" />
         <div className="form-header">
           <p>Envíame un mensaje</p>
         </div>
