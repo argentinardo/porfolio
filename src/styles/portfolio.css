@@ -39,6 +39,17 @@ body {
   scroll-snap-type: y mandatory;
 }
 
+/* En móvil, desactivar scroll snap */
+@media (max-width: 768px) {
+  html {
+    scroll-snap-type: none;
+  }
+  
+  body {
+    scroll-snap-type: none;
+  }
+}
+
 /* Layout principal */
 .portfolio-container {
   position: relative;
@@ -337,6 +348,16 @@ body {
   backface-visibility: hidden;
 }
 
+/* En móvil, ajustar la pantalla del notebook */
+@media (max-width: 768px) {
+  .laptop-screen {
+    position: relative;
+    height: auto;
+    min-height: 25rem;
+    overflow: visible;
+  }
+}
+
 /* Estados del laptop */
 .notebook.active .laptop-screen {
   transform: scale(1);
@@ -413,9 +434,23 @@ body {
   z-index: 10;
 }
 
+/* En móvil, reducir padding del header */
+@media (max-width: 768px) {
+  .editor-header {
+    padding: 0.375rem 0.75rem;
+  }
+}
+
 .window-controls {
   display: flex;
   gap: 0.25rem;
+}
+
+/* En móvil, reducir gap de los controles */
+@media (max-width: 768px) {
+  .window-controls {
+    gap: 0.2rem;
+  }
 }
 
 .control-btn {
@@ -435,6 +470,14 @@ body {
   z-index: 10;
 }
 
+/* En móvil, reducir tamaño de los botones de control */
+@media (max-width: 768px) {
+  .control-btn {
+    width: 0.65rem;
+    height: 0.65rem;
+  }
+}
+
 .control-btn:hover {
   transform: scale(1.1);
 }
@@ -445,6 +488,14 @@ body {
   opacity: 0.8;
   transition: all 0.2s ease;
   color: var(--text-secondary);
+}
+
+/* En móvil, reducir tamaño de los iconos de control */
+@media (max-width: 768px) {
+  .control-btn .control-icon {
+    width: 0.6rem;
+    height: 0.6rem;
+  }
 }
 
 .control-btn:hover .control-icon {
@@ -474,6 +525,14 @@ body {
   letter-spacing: 0.05em;
 }
 
+/* En móvil, reducir margen del filename */
+@media (max-width: 768px) {
+  .editor-filename {
+    margin-left: 0.375rem;
+    font-size: 0.8rem;
+  }
+}
+
 .code-content {
   padding: 1.5rem;
   font-size: 0.95rem;
@@ -482,6 +541,16 @@ body {
   overflow: auto;
   height: calc(100% - 3rem);
   white-space: pre-wrap;
+}
+
+/* En móvil, ajustar el contenido del código */
+@media (max-width: 768px) {
+  .code-content {
+    height: auto;
+    min-height: calc(25rem - 3rem);
+    overflow: visible;
+    padding: 0.75rem;
+  }
 }
 
 /* Estilos para terminal con iconos */
@@ -640,11 +709,11 @@ body {
 
 @media (max-width: 768px) {
   .fixed-layout {
-    display: none;
+    display: none !important;
   }
   
   .content-grid {
-    display: none;
+    display: none !important;
   }
   
   .notebook-container {
@@ -654,7 +723,7 @@ body {
     min-width: auto;
     height: auto;
     margin: 2rem 0;
-    padding: 0;
+    padding: 0.5rem;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -664,34 +733,106 @@ body {
     width: 100%;
     max-width: 100%;
     min-width: auto;
-    height: 25rem;
+    height: auto;
+    min-height: 25rem;
     transform: none !important;
     opacity: 1 !important;
   }
   
-  /* Ocultar notebook móvil en desktop */
-  .scrollable-content .notebook-container {
+  /* Notebook móvil - oculta por defecto */
+  .mobile-notebook-container {
     display: none;
   }
   
   /* Mostrar notebook móvil solo en móvil */
   @media (max-width: 768px) {
-    .scrollable-content .notebook-container {
+    .mobile-notebook-container {
       display: flex;
       width: 100%;
       justify-content: center;
       align-items: center;
+      margin: 1rem 0;
+      padding: 0;
     }
     
-    .scrollable-content .notebook {
+    .mobile-notebook {
       width: 100%;
       max-width: 100%;
-      height: 20rem;
+      min-width: auto;
+      height: auto;
+      min-height: 20rem;
+      transform: none !important;
+      opacity: 1 !important;
+      position: relative;
+      transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      filter: drop-shadow(0 30px 60px rgba(0, 0, 0, 0.3));
+      perspective: 1400px;
+      transform-style: preserve-3d;
     }
     
-    .scrollable-content .laptop-screen {
-      border: 4px solid var(--border-color);
-      margin: 0;
+    .mobile-notebook .laptop-screen {
+      position: relative;
+      top: 0;
+      width: 100%;
+      height: auto;
+      min-height: 20rem;
+      background-color: #111827;
+      border-radius: 0.5rem 0.5rem 0 0;
+      box-shadow: 0 25px 50px var(--shadow-color);
+      overflow: visible;
+      border: 8px solid var(--border-color);
+      transform-origin: bottom center;
+      transform-style: preserve-3d;
+      backface-visibility: hidden;
+    }
+    
+    .mobile-notebook .screen-content {
+      width: 100%;
+      height: 100%;
+      transition: all 0.3s ease;
+    }
+    
+    .mobile-notebook .screen-reflection {
+      position: absolute;
+      inset: 0;
+      background: transparent;
+      pointer-events: none;
+    }
+    
+    .mobile-notebook .laptop-base {
+      display: none;
+    }
+    
+    .mobile-notebook .window-base {
+      height: 100%;
+      background-color: #111827;
+      border-radius: 0.5rem;
+      overflow: hidden;
+      pointer-events: auto;
+      position: relative;
+      z-index: 10;
+    }
+    
+    .mobile-notebook .editor-header {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.375rem 0.75rem;
+      background-color: #1f2937;
+      border-bottom: 1px solid var(--border-color);
+      pointer-events: auto;
+      position: relative;
+      z-index: 10;
+    }
+    
+    .mobile-notebook .code-content {
+      padding: 0.75rem;
+      height: auto;
+      min-height: calc(20rem - 3rem);
+      overflow: visible;
+      font-family: var(--font-code);
+      font-size: 0.875rem;
+      line-height: 1.5;
     }
   }
   
@@ -699,23 +840,23 @@ body {
     width: 100%;
     position: static;
     padding: 0;
+    scroll-snap-type: none;
   }
   
   .scrollable-section {
     max-width: 100%;
-    padding: 1rem;
+    padding: 2rem 0.5rem;
     display: flex;
     flex-direction: column;
+    scroll-snap-align: none;
   }
   
   .scrollable-text {
     order: 1;
   }
   
-  .scrollable-section .notebook-container {
+  .scrollable-section .mobile-notebook-container {
     order: 2;
-    margin-top: 2rem;
-    margin-bottom: 2rem;
   }
   
   .main-title {
@@ -815,6 +956,13 @@ body {
   font-weight: bold;
   animation: blink 1s infinite;
   margin-left: 2px;
+}
+
+/* Ocultar cursor intermitente en móvil */
+@media (max-width: 768px) {
+  .blinking-cursor {
+    display: none;
+  }
 }
 
 .animated-code {
@@ -1255,6 +1403,18 @@ body.light-mode .tech-item {
   scroll-snap-align: start;
 }
 
+/* En móvil, desactivar scroll snap y ajustar márgenes */
+@media (max-width: 768px) {
+  .scrollable-content {
+    scroll-snap-type: none;
+  }
+  
+  .scrollable-section {
+    scroll-snap-align: none;
+    padding: 0 1rem;
+  }
+}
+
 .scrollable-text {
   display: flex;
   flex-direction: column;
@@ -1429,14 +1589,14 @@ body.light-mode .service-features li {
 
 /* Estilos para versión minimalista de servicios */
 .services-minimal {
-  padding: 1.5rem;
+  padding: 1rem;
   color: #e5e7eb;
 }
 
 .services-minimal-title {
   font-size: 1.5rem;
   font-weight: 600;
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
   color: #f3f4f6;
   text-align: center;
 }
@@ -1444,14 +1604,14 @@ body.light-mode .service-features li {
 .services-minimal-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 1.5rem;
+  gap: 1rem;
 }
 
 .service-minimal-item {
   display: flex;
   align-items: flex-start;
-  gap: 1rem;
-  padding: 1rem;
+  gap: 0.75rem;
+  padding: 0.75rem;
   border-radius: 0.5rem;
   background-color: rgba(31, 41, 55, 0.5);
   border: 1px solid rgba(75, 85, 99, 0.3);
@@ -1718,14 +1878,14 @@ body.light-mode .service-modal-contact-btn:hover:not(:disabled) {
 
 /* Estilos para versión minimalista de proyectos */
 .projects-minimal {
-  padding: 2rem;
+  padding: 1rem;
   color: #e5e7eb;
 }
 
 .projects-minimal-title {
   font-size: 1.5rem;
   font-weight: 600;
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
   color: #f3f4f6;
   text-align: center;
 }
@@ -1734,15 +1894,15 @@ body.light-mode .service-modal-contact-btn:hover:not(:disabled) {
   background-color: rgba(31, 41, 55, 0.5);
   border: 1px solid rgba(75, 85, 99, 0.3);
   border-radius: 0.75rem;
-  padding: 1.5rem;
-  margin-bottom: 1rem;
+  padding: 1rem;
+  margin-bottom: 0.75rem;
 }
 
 .project-minimal-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1rem;
+  margin-bottom: 0.75rem;
 }
 
 .project-minimal-title {
@@ -1762,13 +1922,13 @@ body.light-mode .service-modal-contact-btn:hover:not(:disabled) {
   font-size: 0.875rem;
   color: #9ca3af;
   line-height: 1.5;
-  margin-bottom: 1rem;
+  margin-bottom: 0.75rem;
 }
 
 .project-minimal-tech {
   display: flex;
   gap: 0.5rem;
-  margin-bottom: 1rem;
+  margin-bottom: 0.75rem;
   flex-wrap: wrap;
 }
 
@@ -2523,5 +2683,20 @@ textarea:focus {
   100% {
     transform: translate(0.5px, 0.5px);
     opacity: 0;
+  }
+}
+
+@media (min-width: 769px) {
+  .mobile-notebook-container,
+  .mobile-notebook,
+  .mobile-notebook .laptop-screen,
+  .mobile-notebook .laptop-base {
+    display: none !important;
+    visibility: hidden !important;
+    height: 0 !important;
+    width: 0 !important;
+    overflow: hidden !important;
+    position: absolute !important;
+    pointer-events: none !important;
   }
 }

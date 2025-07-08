@@ -3,7 +3,7 @@ import { NeuralNetworkBackground } from './SimpleAnimations';
 import ProjectsShowcase from './ProjectsShowcase';
 import ServiceCards from './ServiceCards';
 import ContactForm from './ContactForm';
-import { profileSections, socialLinks } from '../data/profileData';
+import { profileSections, socialLinks, ProfileSection } from '../data/profileData';
 import { 
   ComputerDesktopIcon,
   CodeBracketIcon,
@@ -354,7 +354,7 @@ const PortfolioSimple: React.FC = () => {
     }
   };
 
-  const renderMobileNotebook = (section: any) => {
+  const renderMobileNotebook = (section: ProfileSection) => {
     if (!section.notebookContent) return null;
 
     const { type, code } = section.notebookContent;
@@ -626,8 +626,8 @@ const PortfolioSimple: React.FC = () => {
             </div>
             
             {/* Notebook móvil */}
-            <div className="notebook-container">
-              <div className="notebook active">
+            <div className="mobile-notebook-container">
+              <div className="mobile-notebook active">
                 <div className="laptop-base"></div>
                 <div className="laptop-screen">
                   <div className="screen-content">
