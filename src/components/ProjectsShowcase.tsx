@@ -1,12 +1,41 @@
 import React, { useState } from 'react';
 import { projects, projectCategories, Project } from '../data/projectsData';
 
+interface PersonalGame {
+  id: string;
+  title: string;
+  year: string;
+  description: string;
+  technologies: string[];
+  gameUrl: string;
+}
+
 interface ProjectsShowcaseProps {
   isVisible: boolean;
   minimal?: boolean;
+  onPlayGame?: (gameUrl: string, gameTitle: string) => void;
 }
 
-const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({ isVisible, minimal = false }) => {
+const personalGames: PersonalGame[] = [
+  {
+    id: 'mecano-game',
+    title: 'Mecano Game',
+    year: '2025',
+    description: 'Juego web interactivo desarrollado con JavaScript vanilla. Una experiencia de juego mecánico con física y animaciones fluidas.',
+    technologies: ['JavaScript', 'HTML5', 'CSS3'],
+    gameUrl: 'https://mecano-game.netlify.app'
+  },
+  {
+    id: 'run-ninja-run',
+    title: 'Run Ninja Run',
+    year: '2025',
+    description: 'Desarrollo integral de un juego hecho con Pixi.js y TypeScript, asistido con inteligencia artificial. Juego de plataformas con mecánicas dinámicas.',
+    technologies: ['Pixi.js', 'TypeScript', 'AI-Assisted'],
+    gameUrl: 'https://upit.com/@argentinardo/play/iS4sHgHhbG'
+  }
+];
+
+const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({ isVisible, minimal = false, onPlayGame }) => {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
 
@@ -25,31 +54,42 @@ const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({ isVisible, minimal 
     return (
       <div className="projects-minimal">
         <h2 className="projects-minimal-title">Proyectos Personales</h2>
-        <div className="project-minimal-card">
-          <div className="project-minimal-header">
-            <h3 className="project-minimal-title">Mecano Game</h3>
-            <span className="project-minimal-year">2025</span>
+        {personalGames.map((game) => (
+          <div key={game.id} className="project-minimal-card">
+            <div className="project-minimal-header">
+              <h3 className="project-minimal-title">{game.title}</h3>
+              <span className="project-minimal-year">{game.year}</span>
+            </div>
+            <p className="project-minimal-description">
+              {game.description}
+            </p>
+            <div className="project-minimal-tech">
+              {game.technologies.map((tech) => (
+                <span key={tech} className="tech-tag">{tech}</span>
+              ))}
+            </div>
+            <div className="project-minimal-links">
+              {onPlayGame ? (
+                <button 
+                  onClick={() => onPlayGame(game.gameUrl, game.title)}
+                  className="project-minimal-link"
+                  type="button"
+                >
+                  🎮 Jugar Demo
+                </button>
+              ) : (
+                <a 
+                  href={game.gameUrl} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="project-minimal-link"
+                >
+                  🌐 Jugar Demo
+                </a>
+              )}
+            </div>
           </div>
-          <p className="project-minimal-description">
-            Juego web interactivo desarrollado con JavaScript vanilla. 
-            Una experiencia de juego mecánico con física y animaciones fluidas.
-          </p>
-          <div className="project-minimal-tech">
-            <span className="tech-tag">JavaScript</span>
-            <span className="tech-tag">HTML5</span>
-            <span className="tech-tag">CSS3</span>
-          </div>
-          <div className="project-minimal-links">
-            <a 
-              href="https://mecano-game.netlify.app" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="project-minimal-link"
-            >
-              🌐 Jugar Demo
-            </a>
-          </div>
-        </div>
+        ))}
       </div>
     );
   }

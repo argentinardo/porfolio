@@ -51,10 +51,10 @@ console.log("¿Trabajamos juntos?");
     title: 'Experiencia Laboral',
     subtitle: 'Trayectoria Profesional',
     content: [
-      'Frontend Developer en empresas multinacionales',
+      'Frontend Developer en empresas tecnológicas consolidadas',
       'Especializado en React, Vue.js y arquitectura CSS',
       'Experiencia con metodologías ágiles y equipos multidisciplinarios',
-      'Trabajo con clientes de renombre como Aedas, Occident, Balearia',
+      'Colaboración con clientes de diversos sectores empresariales',
       'Desarrollo de aplicaciones web de alto impacto'
     ],
     notebookContent: {

@@ -1946,6 +1946,18 @@ body.light-mode .service-modal-contact-btn:hover:not(:disabled) {
   gap: 1rem;
 }
 
+/* Espaciado entre múltiples tarjetas de proyectos */
+.project-minimal-card + .project-minimal-card {
+  margin-top: 1.5rem;
+}
+
+/* En móvil, reducir el espaciado */
+@media (max-width: 768px) {
+  .project-minimal-card + .project-minimal-card {
+    margin-top: 1rem;
+  }
+}
+
 .project-minimal-link {
   color: #10b981;
   text-decoration: none;
@@ -1960,6 +1972,39 @@ body.light-mode .service-modal-contact-btn:hover:not(:disabled) {
 .project-minimal-link:hover {
   background-color: #10b981;
   color: #111827;
+}
+
+/* Estilos para el botón de jugar cuando es button */
+.project-minimal-link[type="button"] {
+  background: none;
+  border: 1px solid #10b981;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.project-minimal-link[type="button"]:hover {
+  background-color: #10b981;
+  color: #111827;
+}
+
+/* Estilos para la ventana del juego */
+.window-base.game {
+  height: 100%;
+  background-color: #111827;
+}
+
+.game-content {
+  height: calc(100% - 2.5rem);
+  width: 100%;
+  overflow: hidden;
+}
+
+.game-content iframe {
+  width: 1368px;
+  height: 913px;
+  border: none;
+  border-radius: 0 0 0.5rem 0.5rem;
+  transform: scale(0.5) translate(-50%, -50%);
 }
 
 /* Responsive para las cards de servicios */

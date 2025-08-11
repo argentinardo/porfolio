@@ -26,8 +26,8 @@ import {
   WindowIcon,
   ChevronDownIcon
 } from '@heroicons/react/24/outline';
-import '../styles/portfolio.css';
 import { SkipLink } from './SkipLink';
+import '../styles/portfolio.css';
 
 // Componente para texto animado con cursor parpadeante
 const AnimatedText: React.FC<{ text: string; speed?: number; className?: string }> = ({ 
@@ -211,8 +211,22 @@ const PortfolioSimple: React.FC = () => {
   const [isNotebookClosed, setIsNotebookClosed] = useState(false);
   const [isWindowMinimized, setIsWindowMinimized] = useState(false);
   const [isWindowMaximized, setIsWindowMaximized] = useState(false);
+  const [showGame, setShowGame] = useState(false);
+  const [currentGame, setCurrentGame] = useState<{url: string, title: string} | null>(null);
   const prevSectionRef = useRef<number>(0);
   const notebookContainerRef = useRef<HTMLDivElement>(null);
+
+  const openGameInNotebook = (gameUrl: string, gameTitle: string) => {
+    setCurrentGame({ url: gameUrl, title: gameTitle });
+    setShowGame(true);
+    setIsNotebookElevated(true);
+  };
+
+  const closeGame = () => {
+    setShowGame(false);
+    setCurrentGame(null);
+    setIsNotebookElevated(false);
+  };
 
   useEffect(() => {
     if (prevSectionRef.current !== activeSection) {
@@ -244,16 +258,25 @@ const PortfolioSimple: React.FC = () => {
       
       const sectionIndex = Math.round(progress * (profileSections.length - 1));
       setActiveSection(Math.max(0, Math.min(sectionIndex, profileSections.length - 1)));
+      
+      // Si la notebook está maximizada y se hace scroll, volver al estado normal
+      if (isWindowMaximized) {
+        setIsWindowMaximized(false);
+        // También desminimizar si estaba minimizada
+        if (isWindowMinimized) {
+          setIsWindowMinimized(false);
+        }
+      }
     };
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [isWindowMaximized, isWindowMinimized]);
 
   const currentSection = profileSections[displaySection];
   
   // Calcular si estamos en la sección de servicios para mover la notebook
-  const isServicesSection = profileSections[activeSection].id === 'services';
+  const isServicesSection = profileSections[activeSection]?.id === 'services';
   
   useEffect(() => {
     if (isServicesSection) {
@@ -265,9 +288,67 @@ const PortfolioSimple: React.FC = () => {
   }, [isServicesSection]);
 
   const renderWindowContent = () => {
-    if (!currentSection.notebookContent) return null;
+    if (!currentSection.notebookContent && !showGame) return null;
 
-    const { type, code } = currentSection.notebookContent;
+    // Si se está mostrando el juego, mostrar el iframe del juego
+    if (showGame) {
+      const gameWindowHeader = (
+        <div className="editor-header">
+          <div className="window-controls">
+            <button 
+              className="control-btn red" 
+              aria-label="Cerrar juego"
+              onClick={closeGame}
+            >
+              <XMarkIcon className="control-icon" />
+            </button>
+            <button 
+              className="control-btn yellow" 
+              aria-label="Minimizar ventana"
+              onClick={() => handleWindowControl('minimize')}
+            >
+              <ChevronDownIcon className="control-icon" />
+            </button>
+            <button 
+              className="control-btn green" 
+              aria-label="Maximizar ventana"
+              onClick={() => handleWindowControl('maximize')}
+            >
+              <WindowIcon className="control-icon" />
+            </button>
+          </div>
+          <span className="editor-filename">
+            {currentGame?.title || 'Juego'}
+          </span>
+        </div>
+      );
+
+      return (
+        <div className="window-base game">
+          {gameWindowHeader}
+          <div className="game-content">
+            <iframe
+              src={currentGame?.url || ''}
+              title={currentGame?.title || 'Juego'}
+              width="100%"
+              height="100%"
+              frameBorder="0"
+              allow="fullscreen; autoplay; camera; microphone; geolocation"
+              sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals allow-top-navigation allow-pointer-lock"
+              style={{
+                border: 'none',
+                borderRadius: '0 0 0.5rem 0.5rem'
+              }}
+            />
+          </div>
+        </div>
+      );
+    }
+
+    const notebookContent = currentSection.notebookContent;
+    if (!notebookContent) return null;
+    
+    const { type, code } = notebookContent;
 
     const windowHeader = (
       <div className="editor-header">
@@ -332,11 +413,11 @@ const PortfolioSimple: React.FC = () => {
           <div className="window-base browser">
             {windowHeader}
             <div className="browser-content">
-              {currentSection.id === 'projects' ? (
-                <ProjectsShowcase isVisible={true} minimal={true} />
-              ) : currentSection.id === 'services' ? (
+              {currentSection?.id === 'projects' ? (
+                <ProjectsShowcase isVisible={true} minimal={true} onPlayGame={openGameInNotebook} />
+              ) : currentSection?.id === 'services' ? (
                 <ServiceCards isVisible={true} minimal={true} />
-              ) : currentSection.id === 'contact' ? (
+              ) : currentSection?.id === 'contact' ? (
                 <ContactForm isVisible={true} />
               ) : (
               <div className="browser-project">
@@ -355,9 +436,67 @@ const PortfolioSimple: React.FC = () => {
   };
 
   const renderMobileNotebook = (section: ProfileSection) => {
-    if (!section.notebookContent) return null;
+    if (!section.notebookContent && !showGame) return null;
 
-    const { type, code } = section.notebookContent;
+    // Si se está mostrando el juego, mostrar el iframe del juego
+    if (showGame) {
+      const gameWindowHeader = (
+        <div className="editor-header">
+          <div className="window-controls">
+            <button 
+              className="control-btn red" 
+              aria-label="Cerrar juego"
+              onClick={closeGame}
+            >
+              <XMarkIcon className="control-icon" />
+            </button>
+            <button 
+              className="control-btn yellow" 
+              aria-label="Minimizar ventana"
+              disabled
+            >
+              <ChevronDownIcon className="control-icon" />
+            </button>
+            <button 
+              className="control-btn green" 
+              aria-label="Maximizar ventana"
+              disabled
+            >
+              <WindowIcon className="control-icon" />
+            </button>
+          </div>
+          <span className="editor-filename">
+            {currentGame?.title || 'Juego'}
+          </span>
+        </div>
+      );
+
+      return (
+        <div className="window-base game">
+          {gameWindowHeader}
+          <div className="game-content">
+            <iframe
+              src={currentGame?.url || ''}
+              title={currentGame?.title || 'Juego'}
+              width="100%"
+              height="100%"
+              frameBorder="0"
+              allow="fullscreen; autoplay; camera; microphone; geolocation"
+              sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals allow-top-navigation allow-pointer-lock"
+              style={{
+                border: 'none',
+                borderRadius: '0 0 0.5rem 0.5rem'
+              }}
+            />
+          </div>
+        </div>
+      );
+    }
+
+    const notebookContent = section.notebookContent;
+    if (!notebookContent) return null;
+    
+    const { type, code } = notebookContent;
 
     const windowHeader = (
       <div className="editor-header">
@@ -422,11 +561,11 @@ const PortfolioSimple: React.FC = () => {
           <div className="window-base browser">
             {windowHeader}
             <div className="browser-content">
-              {section.id === 'projects' ? (
-                <ProjectsShowcase isVisible={true} minimal={true} />
-              ) : section.id === 'services' ? (
+              {section?.id === 'projects' ? (
+                <ProjectsShowcase isVisible={true} minimal={true} onPlayGame={openGameInNotebook} />
+              ) : section?.id === 'services' ? (
                 <ServiceCards isVisible={true} minimal={true} />
-              ) : section.id === 'contact' ? (
+              ) : section?.id === 'contact' ? (
                 <ContactForm isVisible={true} />
               ) : (
               <div className="browser-project">
@@ -546,15 +685,15 @@ const PortfolioSimple: React.FC = () => {
           <section 
             key={index} 
             className="scrollable-section"
-            id={`section-${section.id}`}
-            aria-labelledby={`title-${section.id}`}
+            id={`section-${section?.id}`}
+            aria-labelledby={`title-${section?.id}`}
           >
             <div className="scrollable-text">
-              <p className="subtitle" id={`subtitle-${section.id}`}>{section.subtitle}</p>
-              <h1 className="main-title" id={`title-${section.id}`} data-text={section.title}>{section.title}</h1>
-              {section.id === 'services' ? (
+              <p className="subtitle" id={`subtitle-${section?.id}`}>{section.subtitle}</p>
+              <h1 className="main-title" id={`title-${section?.id}`} data-text={section.title}>{section.title}</h1>
+              {section?.id === 'services' ? (
                 <ServiceCards isVisible={true} />
-              ) : section.id === 'contact' ? (
+              ) : section?.id === 'contact' ? (
                 <>
                   <div className="content-list" role="list">
                     {section.content.map((item, itemIndex) => (
@@ -562,7 +701,7 @@ const PortfolioSimple: React.FC = () => {
                         key={itemIndex} 
                         text={item} 
                         index={itemIndex}
-                        sectionId={section.id}
+                        sectionId={section?.id}
                       />
                     ))}
                   </div>
@@ -595,7 +734,7 @@ const PortfolioSimple: React.FC = () => {
                         key={itemIndex} 
                         text={item} 
                         index={itemIndex}
-                        sectionId={section.id}
+                        sectionId={section?.id}
                       />
                     ))}
                   </div>
