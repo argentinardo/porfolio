@@ -17,7 +17,7 @@ export const profileSections: ProfileSection[] = [
   {
     id: 'intro',
     title: 'Desarrollador Frontend ',
-    subtitle: 'Damian Nardini',
+    subtitle: 'Nardo',
     content: [
       '10+ años de experiencia en desarrollo web frontend',
       'Especializado en React, TypeScript y tecnologías modernas',
