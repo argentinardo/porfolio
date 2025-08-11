@@ -1,0 +1,5 @@
+# Redirecciones para Netlify
+/*    /index.html   200
+
+# Redirección después del envío del formulario
+/form-success    /form-success.html   200 
