@@ -12,7 +12,7 @@ exports.handler = async function(event) {
 
   try {
     // Parsear el cuerpo de la petición
-    const { name, email, message } = JSON.parse(event.body);
+    const { name, email, subject, message } = JSON.parse(event.body);
 
     // Validar campos requeridos
     if (!name || !email || !message) {
@@ -34,6 +34,7 @@ exports.handler = async function(event) {
     // Preparar el contenido del email
     const emailContent = `
       <h2>Nuevo mensaje de contacto desde tu portfolio</h2>
+      <p><strong>Asunto:</strong> ${subject || 'Consulta desde la web'}</p>
       <p><strong>Nombre:</strong> ${name}</p>
       <p><strong>Email:</strong> ${email}</p>
       <p><strong>Mensaje:</strong></p>
@@ -52,7 +53,7 @@ exports.handler = async function(event) {
       body: JSON.stringify({
         from: 'Portfolio <noreply@damiannardini.com>',
         to: [TO_EMAIL],
-        subject: `Nuevo mensaje de ${name} desde tu portfolio`,
+        subject: `${subject || 'Consulta desde la web'} — ${name}`,
         html: emailContent,
         reply_to: email
       })
