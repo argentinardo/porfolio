@@ -125,22 +125,23 @@ const ContactForm: React.FC<ContactFormProps> = ({ isVisible }) => {
     setSubmitStatus('idle');
 
     try {
-      const response = await fetch('/api/send-email.php', {
+      // Enviar directamente a Formspree (sin PHP)
+      const response = await fetch('https://formspree.io/f/xayzqkpn', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+          'Content-Type': 'application/x-www-form-urlencoded',
         },
         body: new URLSearchParams({
           name: formData.name,
           email: formData.email,
           subject: formData.subject || 'Consulta desde la web',
-          message: formData.message
+          message: formData.message,
+          _replyto: formData.email,
+          _subject: 'Nuevo mensaje de contacto - ' + formData.name
         }).toString()
       });
 
-      const result = await response.json().catch(() => null);
-      
-      if (response.ok && result && result.success) {
+      if (response.ok) {
         setSubmitStatus('success');
         setFormData({
           name: '',
