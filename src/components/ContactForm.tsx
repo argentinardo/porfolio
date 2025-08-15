@@ -154,8 +154,6 @@ const ContactForm: React.FC<ContactFormProps> = ({ isVisible }) => {
       }
       
       // Si falla, intentar con Formspree como respaldo
-      console.log('PHP falló, intentando con Formspree...');
-      
       const formspreeResponse = await fetch('/api/send-email-formspree.php', {
         method: 'POST',
         headers: {
@@ -182,12 +180,10 @@ const ContactForm: React.FC<ContactFormProps> = ({ isVisible }) => {
         setErrors({});
       } else {
         setSubmitStatus('error');
-        console.error('Ambos métodos fallaron:', result, formspreeResult);
       }
       
     } catch (error) {
       setSubmitStatus('error');
-      console.error('Error en envío:', error);
     } finally {
       setIsSubmitting(false);
     }
