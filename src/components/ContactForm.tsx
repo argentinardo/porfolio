@@ -126,7 +126,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ isVisible }) => {
 
     try {
       // Enviar directamente a Formspree (sin PHP)
-      const response = await fetch('https://formspree.io/f/xayzqkpn', {
+      const response = await fetch('https://formspree.io/f/mkgzeqbw', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',

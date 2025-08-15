@@ -56,7 +56,7 @@ if (!empty($errors)) {
 
 // Configuración Formspree
 // IMPORTANTE: Cambiar por tu endpoint de Formspree
-$formspreeEndpoint = 'https://formspree.io/f/xayzqkpn'; // Cambiar por tu endpoint real
+$formspreeEndpoint = 'https://formspree.io/f/mkgzeqbw'; // Cambiar por tu endpoint real
 
 $emailData = [
   'name' => $name,
