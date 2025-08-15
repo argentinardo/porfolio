@@ -168,9 +168,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ isVisible }) => {
         aria-label="Formulario de contacto" 
         noValidate
       >
-        <div className="form-header">
-          <p>Envíame un mensaje</p>
-        </div>
+
 
         <div className="form-fields">
           <div className="form-row">
@@ -259,19 +257,19 @@ const ContactForm: React.FC<ContactFormProps> = ({ isVisible }) => {
             {isSubmitting ? 'Enviando...' : 'Enviar'}
           </button>
           {isSubmitting && <span id="submitting-status" className="sr-only">Enviando formulario...</span>}
+          
+          {submitStatus === 'success' && (
+            <div className="form-message success" role="alert" aria-live="polite">
+              ✓ Mensaje enviado
+            </div>
+          )}
+
+          {submitStatus === 'error' && (
+            <div className="form-message error" role="alert" aria-live="polite">
+              ✗ Error al enviar
+            </div>
+          )}
         </div>
-
-        {submitStatus === 'success' && (
-          <div className="form-message success" role="alert" aria-live="polite">
-            ✓ Mensaje enviado
-          </div>
-        )}
-
-        {submitStatus === 'error' && (
-          <div className="form-message error" role="alert" aria-live="polite">
-            ✗ Error al enviar
-          </div>
-        )}
       </form>
     </div>
   );
