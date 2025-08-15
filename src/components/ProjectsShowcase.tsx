@@ -55,7 +55,7 @@ const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({ isVisible, minimal 
       <div className="projects-minimal">
         <h2 className="projects-minimal-title">Proyectos Personales</h2>
         {personalGames.map((game) => (
-          <div key={game.id} className="project-minimal-card">
+          <div key={game.id} className="project-minimal-card" data-id={game.id}>
             <div className="project-minimal-header">
               <h3 className="project-minimal-title">{game.title}</h3>
               <span className="project-minimal-year">{game.year}</span>

@@ -7,6 +7,7 @@ interface ContactFormProps {
 interface FormErrors {
   name?: string;
   email?: string;
+  subject?: string;
   message?: string;
 }
 
@@ -14,8 +15,10 @@ const ContactForm: React.FC<ContactFormProps> = ({ isVisible }) => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
+    subject: 'Consulta desde la web',
     message: ''
   });
+  // Eliminado breadcrumb/origen para evitar redundancia
   
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -23,10 +26,46 @@ const ContactForm: React.FC<ContactFormProps> = ({ isVisible }) => {
   const nameInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    if (isVisible && nameInputRef.current) {
-      setTimeout(() => {
-        nameInputRef.current?.focus();
-      }, 100);
+    if (isVisible) {
+      // Prefill desde localStorage si existe
+      try {
+        const raw = localStorage.getItem('contactPrefill');
+        if (raw) {
+          const data = JSON.parse(raw) as Partial<typeof formData>;
+          setFormData(prev => ({
+            ...prev,
+            message: '',
+            subject: data.subject ? String(data.subject) : (prev.subject || 'Consulta desde la web')
+          }));
+          // Limpiar el prefill para no volver a aplicarlo
+          localStorage.removeItem('contactPrefill');
+        }
+      } catch {}
+
+      // Prefill desde parámetros de URL (?subject=...&message=...)
+      try {
+        const params = new URLSearchParams(window.location.search);
+        const subjectParam = params.get('subject');
+        const messageParam = params.get('message');
+        if (subjectParam || messageParam) {
+          setFormData(prev => ({
+            ...prev,
+            subject: subjectParam ? subjectParam : (prev.subject || 'Consulta desde la web'),
+            message: ''
+          }));
+          // Limpiar los parámetros de la URL para no dejarlos visibles
+          try {
+            const cleanUrl = window.location.pathname + window.location.hash;
+            window.history.replaceState({}, '', cleanUrl);
+          } catch {}
+        }
+      } catch {}
+
+      if (nameInputRef.current) {
+        setTimeout(() => {
+          nameInputRef.current?.focus();
+        }, 100);
+      }
     }
   }, [isVisible]);
 
@@ -86,30 +125,32 @@ const ContactForm: React.FC<ContactFormProps> = ({ isVisible }) => {
     setSubmitStatus('idle');
 
     try {
-      // Enviar email usando Resend API
-      const response = await fetch('/api/send-email', {
+      // Enviar email hacia PHP en hosting Apache
+      const response = await fetch('/api/send-email.php', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
         },
-        body: JSON.stringify({
+        body: new URLSearchParams({
           name: formData.name,
           email: formData.email,
+          subject: formData.subject || 'Consulta desde la web',
           message: formData.message
-        })
+        }).toString()
       });
 
-      if (response.ok) {
+      const result = await response.json().catch(() => null);
+      if (response.ok && result && result.success) {
         setSubmitStatus('success');
         setFormData({
           name: '',
           email: '',
+          subject: 'Consulta desde la web',
           message: ''
         });
         setErrors({});
       } else {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Error al enviar el formulario');
+        setSubmitStatus('error');
       }
       
     } catch (error) {
@@ -169,6 +210,24 @@ const ContactForm: React.FC<ContactFormProps> = ({ isVisible }) => {
                 {errors.email || '\u00A0'}
               </span>
             </div>
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="subject">Asunto:</label>
+            <input
+              type="text"
+              id="subject"
+              name="subject"
+              value={formData.subject}
+              onChange={handleInputChange}
+              className={errors.subject ? 'error' : ''}
+              placeholder="Consulta desde la web"
+              aria-describedby={errors.subject ? 'subject-error' : undefined}
+              aria-invalid={!!errors.subject}
+            />
+            <span className={`error-message ${errors.subject ? 'has-error' : ''}`} id="subject-error" role="alert">
+              {errors.subject || '\u00A0'}
+            </span>
           </div>
 
           <div className="form-group">

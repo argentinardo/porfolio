@@ -1,11 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { 
   CodeBracketIcon, 
-  PaintBrushIcon, 
   BoltIcon, 
   LightBulbIcon,
   CpuChipIcon,
-  XMarkIcon
+  XMarkIcon,
+  WrenchScrewdriverIcon
 } from '@heroicons/react/24/outline';
 
 interface ServiceCard {
@@ -13,7 +13,6 @@ interface ServiceCard {
   description: string;
   icon: React.ElementType;
   features: string[];
-  price: string;
 }
 
 interface ServiceCardsProps {
@@ -27,7 +26,51 @@ const ServiceCards: React.FC<ServiceCardsProps> = ({ isVisible, minimal = false 
 
   const services: ServiceCard[] = [
     {
-      title: "Desarrollo Frontend",
+      title: "n8n",
+      description: "Orquestación de procesos y flujos sin fricción con n8n",
+      icon: BoltIcon,
+      features: [
+        "Workflows automatizados con n8n",
+        "Integraciones con APIs y CRMs",
+        "Conectores personalizados",
+        "Monitoreo, logs y alertas"
+      ]
+    },
+    {
+      title: "LLM local",
+      description: "Instalación y configuración de modelos LLM en tu infraestructura",
+      icon: CpuChipIcon,
+      features: [
+        "Ollama / llama.cpp / LM Studio",
+        "RAG con bases de datos locales",
+        "Privacidad y seguridad on‑premise",
+        "Afinado y evaluación de modelos"
+      ]
+    },
+    {
+      title: "Mantenimiento IA",
+      description: "Planes de mantenimiento y soporte para flujos y modelos de IA",
+      icon: WrenchScrewdriverIcon,
+      features: [
+        "Soporte mensual y SLA",
+        "Actualización de flujos y dependencias",
+        "Monitorización y optimización continua",
+        "Backups y recuperación"
+      ]
+    },
+    {
+      title: "Asesoría IA",
+      description: "Estrategia, auditoría y capacitación en IA aplicada",
+      icon: LightBulbIcon,
+      features: [
+        "Identificación de casos de uso",
+        "ROI y roadmap de adopción",
+        "Mejores prácticas de prompts",
+        "Workshops a medida"
+      ]
+    },
+    {
+      title: "Frontend",
       description: "Aplicaciones web modernas con React y TypeScript",
       icon: CodeBracketIcon,
       features: [
@@ -35,56 +78,7 @@ const ServiceCards: React.FC<ServiceCardsProps> = ({ isVisible, minimal = false 
         "TypeScript para código robusto",
         "Optimización de performance",
         "Testing y debugging"
-      ],
-      price: "Desde $50/hora"
-    },
-    {
-      title: "Diseño UI/UX",
-      description: "Interfaces intuitivas y experiencias memorables",
-      icon: PaintBrushIcon,
-      features: [
-        "Diseño responsivo",
-        "Prototipado interactivo",
-        "Accesibilidad web",
-        "Animaciones fluidas"
-      ],
-      price: "Desde $45/hora"
-    },
-    {
-      title: "Optimización Web",
-      description: "Mejora de velocidad y posicionamiento SEO",
-      icon: BoltIcon,
-      features: [
-        "Optimización de Core Web Vitals",
-        "SEO técnico avanzado",
-        "Análisis de performance",
-        "Monitoreo continuo"
-      ],
-      price: "Desde $40/hora"
-    },
-    {
-      title: "Inteligencia Artificial",
-      description: "Implementación de IA en entornos locales",
-      icon: CpuChipIcon,
-      features: [
-        "Integración de modelos LLM",
-        "APIs de inteligencia artificial",
-        "Automatización con IA",
-        "Despliegue local seguro"
-      ],
-      price: "Desde $65/hora"
-    },
-    {
-      title: "Consultoría Técnica",
-      description: "Asesoramiento experto para tu proyecto",
-      icon: LightBulbIcon,
-      features: [
-        "Arquitectura frontend",
-        "Revisión de código",
-        "Mentoring de equipos",
-        "Migración de tecnologías"
-      ],
-      price: "Desde $60/hora"
+      ]
     }
   ];
 
@@ -116,13 +110,30 @@ const ServiceCards: React.FC<ServiceCardsProps> = ({ isVisible, minimal = false 
               <div 
                 key={index} 
                 className="service-minimal-item"
-                onClick={() => setSelectedService(service)}
-                style={{ cursor: 'pointer' }}
+                style={{ cursor: 'default' }}
               >
                 <IconComponent className="service-minimal-icon" />
                 <div className="service-minimal-content">
                   <h3 className="service-minimal-title">{service.title}</h3>
                   <p className="service-minimal-description">{service.description}</p>
+                  <div>
+                    <button 
+                      className="service-consult-btn"
+                      onClick={() => {
+                        try {
+                          localStorage.setItem('contactPrefill', JSON.stringify({
+                            subject: `${service.title}`
+                          }));
+                        } catch {}
+                        const contactSection = document.getElementById('section-contact');
+                        if (contactSection) {
+                          contactSection.scrollIntoView({ behavior: 'smooth' });
+                        }
+                      }}
+                    >
+                      Consultar
+                    </button>
+                  </div>
                 </div>
               </div>
             );
@@ -163,7 +174,12 @@ const ServiceCards: React.FC<ServiceCardsProps> = ({ isVisible, minimal = false 
                     className="service-modal-contact-btn"
                     onClick={() => {
                       setSelectedService(null);
-                      // Scroll a la sección de contacto
+                      // Prefill y scroll a la sección de contacto
+                      try {
+                        localStorage.setItem('contactPrefill', JSON.stringify({
+                          subject: `${selectedService.title}`
+                        }));
+                      } catch {}
                       const contactSection = document.getElementById('section-contact');
                       if (contactSection) {
                         contactSection.scrollIntoView({ behavior: 'smooth' });
