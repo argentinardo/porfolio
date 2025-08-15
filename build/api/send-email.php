@@ -1,26 +1,24 @@
 <?php
-// Enviar correo desde formulario de contacto usando PHP (hosting Apache/Linux)
-// Responde JSON sin recargar la página
+// Envío de emails usando Formspree - servicio gratuito y confiable
+// No requiere configuración de servidor de email
 
 header('Content-Type: application/json; charset=UTF-8');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: POST, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type');
 
-// Manejar preflight OPTIONS
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
   http_response_code(200);
   exit;
 }
 
-// Permitir solo POST
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
   http_response_code(405);
   echo json_encode(['success' => false, 'message' => 'Método no permitido']);
   exit;
 }
 
-// Obtener datos tanto de JSON como de application/x-www-form-urlencoded
+// Obtener datos
 $contentType = isset($_SERVER['CONTENT_TYPE']) ? strtolower($_SERVER['CONTENT_TYPE']) : '';
 
 if (strpos($contentType, 'application/json') !== false) {
@@ -44,7 +42,7 @@ $email = trim(filter_var($email, FILTER_SANITIZE_EMAIL));
 $subject = trim($subject);
 $message = trim($message);
 
-// Validar campos mínimos
+// Validar
 $errors = [];
 if ($name === '' || mb_strlen($name) < 2) { $errors['name'] = 'Nombre inválido'; }
 if (!filter_var($email, FILTER_VALIDATE_EMAIL)) { $errors['email'] = 'Email inválido'; }
@@ -56,80 +54,56 @@ if (!empty($errors)) {
   exit;
 }
 
-// Configuración de destino
-$to = 'damiannardini@gmail.com';
+// Configuración Formspree
+// IMPORTANTE: Cambiar por tu endpoint de Formspree
+$formspreeEndpoint = 'https://formspree.io/f/xayzqkpn'; // Cambiar por tu endpoint real
 
-// Construir asunto y cuerpo
-$subjectPrefix = 'Contacto Web';
-$finalSubject = ($subject !== '' ? "$subjectPrefix: $subject" : $subjectPrefix);
+$emailData = [
+  'name' => $name,
+  'email' => $email,
+  'subject' => $subject ?: 'Consulta desde la web',
+  'message' => $message,
+  '_replyto' => $email,
+  '_subject' => 'Nuevo mensaje de contacto - ' . $name
+];
 
-$bodyText = "Nombre: $name\n" .
-            "Email: $email\n\n" .
-            "Mensaje:\n$message\n\n" .
-            "---\n" .
-            "Enviado desde: " . $_SERVER['HTTP_HOST'] . "\n" .
-            "Fecha: " . date('Y-m-d H:i:s') . "\n" .
-            "IP: " . $_SERVER['REMOTE_ADDR'] . "\n";
+// Enviar a Formspree
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, $formspreeEndpoint);
+curl_setopt($ch, CURLOPT_POST, true);
+curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($emailData));
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+  'Content-Type: application/x-www-form-urlencoded',
+  'Accept: application/json'
+]);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 
-// Cabeceras mejoradas
-$domain = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'localhost';
-$from = 'no-reply@' . $domain;
-$headers = [];
-$headers[] = 'From: ' . $from;
-$headers[] = 'Reply-To: ' . $email;
-$headers[] = 'MIME-Version: 1.0';
-$headers[] = 'Content-Type: text/plain; charset=UTF-8';
-$headers[] = 'X-Mailer: PHP/' . phpversion();
-
-$headersStr = implode("\r\n", $headers);
+$response = curl_exec($ch);
+$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+$error = curl_error($ch);
+curl_close($ch);
 
 // Log para debug
 $logFile = __DIR__ . '/email_log.txt';
-$logEntry = date('Y-m-d H:i:s') . " - Intentando enviar email a: $to\n";
+$logEntry = date('Y-m-d H:i:s') . " - HTTP Code: $httpCode, Response: $response, Error: $error\n";
 file_put_contents($logFile, $logEntry, FILE_APPEND | LOCK_EX);
 
-// Intentar enviar con mail() de PHP
-$sent = @mail($to, '=?UTF-8?B?' . base64_encode($finalSubject) . '?=', $bodyText, $headersStr);
-
-if ($sent) {
-  $logEntry = date('Y-m-d H:i:s') . " - Email enviado exitosamente\n";
-  file_put_contents($logFile, $logEntry, FILE_APPEND | LOCK_EX);
+if ($httpCode === 200 || $httpCode === 302) {
   echo json_encode(['success' => true, 'message' => '¡Mensaje enviado correctamente!']);
 } else {
-  // Si mail() falla, intentar con alternativa
-  $logEntry = date('Y-m-d H:i:s') . " - mail() falló, intentando alternativa\n";
-  file_put_contents($logFile, $logEntry, FILE_APPEND | LOCK_EX);
-  
-  // Intentar con headers adicionales
-  $headers[] = 'Return-Path: ' . $from;
-  $headersStr = implode("\r\n", $headers);
-  
-  $sent = @mail($to, $finalSubject, $bodyText, $headersStr);
-  
-  if ($sent) {
-    $logEntry = date('Y-m-d H:i:s') . " - Email enviado con headers adicionales\n";
-    file_put_contents($logFile, $logEntry, FILE_APPEND | LOCK_EX);
-    echo json_encode(['success' => true, 'message' => '¡Mensaje enviado correctamente!']);
-  } else {
-    $logEntry = date('Y-m-d H:i:s') . " - Fallo total en envío de email\n";
-    file_put_contents($logFile, $logEntry, FILE_APPEND | LOCK_EX);
-    
-    http_response_code(500);
-    echo json_encode([
-      'success' => false, 
-      'message' => 'No se pudo enviar el email. El servidor puede no tener configurado el envío de emails.',
-      'debug' => [
-        'to' => $to,
-        'subject' => $finalSubject,
-        'headers' => $headersStr,
-        'server' => $_SERVER['SERVER_SOFTWARE'] ?? 'Unknown'
-      ]
-    ]);
-  }
+  http_response_code(500);
+  echo json_encode([
+    'success' => false, 
+    'message' => 'No se pudo enviar el email. Intenta más tarde.',
+    'debug' => [
+      'http_code' => $httpCode,
+      'response' => $response,
+      'error' => $error
+    ]
+  ]);
 }
 
 exit;
 ?>
-
-
-

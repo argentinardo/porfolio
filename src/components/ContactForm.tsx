@@ -125,7 +125,6 @@ const ContactForm: React.FC<ContactFormProps> = ({ isVisible }) => {
     setSubmitStatus('idle');
 
     try {
-      // Intentar primero con PHP normal
       const response = await fetch('/api/send-email.php', {
         method: 'POST',
         headers: {
@@ -142,34 +141,6 @@ const ContactForm: React.FC<ContactFormProps> = ({ isVisible }) => {
       const result = await response.json().catch(() => null);
       
       if (response.ok && result && result.success) {
-        setSubmitStatus('success');
-        setFormData({
-          name: '',
-          email: '',
-          subject: 'Consulta desde la web',
-          message: ''
-        });
-        setErrors({});
-        return;
-      }
-      
-      // Si falla, intentar con Formspree como respaldo
-      const formspreeResponse = await fetch('/api/send-email-formspree.php', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
-        },
-        body: new URLSearchParams({
-          name: formData.name,
-          email: formData.email,
-          subject: formData.subject || 'Consulta desde la web',
-          message: formData.message
-        }).toString()
-      });
-
-      const formspreeResult = await formspreeResponse.json().catch(() => null);
-      
-      if (formspreeResponse.ok && formspreeResult && formspreeResult.success) {
         setSubmitStatus('success');
         setFormData({
           name: '',
