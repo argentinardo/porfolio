@@ -1,14 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useForm, ValidationError } from '@formspree/react';
 
 interface ContactFormProps {
   isVisible: boolean;
-}
-
-interface FormErrors {
-  name?: string;
-  email?: string;
-  subject?: string;
-  message?: string;
 }
 
 const ContactForm: React.FC<ContactFormProps> = ({ isVisible }) => {
@@ -18,12 +12,12 @@ const ContactForm: React.FC<ContactFormProps> = ({ isVisible }) => {
     subject: 'Consulta desde la web',
     message: ''
   });
-  // Eliminado breadcrumb/origen para evitar redundancia
   
-  const [errors, setErrors] = useState<FormErrors>({});
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  const [errors, setErrors] = useState<{[key: string]: string}>({});
   const nameInputRef = useRef<HTMLInputElement>(null);
+
+  // Usar el hook de Formspree
+  const [state, handleSubmit] = useForm("mkgzeqbw");
 
   useEffect(() => {
     if (isVisible) {
@@ -70,7 +64,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ isVisible }) => {
   }, [isVisible]);
 
   const validateForm = (): boolean => {
-    const newErrors: FormErrors = {};
+    const newErrors: {[key: string]: string} = {};
 
     // Validar nombre
     if (!formData.name.trim()) {
@@ -106,71 +100,51 @@ const ContactForm: React.FC<ContactFormProps> = ({ isVisible }) => {
     }));
     
     // Limpiar error del campo cuando el usuario empiece a escribir
-    if (errors[name as keyof FormErrors]) {
+    if (errors[name]) {
       setErrors(prev => ({
         ...prev,
-        [name]: undefined
+        [name]: ''
       }));
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!validateForm()) {
       return;
     }
 
-    setIsSubmitting(true);
-    setSubmitStatus('idle');
+    // Crear un objeto con los datos del formulario para Formspree
+    const formDataObj = new FormData();
+    formDataObj.append('name', formData.name);
+    formDataObj.append('email', formData.email);
+    formDataObj.append('subject', formData.subject);
+    formDataObj.append('message', formData.message);
 
-    try {
-      // Enviar directamente a Formspree (sin PHP)
-      const response = await fetch('https://formspree.io/f/mkgzeqbw', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: new URLSearchParams({
-          name: formData.name,
-          email: formData.email,
-          subject: formData.subject || 'Consulta desde la web',
-          message: formData.message,
-          _replyto: formData.email,
-          _subject: 'Nuevo mensaje de contacto - ' + formData.name
-        }).toString()
+    // Usar el handleSubmit de Formspree
+    await handleSubmit(formDataObj);
+
+    // Si el envío fue exitoso, limpiar el formulario
+    if (state.succeeded) {
+      setFormData({
+        name: '',
+        email: '',
+        subject: 'Consulta desde la web',
+        message: ''
       });
-
-      if (response.ok) {
-        setSubmitStatus('success');
-        setFormData({
-          name: '',
-          email: '',
-          subject: 'Consulta desde la web',
-          message: ''
-        });
-        setErrors({});
-      } else {
-        setSubmitStatus('error');
-      }
-      
-    } catch (error) {
-      setSubmitStatus('error');
-    } finally {
-      setIsSubmitting(false);
+      setErrors({});
     }
   };
 
   return (
     <div className={`contact-form-container ${isVisible ? 'visible' : ''}`}>
       <form 
-        onSubmit={handleSubmit} 
+        onSubmit={handleFormSubmit} 
         className="contact-form" 
         aria-label="Formulario de contacto" 
         noValidate
       >
-
-
         <div className="form-fields">
           <div className="form-row">
             <div className="form-group">
@@ -190,6 +164,12 @@ const ContactForm: React.FC<ContactFormProps> = ({ isVisible }) => {
               <span className={`error-message ${errors.name ? 'has-error' : ''}`} id="name-error" role="alert">
                 {errors.name || '\u00A0'}
               </span>
+              <ValidationError 
+                prefix="Nombre" 
+                field="name"
+                errors={state.errors}
+                className="error-message has-error"
+              />
             </div>
 
             <div className="form-group">
@@ -208,6 +188,12 @@ const ContactForm: React.FC<ContactFormProps> = ({ isVisible }) => {
               <span className={`error-message ${errors.email ? 'has-error' : ''}`} id="email-error" role="alert">
                 {errors.email || '\u00A0'}
               </span>
+              <ValidationError 
+                prefix="Email" 
+                field="email"
+                errors={state.errors}
+                className="error-message has-error"
+              />
             </div>
           </div>
 
@@ -220,13 +206,19 @@ const ContactForm: React.FC<ContactFormProps> = ({ isVisible }) => {
               value={formData.subject}
               onChange={handleInputChange}
               className={errors.subject ? 'error' : ''}
-              placeholder="Consulta desde la web"
+              placeholder="Asunto del mensaje"
               aria-describedby={errors.subject ? 'subject-error' : undefined}
               aria-invalid={!!errors.subject}
             />
             <span className={`error-message ${errors.subject ? 'has-error' : ''}`} id="subject-error" role="alert">
               {errors.subject || '\u00A0'}
             </span>
+            <ValidationError 
+              prefix="Asunto" 
+              field="subject"
+              errors={state.errors}
+              className="error-message has-error"
+            />
           </div>
 
           <div className="form-group">
@@ -237,37 +229,43 @@ const ContactForm: React.FC<ContactFormProps> = ({ isVisible }) => {
               value={formData.message}
               onChange={handleInputChange}
               className={errors.message ? 'error' : ''}
-              rows={4}
               placeholder="Cuéntame sobre tu proyecto..."
+              rows={5}
               aria-describedby={errors.message ? 'message-error' : undefined}
               aria-invalid={!!errors.message}
             />
             <span className={`error-message ${errors.message ? 'has-error' : ''}`} id="message-error" role="alert">
               {errors.message || '\u00A0'}
             </span>
+            <ValidationError 
+              prefix="Mensaje" 
+              field="message"
+              errors={state.errors}
+              className="error-message has-error"
+            />
           </div>
         </div>
 
         <div className="form-actions">
           <button
             type="submit"
-            className={`submit-btn ${isSubmitting ? 'submitting' : ''}`}
-            disabled={isSubmitting}
-            aria-describedby={isSubmitting ? 'submitting-status' : undefined}
+            className={`submit-btn ${state.submitting ? 'submitting' : ''}`}
+            disabled={state.submitting}
+            aria-describedby={state.submitting ? 'submitting-status' : undefined}
           >
-            {isSubmitting ? 'Enviando...' : 'Enviar'}
+            {state.submitting ? 'Enviando...' : 'Enviar'}
           </button>
-          {isSubmitting && <span id="submitting-status" className="sr-only">Enviando formulario...</span>}
+          {state.submitting && <span id="submitting-status" className="sr-only">Enviando formulario...</span>}
           
-          {submitStatus === 'success' && (
+          {state.succeeded && (
             <div className="form-message success" role="alert" aria-live="polite">
-              ✓ Mensaje enviado
+              ✓ Mensaje enviado correctamente
             </div>
           )}
 
-          {submitStatus === 'error' && (
+          {state.errors && Array.isArray(state.errors) && state.errors.length > 0 && (
             <div className="form-message error" role="alert" aria-live="polite">
-              ✗ Error al enviar
+              ✗ Error al enviar el mensaje
             </div>
           )}
         </div>
