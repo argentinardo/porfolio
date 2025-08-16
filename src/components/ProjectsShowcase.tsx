@@ -19,8 +19,16 @@ const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({ isVisible, minimal 
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
 
   // Obtener proyectos traducidos
-  const translatedProjects = t('projects.items', { returnObjects: true }) as any[];
-  const translatedButtons = t('projects.buttons', { returnObjects: true }) as any;
+  const translatedProjects = t('projects.items', { returnObjects: true }) as Array<{
+    title: string;
+    year: string;
+    description: string;
+    technologies: string[];
+    liveUrl: string;
+  }>;
+  const translatedButtons = t('projects.buttons', { returnObjects: true }) as {
+    playDemo: string;
+  };
 
   const filteredProjects = selectedCategory === 'all' 
     ? projects 

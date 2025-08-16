@@ -27,7 +27,12 @@ const ServiceCards: React.FC<ServiceCardsProps> = ({ isVisible, minimal = false 
   const [selectedService, setSelectedService] = useState<ServiceCard | null>(null);
   const modalRef = useRef<HTMLDivElement>(null);
 
-  const servicesData = t('services.items', { returnObjects: true }) as any[];
+  const servicesData = t('services.items', { returnObjects: true }) as Array<{
+    title: string;
+    description: string;
+    features: string[];
+    icon: string;
+  }>;
   
   const iconMap: { [key: string]: React.ElementType } = {
     CogIcon,

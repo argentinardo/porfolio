@@ -63,7 +63,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ isVisible }) => {
         }, 100);
       }
     }
-  }, [isVisible]);
+  }, [isVisible, t]);
 
   const validateForm = (): boolean => {
     const newErrors: {[key: string]: string} = {};

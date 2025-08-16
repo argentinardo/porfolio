@@ -121,7 +121,7 @@ const ListItemWithIcon: React.FC<{ text: string; index: number; sectionId: strin
 
 
 const PortfolioSimple: React.FC = () => {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const [activeSection, setActiveSection] = useState(0);
   const [displaySection, setDisplaySection] = useState(0);
   const [isNotebookElevated, setIsNotebookElevated] = useState(false);
@@ -197,7 +197,7 @@ const PortfolioSimple: React.FC = () => {
       }
     }
   ];
-  }, [t, i18n.language]);
+  }, [t]);
 
 
 
@@ -244,12 +244,9 @@ const PortfolioSimple: React.FC = () => {
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [isWindowMaximized, isWindowMinimized]);
+  }, [isWindowMaximized, isWindowMinimized, profileSections.length]);
 
   const currentSection = profileSections[displaySection];
-  console.log('displaySection:', displaySection);
-  console.log('activeSection:', activeSection);
-  console.log('currentSection:', currentSection);
   
   // Calcular si estamos en la sección de servicios para mover la notebook
   const isServicesSection = profileSections[activeSection]?.id === 'services';
@@ -264,8 +261,6 @@ const PortfolioSimple: React.FC = () => {
   }, [isServicesSection]);
 
   const renderWindowContent = () => {
-    console.log('renderWindowContent called, currentSection:', currentSection);
-    console.log('currentSection.id:', currentSection?.id);
     
     // Determinar el título de la ventana
     let windowTitle = currentSection.title;
@@ -305,7 +300,6 @@ const PortfolioSimple: React.FC = () => {
     );
 
     // Renderizar contenido específico para cada sección dentro del notebook
-    console.log('Checking section:', currentSection.id);
     if (currentSection.id === 'services') {
       return (
         <div className="window-base services">
@@ -318,7 +312,6 @@ const PortfolioSimple: React.FC = () => {
     }
 
     if (currentSection.id === 'projects') {
-      console.log('Rendering projects section in notebook');
       
       // Si hay un juego activo, mostrar el iframe
       if (activeGame) {
@@ -519,7 +512,7 @@ const PortfolioSimple: React.FC = () => {
         mobileMarkersContainer.appendChild(marker);
       });
     }
-  }, [activeSection]);
+  }, [activeSection, profileSections, scrollToSection]);
 
   return (
     <div className="portfolio-container" role="main" aria-label="Portfolio de Damian Nardini">
