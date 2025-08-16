@@ -1569,7 +1569,8 @@ body.light-mode .tech-item {
   }
   
   .language-selector {
-    right: 4rem;
+    top: 4.5rem;
+    right: 1.25rem;
     padding: 0.375rem;
   }
   
@@ -2748,9 +2749,10 @@ body.light-mode .submit-btn:hover:not(:disabled) {
 /* Selector de idioma */
 .language-selector {
   position: fixed;
-  top: 1rem;
-  right: 5rem;
+  top: 4.5rem;
+  right: 1.25rem;
   display: flex;
+  flex-direction: column;
   gap: 0.25rem;
   z-index: 1000;
   background: rgba(17, 24, 39, 0.8);
