@@ -1,0 +1,175 @@
+{
+  "navigation": {
+    "intro": "Introducció",
+    "services": "Serveis",
+    "projects": "Projectes",
+    "experience": "Experiència",
+    "contact": "Contacte"
+  },
+  "intro": {
+    "title": "Frontend developer",
+    "subtitle": "Damián Nardini",
+    "content": [
+      "10+ anys d'experiència en desenvolupament web frontend",
+      "Especialitzat en React, TypeScript i tecnologies modernes",
+      "Disponible per a projectes freelance i col·laboracions",
+      "Centrat en crear experiències d'usuari excepcionals"
+    ],
+    "notebook": {
+      "code": "const developer = {\n  name: \"Damián Nardini\",\n  experience: \"10+ anys en Frontend\",\n  specialization: \"React • TypeScript • UI/UX\",\n  passion: \"Crear experiències web úniques\",\n  location: \"Barcelona\",\n  available: true,\n};\n\nconsole.log(\"Hola! Sóc \" + developer.name);\nconsole.log(\"Amb \" + developer.experience + \" d'experiència\");\nconsole.log(\"Treballem junts?\");\n\n Hola! Sóc Damián Nardini\n Amb 10+ anys en Frontend d'experiència  \nTreballem junts?"
+    }
+  },
+  "experience": {
+    "title": "Experiència Laboral",
+    "subtitle": "El Que He Assolit",
+    "content": [
+      "Desenvolupament frontend especialitzat en React i Vue.js",
+      "Arquitectura CSS escalable amb metodologies BEMIT",
+      "Optimització de rendiment en aplicacions web",
+      "Col·laboració amb equips multidisciplinaris",
+      "Implementació de metodologies àgils"
+    ],
+    "notebook": {
+      "terminal": "console.log(damian.experience)\n\nDESENVOLUPAMENT FRONTEND AVANÇAT\n   • Reducció de temps de càrrega en 40% en aplicacions crítiques\n   • Implementació de lazy loading i code splitting\n   • Desenvolupament de components reutilitzables amb React\n   • Col·laboració en projectes per a sectors immobiliari i logística\n\nARQUITECTURA CSS ESCALABLE\n   • Creació de sistemes de disseny mantenibles amb metodologia BEMIT\n   • Optimització de fluxos de treball amb Git i GitHub\n   • Desenvolupament amb Less, Sass i JavaScript modern\n   • Implementació de metodologies àgils (Scrum, Jira)\n\nDESENVOLUPAMENT VUE.JS\n   • Construcció d'interfícies complexes amb Vue.js\n   • Implementació de layout responsiu amb Vuefy\n   • Configuració de bundlers i eines de build\n   • Disseny de components visuals interactius\n\nLAYOUT I EMAIL MARKETING\n   • Creació de sistemes de layout CSS/HTML\n   • Implementació de templates amb Sass i Handlebars\n   • Desenvolupament d'emails compatibles responsius\n   • Optimització de fluxos de treball amb Webpack\n\nDESENVOLUPAMENT WORDPRESS\n   • Disseny i desenvolupament de temes WordPress complets\n   • Implementació de funcionalitats amb Less i Bootstrap\n   • Creació d'experiències d'usuari úniques\n   • Optimització de SEO i rendiment\n\nDESENVOLUPAMENT FRONTEND CORPORATIU\n   • Desenvolupament d'interfícies per a empreses Fortune 500\n   • Implementació d'HTML5/CSS3 i JavaScript avançat\n   • Treball amb frameworks Bootstrap i Foundation\n   • Optimització amb preprocessadors Sass i Less\n\nDISSENY MULTIMÈDIA"
+    }
+  },
+  "services": {
+    "title": "Serveis Professionals",
+    "subtitle": "El Que Oferixo",
+    "items": [
+      {
+        "title": "n8n",
+        "description": "Orquestració de processos i fluxos de treball amb n8n",
+        "icon": "CogIcon",
+        "features": [
+          "Fluxos de treball automatitzats amb n8n",
+          "Integracions API i CRM",
+          "Connectors personalitzats",
+          "Monitoratge, logs i alertes"
+        ],
+        "price": "Des de €2.500"
+      },
+      {
+        "title": "IA Local",
+        "description": "Instal·lació i configuració de models LLM a la teva infraestructura",
+        "icon": "CpuChipIcon",
+        "features": [
+          "Ollama / llama.cpp / LM Studio",
+          "RAG amb bases de dades locals",
+          "Privadesa i seguretat on-premise",
+          "Fine-tuning i avaluació de models"
+        ],
+        "price": "Des de €3.500"
+      },
+      {
+        "title": "Manteniment IA",
+        "description": "Plans de manteniment i suport per a fluxos i models d'IA",
+        "icon": "WrenchScrewdriverIcon",
+        "features": [
+          "Suport mensual i SLA",
+          "Actualitzacions de fluxos i dependències",
+          "Monitoratge continu i optimització",
+          "Backups i recuperació"
+        ],
+        "price": "Des de €1.800"
+      },
+      {
+        "title": "Consultoria IA",
+        "description": "Estratègia, auditoria i formació en IA aplicada",
+        "icon": "AcademicCapIcon",
+        "features": [
+          "Identificació de casos d'ús",
+          "ROI i roadmap d'adopció",
+          "Millors pràctiques de prompts",
+          "Tallers personalitzats"
+        ],
+        "price": "€150/hora"
+      },
+      {
+        "title": "Frontend",
+        "description": "Aplicacions web modernes amb React i TypeScript",
+        "icon": "CodeBracketIcon",
+        "features": [
+          "Components reutilitzables",
+          "TypeScript per a codi robust",
+          "Optimització de rendiment",
+          "Testing i debugging"
+        ],
+        "price": "Des de €2.500"
+      }
+    ],
+    "consult": "Consultar",
+    "contact": "Contacta'm"
+  },
+  "projects": {
+    "title": "Projectes Destacats",
+    "subtitle": "Treball Recent",
+    "filters": {
+      "all": "Tots",
+      "game": "Jocs",
+      "ecommerce": "E-commerce",
+      "dashboard": "Dashboards",
+      "corporate": "Sites Corporatius",
+      "pwa": "Apps PWA",
+      "landing": "Landing Pages"
+    },
+    "items": [
+      {
+        "title": "Mecano Game",
+        "description": "Joc web interactiu desenvolupat amb JavaScript vanilla. Una experiència de joc mecànic amb física i animacions fluides.",
+        "technologies": ["JavaScript", "HTML5", "CSS3"],
+        "category": "game",
+        "year": 2025,
+        "liveUrl": "https://mecano-game.netlify.app",
+        "githubUrl": "https://github.com/damiannardini/mecano-game"
+      },
+      {
+        "title": "Run Ninja Run",
+        "description": "Desenvolupament integral d'un joc fet amb Pixi.js i TypeScript, assistit amb intel·ligència artificial. Joc de plataformes amb mecàniques dinàmiques.",
+        "technologies": ["Pixi.js", "TypeScript", "AI-Assisted"],
+        "category": "game",
+        "year": 2025,
+        "liveUrl": "https://upit.com/@Damián Nardini/play/iS4sHgHhbG",
+        "githubUrl": "https://github.com/damiannardini/run-ninja-run"
+      }
+    ],
+    "buttons": {
+      "playDemo": "Jugar Demo",
+      "viewDemo": "Veure Demo",
+      "viewCode": "Veure Codi"
+    },
+    "description": "Projectes personals que he desenvolupat per la meva compte com a recerca i hobby. Experiments amb diferents tecnologies i conceptes que m'interessen.",
+    "notebook": {
+      "code": "// Projectes personals desenvolupats com a hobby\nconst personalProjects = {\n  mecanoGame: {\n    title: \"Mecano Game\",\n    description: \"Joc web interactiu amb JavaScript vanilla\",\n    technologies: [\"JavaScript\", \"HTML5\", \"CSS3\"],\n    features: [\"Física i animacions\", \"Experiència mecànica\", \"Interactiu\", \"Responsiu\"]\n  },\n  runNinjaRun: {\n    title: \"Run Ninja Run\",\n    description: \"Joc de plataformes amb Pixi.js i TypeScript\",\n    technologies: [\"Pixi.js\", \"TypeScript\", \"AI-Assisted\"],\n    features: [\"Mecàniques dinàmiques\", \"Assistit per IA\", \"Plataformes\", \"Animacions\"]\n  }\n};\n\nconsole.log(\"Projectes personals:\", Object.keys(personalProjects));\nconsole.log(\"Tecnologies: JavaScript, TypeScript, Pixi.js\");\nconsole.log(\"Enfocament: Experimentació i aprenentatge\");"
+    }
+  },
+  "contact": {
+    "title": "Treballem Junts",
+    "subtitle": "Posa't en Contacte",
+    "description": "Sempre estic obert a nous reptes i col·laboracions emocionants. Parlem del teu projecte!",
+    "form": {
+      "name": "Nom",
+      "email": "Email",
+      "message": "Missatge",
+      "send": "Enviar Missatge",
+      "sending": "Enviant...",
+      "success": "Missatge enviat amb èxit",
+      "error": "Error en enviar missatge",
+      "subject": "Consulta des del lloc web",
+      "errors": {
+        "nameRequired": "El nom és requerit",
+        "nameMinLength": "El nom ha de tenir almenys 2 caràcters",
+        "emailRequired": "L'email és requerit",
+        "emailInvalid": "Si us plau, introdueix un email vàlid",
+        "messageRequired": "El missatge és requerit",
+        "messageMinLength": "El missatge ha de tenir almenys 10 caràcters"
+      }
+    }
+  },
+  "common": {
+    "language": "Idioma",
+    "theme": "Tema",
+    "dark": "Fosc",
+    "light": "Clar"
+  }
+}

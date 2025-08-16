@@ -1,33 +1,43 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { NeuralNetworkBackground } from './SimpleAnimations';
-import ProjectsShowcase from './ProjectsShowcase';
 import ServiceCards from './ServiceCards';
 import ContactForm from './ContactForm';
-import { profileSections, socialLinks, ProfileSection } from '../data/profileData';
+import ProjectsShowcase from './ProjectsShowcase';
+import { socialLinks } from '../data/profileData';
 import { 
-  ComputerDesktopIcon,
   CodeBracketIcon,
   DevicePhoneMobileIcon,
   WrenchScrewdriverIcon,
   RocketLaunchIcon,
-  LightBulbIcon,
   BriefcaseIcon,
   UserGroupIcon,
   EnvelopeIcon,
-  ComputerDesktopIcon as LaptopIcon,
   GlobeAltIcon,
-  CalendarIcon,
-  DocumentTextIcon,
   CpuChipIcon,
-  ServerIcon,
-  SparklesIcon,
   ChevronRightIcon,
   XMarkIcon,
   WindowIcon,
-  ChevronDownIcon
+  ChevronDownIcon,
+  // Nuevos iconos más profesionales
+  AcademicCapIcon,
+  ClockIcon
 } from '@heroicons/react/24/outline';
 import { SkipLink } from './SkipLink';
 import '../styles/portfolio.css';
+
+interface ProfileSection {
+  id: string;
+  title: string;
+  subtitle: string;
+  content: string[];
+  notebookContent?: {
+    type: 'code' | 'design' | 'terminal' | 'browser';
+    code?: string;
+    language?: string;
+    url?: string;
+  } | null;
+}
 
 // Componente para texto animado con cursor parpadeante
 const AnimatedText: React.FC<{ text: string; speed?: number; className?: string }> = ({ 
@@ -75,22 +85,23 @@ const ListItemWithIcon: React.FC<{ text: string; index: number; sectionId: strin
   const getIconForSection = (sectionId: string, index: number) => {
     if (sectionId === 'freelance') {
       const icons = [
-        ComputerDesktopIcon,
-        CodeBracketIcon,
-        DevicePhoneMobileIcon,
-        WrenchScrewdriverIcon,
-        RocketLaunchIcon,
-        LightBulbIcon
+        GlobeAltIcon,           // Desarrollo de sitios web completos
+        CodeBracketIcon,     // Aplicaciones React/TypeScript
+        DevicePhoneMobileIcon, // Diseño responsivo y mobile-first
+        WrenchScrewdriverIcon, // Mantenimiento y optimización
+        RocketLaunchIcon,    // Migración de tecnologías legacy
+        AcademicCapIcon,     // Consultoría técnica y mentoring
+        CpuChipIcon          // Implementación de IA en local
       ];
-      return icons[index] || ComputerDesktopIcon;
+      return icons[index] || GlobeAltIcon;
     } else if (sectionId === 'contact') {
-             const icons = [
-         BriefcaseIcon,
-         UserGroupIcon,
-         EnvelopeIcon,
-         LaptopIcon,
-         GlobeAltIcon
-       ];
+      const icons = [
+        BriefcaseIcon,       // Busco proyectos freelance interesantes
+        UserGroupIcon,       // Colaboraciones a largo plazo
+        EnvelopeIcon,        // Contacto directo y respuesta rápida
+        ClockIcon,           // Disponibilidad inmediata
+        GlobeAltIcon         // Proyectos internacionales
+      ];
       return icons[index] || BriefcaseIcon;
     }
     return null;
@@ -103,130 +114,92 @@ const ListItemWithIcon: React.FC<{ text: string; index: number; sectionId: strin
   }
 
   return (
-    <div className="content-item-with-icon" role="listitem">
-      <div className="content-icon">
-        <IconComponent className="w-5 h-5" />
-      </div>
+
       <p className="content-item">{text}</p>
-    </div>
   );
 };
 
-// Componente para renderizar contenido de terminal con iconos
-const TerminalContent: React.FC<{ code: string }> = ({ code }) => {
-  const renderTerminalLine = (line: string, index: number) => {
-    // Líneas que contienen fechas con iconos
-    if (line.includes('📅')) {
-      const yearMatch = line.match(/(\d{4}-\d{4}|\d{4}-Presente):/);
-      if (yearMatch) {
-        const year = yearMatch[1];
-        const tech = line.split(':')[1]?.trim() || '';
-        return (
-          <div key={index} className="terminal-line-with-icon">
-            <CalendarIcon className="w-4 h-4 terminal-icon" />
-            <span className="terminal-text">
-              <span className="terminal-year">{year}:</span> {tech}
-            </span>
-          </div>
-        );
-      }
-    }
-    
-    // Líneas que contienen tecnologías específicas
-    if (line.includes('HTML/CSS/JavaScript')) {
-      return (
-        <div key={index} className="terminal-line-with-icon">
-          <DocumentTextIcon className="w-4 h-4 terminal-icon" />
-          <span className="terminal-text">{line.replace('📅', '').trim()}</span>
-        </div>
-      );
-    }
-    
-    if (line.includes('jQuery + PHP + MySQL')) {
-      return (
-        <div key={index} className="terminal-line-with-icon">
-          <ServerIcon className="w-4 h-4 terminal-icon" />
-          <span className="terminal-text">{line.replace('📅', '').trim()}</span>
-        </div>
-      );
-    }
-    
-    if (line.includes('React + Node.js')) {
-      return (
-        <div key={index} className="terminal-line-with-icon">
-          <CpuChipIcon className="w-4 h-4 terminal-icon" />
-          <span className="terminal-text">{line.replace('📅', '').trim()}</span>
-        </div>
-      );
-    }
-    
-    if (line.includes('React + TypeScript')) {
-      return (
-        <div key={index} className="terminal-line-with-icon">
-          <SparklesIcon className="w-4 h-4 terminal-icon" />
-          <span className="terminal-text">{line.replace('📅', '').trim()}</span>
-        </div>
-      );
-    }
-    
-    // Líneas de comando
-    if (line.startsWith('$')) {
-      return (
-        <div key={index} className="terminal-command">
-          <span className="terminal-prompt">$</span>
-          <span className="terminal-text">{line.substring(1).trim()}</span>
-        </div>
-      );
-    }
-    
-    // Líneas de echo
-    if (line.startsWith('echo')) {
-      return (
-        <div key={index} className="terminal-echo">
-          <span className="terminal-prompt">$</span>
-          <span className="terminal-text">{line}</span>
-        </div>
-      );
-    }
-    
-    // Líneas normales
-    return (
-      <div key={index} className="terminal-line">
-        <span className="terminal-text">{line}</span>
-      </div>
-    );
-  };
-
-  return (
-    <div className="terminal-content">
-      {code.split('\n').map((line, index) => renderTerminalLine(line, index))}
-    </div>
-  );
-};
 
 const PortfolioSimple: React.FC = () => {
+  const { t, i18n } = useTranslation();
   const [activeSection, setActiveSection] = useState(0);
   const [displaySection, setDisplaySection] = useState(0);
   const [isNotebookElevated, setIsNotebookElevated] = useState(false);
   const [isNotebookClosed, setIsNotebookClosed] = useState(false);
   const [isWindowMinimized, setIsWindowMinimized] = useState(false);
   const [isWindowMaximized, setIsWindowMaximized] = useState(false);
-  const [showGame, setShowGame] = useState(false);
-  const [currentGame, setCurrentGame] = useState<{url: string, title: string} | null>(null);
+  const [activeGame, setActiveGame] = useState<{ url: string; title: string } | null>(null);
   const prevSectionRef = useRef<number>(0);
   const notebookContainerRef = useRef<HTMLDivElement>(null);
 
-  const openGameInNotebook = (gameUrl: string, gameTitle: string) => {
-    setCurrentGame({ url: gameUrl, title: gameTitle });
-    setShowGame(true);
-    setIsNotebookElevated(true);
+  // Función para manejar cuando se hace clic en un juego
+  const handlePlayGame = (gameUrl: string, gameTitle: string) => {
+    setActiveGame({ url: gameUrl, title: gameTitle });
   };
 
-  const closeGame = () => {
-    setShowGame(false);
-    setCurrentGame(null);
-    setIsNotebookElevated(false);
-  };
+  // Generar secciones dinámicamente desde las traducciones
+  const profileSections = useMemo(() => {
+    return [
+    {
+      id: 'intro',
+      title: t('intro.title'),
+      subtitle: t('intro.subtitle'),
+      content: t('intro.content', { returnObjects: true }) as string[],
+      notebookContent: {
+        type: 'code' as const,
+        code: t('intro.notebook.code'),
+        language: 'typescript'
+      }
+    },
+    {
+      id: 'services',
+      title: t('services.title'),
+      subtitle: t('services.subtitle'),
+      content: [],
+      notebookContent: {
+        type: 'code' as const,
+        code: `// Servicios Profesionales Disponibles\n\nconst servicios = {\n  n8n: {\n    descripcion: "Orquestación de procesos y flujos de trabajo",\n    precio: "Desde €2.500",\n    caracteristicas: [\n      "Flujos de trabajo automatizados",\n      "Integraciones API y CRM",\n      "Conectores personalizados",\n      "Monitoreo y alertas"\n    ]\n  },\n  \n  iaLocal: {\n    descripcion: "Instalación y configuración de LLM",\n    precio: "Desde €3.500",\n    caracteristicas: [\n      "Ollama / llama.cpp / LM Studio",\n      "RAG con bases de datos locales",\n      "Privacidad on-premise",\n      "Fine-tuning de modelos"\n    ]\n  },\n  \n  mantenimiento: {\n    descripcion: "Mantenimiento y soporte para IA",\n    precio: "Desde €1.800",\n    caracteristicas: [\n      "Soporte mensual y SLA",\n      "Actualizaciones de flujos",\n      "Monitoreo continuo",\n      "Backups y recuperación"\n    ]\n  },\n  \n  consultoria: {\n    descripcion: "Estrategia y formación en IA",\n    precio: "€150/hora",\n    caracteristicas: [\n      "Identificación de casos de uso",\n      "ROI y roadmap de adopción",\n      "Mejores prácticas de prompts",\n      "Talleres personalizados"\n    ]\n  },\n  \n  frontend: {\n    descripcion: "Aplicaciones web modernas",\n    precio: "Desde €2.500",\n    caracteristicas: [\n      "React y TypeScript",\n      "Componentes reutilizables",\n      "Optimización de rendimiento",\n      "Testing y debugging"\n    ]\n  }\n};\n\nconsole.log("Servicios disponibles:", Object.keys(servicios));\nconsole.log("¿Te interesa alguno? ¡Contáctame!");`,
+        language: 'javascript'
+      }
+    },
+    {
+      id: 'projects',
+      title: t('projects.title'),
+      subtitle: t('projects.subtitle'),
+      content: [],
+      notebookContent: {
+        type: 'code' as const,
+        code: t('projects.notebook.code'),
+        language: 'javascript'
+      }
+    },
+    {
+      id: 'experience',
+      title: t('experience.title'),
+      subtitle: t('experience.subtitle'),
+      content: t('experience.content', { returnObjects: true }) as string[],
+      notebookContent: {
+        type: 'code' as const,
+        code: t('experience.notebook.code')
+      }
+    },
+    {
+      id: 'contact',
+      title: t('contact.title'),
+      subtitle: t('contact.subtitle'),
+      content: [
+        t('contact.description')
+      ],
+      notebookContent: {
+        type: 'code' as const,
+        code: `// Formulario de Contacto\n\nconst contactForm = {\n  campos: {\n    nombre: {\n      tipo: "text",\n      placeholder: "Tu nombre",\n      requerido: true\n    },\n    email: {\n      tipo: "email",\n      placeholder: "tu@email.com",\n      requerido: true\n    },\n    mensaje: {\n      tipo: "textarea",\n      placeholder: "Cuéntame sobre tu proyecto...",\n      requerido: true\n    }\n  },\n  \n  validacion: {\n    email: /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/,\n    nombre: /^[a-zA-Z\\s]{2,50}$/\n  },\n  \n  enviar: async (datos) => {\n    try {\n      const respuesta = await fetch('/api/contact', {\n        method: 'POST',\n        headers: { 'Content-Type': 'application/json' },\n        body: JSON.stringify(datos)\n      });\n      \n      if (respuesta.ok) {\n        console.log("¡Mensaje enviado con éxito!");\n        return { exito: true };\n      } else {\n        throw new Error('Error al enviar');\n      }\n    } catch (error) {\n      console.error("Error:", error);\n      return { exito: false, error };\n    }\n  }\n};\n\nconsole.log("Formulario listo para recibir mensajes");\nconsole.log("¡Hablemos sobre tu proyecto!");`,
+        language: 'javascript'
+      }
+    }
+  ];
+  }, [t, i18n.language]);
+
+
 
   useEffect(() => {
     if (prevSectionRef.current !== activeSection) {
@@ -274,6 +247,9 @@ const PortfolioSimple: React.FC = () => {
   }, [isWindowMaximized, isWindowMinimized]);
 
   const currentSection = profileSections[displaySection];
+  console.log('displaySection:', displaySection);
+  console.log('activeSection:', activeSection);
+  console.log('currentSection:', currentSection);
   
   // Calcular si estamos en la sección de servicios para mover la notebook
   const isServicesSection = profileSections[activeSection]?.id === 'services';
@@ -288,68 +264,15 @@ const PortfolioSimple: React.FC = () => {
   }, [isServicesSection]);
 
   const renderWindowContent = () => {
-    if (!currentSection.notebookContent && !showGame) return null;
-
-    // Si se está mostrando el juego, mostrar el iframe del juego
-    if (showGame) {
-      const gameWindowHeader = (
-        <div className="editor-header">
-          <div className="window-controls">
-            <button 
-              className="control-btn red" 
-              aria-label="Cerrar juego"
-              onClick={closeGame}
-            >
-              <XMarkIcon className="control-icon" />
-            </button>
-            <button 
-              className="control-btn yellow" 
-              aria-label="Minimizar ventana"
-              onClick={() => handleWindowControl('minimize')}
-            >
-              <ChevronDownIcon className="control-icon" />
-            </button>
-            <button 
-              className="control-btn green" 
-              aria-label="Maximizar ventana"
-              onClick={() => handleWindowControl('maximize')}
-            >
-              <WindowIcon className="control-icon" />
-            </button>
-          </div>
-          <span className="editor-filename">
-            {currentGame?.title || 'Juego'}
-          </span>
-        </div>
-      );
-
-      return (
-        <div className="window-base game">
-          {gameWindowHeader}
-          <div className="game-content">
-            <iframe
-              src={currentGame?.url || ''}
-              title={currentGame?.title || 'Juego'}
-              width="100%"
-              height="100%"
-              frameBorder="0"
-              allow="fullscreen; autoplay; camera; microphone; geolocation"
-              sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals allow-top-navigation allow-pointer-lock"
-              style={{
-                border: 'none',
-                borderRadius: '0 0 0.5rem 0.5rem'
-              }}
-            />
-          </div>
-        </div>
-      );
-    }
-
-    const notebookContent = currentSection.notebookContent;
-    if (!notebookContent) return null;
+    console.log('renderWindowContent called, currentSection:', currentSection);
+    console.log('currentSection.id:', currentSection?.id);
     
-    const { type, code } = notebookContent;
-
+    // Determinar el título de la ventana
+    let windowTitle = currentSection.title;
+    if (currentSection.id === 'projects' && activeGame) {
+      windowTitle = activeGame.title;
+    }
+    
     const windowHeader = (
       <div className="editor-header">
         <div className="window-controls">
@@ -376,10 +299,72 @@ const PortfolioSimple: React.FC = () => {
           </button>
         </div>
         <span className="editor-filename">
-          {currentSection.title}
+          {windowTitle}
         </span>
       </div>
     );
+
+    // Renderizar contenido específico para cada sección dentro del notebook
+    console.log('Checking section:', currentSection.id);
+    if (currentSection.id === 'services') {
+      return (
+        <div className="window-base services">
+          {windowHeader}
+          <div className="code-content">
+            <ServiceCards isVisible={true} />
+          </div>
+        </div>
+      );
+    }
+
+    if (currentSection.id === 'projects') {
+      console.log('Rendering projects section in notebook');
+      
+      // Si hay un juego activo, mostrar el iframe
+      if (activeGame) {
+        return (
+          <div className="window-base game">
+            {windowHeader}
+            <div className="game-content">
+              <iframe
+                src={activeGame.url}
+                title={activeGame.title}
+                allowFullScreen
+              />
+            </div>
+          </div>
+        );
+      }
+      
+      // Si no hay juego activo, mostrar la lista de proyectos
+      return (
+        <div className="window-base projects">
+          {windowHeader}
+          <div className="code-content">
+            <ProjectsShowcase isVisible={true} minimal={true} onPlayGame={handlePlayGame} />
+          </div>
+        </div>
+      );
+    }
+
+    if (currentSection.id === 'contact') {
+      return (
+        <div className="window-base contact">
+          {windowHeader}
+          <div className="code-content">
+            <ContactForm isVisible={true} />
+          </div>
+        </div>
+      );
+    }
+
+    // Para otras secciones, usar el notebookContent original
+    if (!currentSection.notebookContent) return null;
+
+    const notebookContent = currentSection.notebookContent;
+    if (!notebookContent) return null;
+    
+    const { type, code } = notebookContent;
 
     switch (type) {
       case 'code':
@@ -398,100 +383,13 @@ const PortfolioSimple: React.FC = () => {
           </div>
         );
 
-      case 'terminal':
-        return (
-          <div className={`window-base ${type}`}>
-            {windowHeader}
-            <div className="code-content">
-              <TerminalContent code={code || ''} />
-            </div>
-          </div>
-        );
-
-      case 'browser':
-        return (
-          <div className="window-base browser">
-            {windowHeader}
-            <div className="browser-content">
-              {currentSection?.id === 'projects' ? (
-                <ProjectsShowcase isVisible={true} minimal={true} onPlayGame={openGameInNotebook} />
-              ) : currentSection?.id === 'services' ? (
-                <ServiceCards isVisible={true} minimal={true} />
-              ) : currentSection?.id === 'contact' ? (
-                <ContactForm isVisible={true} />
-              ) : (
-              <div className="browser-project">
-                <div className="project-icon">P</div>
-                <h3 className="project-title">Portfolio</h3>
-                <p className="project-description">Proyecto en desarrollo</p>
-              </div>
-              )}
-            </div>
-          </div>
-        );
-
       default:
         return null;
     }
   };
 
   const renderMobileNotebook = (section: ProfileSection) => {
-    if (!section.notebookContent && !showGame) return null;
-
-    // Si se está mostrando el juego, mostrar el iframe del juego
-    if (showGame) {
-      const gameWindowHeader = (
-        <div className="editor-header">
-          <div className="window-controls">
-            <button 
-              className="control-btn red" 
-              aria-label="Cerrar juego"
-              onClick={closeGame}
-            >
-              <XMarkIcon className="control-icon" />
-            </button>
-            <button 
-              className="control-btn yellow" 
-              aria-label="Minimizar ventana"
-              disabled
-            >
-              <ChevronDownIcon className="control-icon" />
-            </button>
-            <button 
-              className="control-btn green" 
-              aria-label="Maximizar ventana"
-              disabled
-            >
-              <WindowIcon className="control-icon" />
-            </button>
-          </div>
-          <span className="editor-filename">
-            {currentGame?.title || 'Juego'}
-          </span>
-        </div>
-      );
-
-      return (
-        <div className="window-base game">
-          {gameWindowHeader}
-          <div className="game-content">
-            <iframe
-              src={currentGame?.url || ''}
-              title={currentGame?.title || 'Juego'}
-              width="100%"
-              height="100%"
-              frameBorder="0"
-              allow="fullscreen; autoplay; camera; microphone; geolocation"
-              sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals allow-top-navigation allow-pointer-lock"
-              style={{
-                border: 'none',
-                borderRadius: '0 0 0.5rem 0.5rem'
-              }}
-            />
-          </div>
-        </div>
-      );
-    }
+    if (!section.notebookContent) return null;
 
     const notebookContent = section.notebookContent;
     if (!notebookContent) return null;
@@ -546,38 +444,6 @@ const PortfolioSimple: React.FC = () => {
           </div>
         );
 
-      case 'terminal':
-        return (
-          <div className={`window-base ${type}`}>
-            {windowHeader}
-            <div className="code-content">
-              <TerminalContent code={code || ''} />
-            </div>
-          </div>
-        );
-
-      case 'browser':
-        return (
-          <div className="window-base browser">
-            {windowHeader}
-            <div className="browser-content">
-              {section?.id === 'projects' ? (
-                <ProjectsShowcase isVisible={true} minimal={true} onPlayGame={openGameInNotebook} />
-              ) : section?.id === 'services' ? (
-                <ServiceCards isVisible={true} minimal={true} />
-              ) : section?.id === 'contact' ? (
-                <ContactForm isVisible={true} />
-              ) : (
-              <div className="browser-project">
-                <div className="project-icon">P</div>
-                <h3 className="project-title">Portfolio</h3>
-                <p className="project-description">Proyecto en desarrollo</p>
-              </div>
-              )}
-            </div>
-          </div>
-        );
-
       default:
         return null;
     }
@@ -586,11 +452,16 @@ const PortfolioSimple: React.FC = () => {
   const handleWindowControl = (action: 'close' | 'minimize' | 'maximize') => {
     switch (action) {
       case 'close':
-        setIsNotebookClosed(true);
-        // Reabrir después de la animación de cierre
-        setTimeout(() => {
-          setIsNotebookClosed(false);
-        }, 600);
+        // Si hay un juego activo, cerrar el juego en lugar de la ventana
+        if (activeGame) {
+          setActiveGame(null);
+        } else {
+          setIsNotebookClosed(true);
+          // Reabrir después de la animación de cierre
+          setTimeout(() => {
+            setIsNotebookClosed(false);
+          }, 600);
+        }
         break;
       case 'minimize':
         if (isWindowMaximized) {
@@ -692,7 +563,30 @@ const PortfolioSimple: React.FC = () => {
               <p className="subtitle" id={`subtitle-${section?.id}`}>{section.subtitle}</p>
               <h1 className="main-title" id={`title-${section?.id}`} data-text={section.title}>{section.title}</h1>
               {section?.id === 'services' ? (
-                <ServiceCards isVisible={true} />
+                <>
+                  <div className="content-list" role="list">
+                    {section.content.map((item, itemIndex) => (
+                      <ListItemWithIcon 
+                        key={itemIndex} 
+                        text={item} 
+                        index={itemIndex}
+                        sectionId={section?.id}
+                      />
+                    ))}
+                  </div>
+                  <div className="content-list" role="list">
+                    <p className="content-item">
+                      Ofrezco servicios especializados en automatización, inteligencia artificial local y desarrollo web. 
+                      Cada solución está diseñada para optimizar procesos empresariales y mejorar la eficiencia operativa.
+                    </p>
+                  </div>
+                </>
+              ) : section?.id === 'projects' ? (
+                <div className="content-list" role="list">
+                  <p className="content-item">
+                    {t('projects.description')}
+                  </p>
+                </div>
               ) : section?.id === 'contact' ? (
                 <>
                   <div className="content-list" role="list">

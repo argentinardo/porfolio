@@ -654,13 +654,13 @@ export const NeuralNetworkBackground: React.FC = () => {
           const x = pulse.source.x + (pulse.destination.x - pulse.source.x) * pulse.progress;
           const y = pulse.source.y + (pulse.destination.y - pulse.source.y) * pulse.progress;
           ctx.beginPath();
-          ctx.arc(x, y, 1.5, 0, Math.PI * 2);
+          ctx.arc(x, y, isNightMode ? 1.5 : 1.5, 0, Math.PI * 2);
           
           // Colores de pulsos ajustados - más contraste en modo oscuro
           if (isNightMode) {
             ctx.fillStyle = `hsla(160, 40%, 75%, 0.15)`; // Aumentar saturación y opacidad
           } else {
-            ctx.fillStyle = `hsla(0, 0%, 75%, 0.15)`; // Mantener sutil en modo claro
+            ctx.fillStyle = `hsla(0, 0%, 75%, 0.6)`; // Pulsos más oscuros y visibles en modo día
           }
           
           ctx.fill();
@@ -668,9 +668,6 @@ export const NeuralNetworkBackground: React.FC = () => {
       }
     };
 
-    const updateDepthWaves = () => {
-      // Función vacía ya que no usamos ondas de profundidad
-    };
 
     const applyDepthWaveEffect = (particle: Particle) => {
       // Función vacía ya que no aplicamos efectos de ondas
@@ -698,9 +695,9 @@ export const NeuralNetworkBackground: React.FC = () => {
         ctx.font = `${numberFontSize}px monospace`;
         
         // Calcular opacidad basada en profundidad Z + respiración + valor del nodo
-        const baseOpacity = isNightMode ? 0.15 : 0.15;
-        const depthOpacity = p.z * 0.3; // Nodos más adelante son más opacos
-        const lifeOpacity = p.life * (isNightMode ? 0.25 : 0.25);
+        const baseOpacity = isNightMode ? 0.15 : 0.4; // Mayor opacidad en modo día
+        const depthOpacity = p.z *  0.3;
+        const lifeOpacity = p.life *  0.25 ;
         const valueOpacity = p.value * 0.2; // Nodos con valores más altos son más opacos
         const breathingOpacity = Math.sin(breathingPhase) * 0.05; // Variación sutil de opacidad
         const totalOpacity = baseOpacity + depthOpacity + lifeOpacity + valueOpacity + breathingOpacity;
@@ -713,9 +710,9 @@ export const NeuralNetworkBackground: React.FC = () => {
           const saturation = 30 + (p.z * 20) + (Math.sin(breathingPhase) * 10) + (p.value * 20); // Saturación variable + valor
           ctx.fillStyle = `hsla(160, ${saturation}%, ${brightness}%, ${totalOpacity})`;
         } else {
-          const baseBrightness = p.illumination > 0 ? 66 : 65; // Efecto de color más sutil cuando está iluminado
-          const valueBrightness = p.value * 10; // Nodos con valores más altos son más brillantes
-          const brightness = Math.min(85, baseBrightness + valueBrightness); // Limitar brillo máximo
+          const baseBrightness = p.illumination > 0 ? 30 : 25; // Nodos más oscuros en modo día
+          const valueBrightness = p.value * 15; // Nodos con valores más altos son más brillantes
+          const brightness = Math.min(50, baseBrightness + valueBrightness); // Limitar brillo máximo
           ctx.fillStyle = `hsla(0, 0%, ${brightness}%, ${totalOpacity})`;
         }
         
@@ -727,8 +724,8 @@ export const NeuralNetworkBackground: React.FC = () => {
         ctx.fillText(displayValue.toString(), p.x, p.y);
         
         // Efecto de brillo más visible
-        if (p.illumination > 0.3) {
-          ctx.shadowColor = isNightMode ? 'rgba(16, 185, 129, 0.15)' : 'rgba(255, 255, 255, 0.08)';
+        if (p.illumination > 0.6) {
+          ctx.shadowColor = isNightMode ? 'rgba(16, 185, 129, 0.15)' : 'rgba(0, 0, 0, 0.9)';
           ctx.shadowBlur = p.illumination * 2;
           ctx.fillText(displayValue.toString(), p.x, p.y);
           ctx.shadowBlur = 0;
@@ -747,7 +744,7 @@ export const NeuralNetworkBackground: React.FC = () => {
       if (isNightMode) {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
       } else {
-        ctx.fillStyle = '#f8fafc'; // Gris muy claro en lugar de blanco puro
+        ctx.fillStyle = '#ffffff'; // Fondo blanco puro
         ctx.fillRect(0, 0, canvas.width, canvas.height);
       }
 
@@ -763,7 +760,6 @@ export const NeuralNetworkBackground: React.FC = () => {
         updateConnections();
         updateParticles();
         updatePulses();
-        updateDepthWaves();
 
         // Dibujar conexiones de fondo con efecto de profundidad
         particles.forEach(p => {
@@ -778,15 +774,15 @@ export const NeuralNetworkBackground: React.FC = () => {
             ctx.lineTo(neighbor.x, neighbor.y);
             
             // Opacidad basada en profundidad
-            const connectionOpacity = 0.08 + (avgZ * 0.12); // Conexiones más adelante son más visibles
+            const connectionOpacity = isNightMode ? (0.08 + (avgZ * 0.12)) : (0.05 + (avgZ * 0.05)); // Conexiones más visibles en modo día
             
-                    // Colores de conexiones ajustados con efecto de profundidad
-        if (isNightMode) {
-          const saturation = 25 + (avgZ * 15);
-          ctx.strokeStyle = `hsla(160, ${saturation}%, 70%, ${connectionOpacity})`;
-        } else {
-          ctx.strokeStyle = `hsla(0, 0%, 70%, ${connectionOpacity})`;
-        }
+            // Colores de conexiones ajustados con efecto de profundidad
+            if (isNightMode) {
+              const saturation = 25 + (avgZ * 15);
+              ctx.strokeStyle = `hsla(160, ${saturation}%, 70%, ${connectionOpacity})`;
+            } else {
+              ctx.strokeStyle = `hsla(0, 0%, 30%, ${connectionOpacity})`; // Conexiones más oscuras en modo día
+            }
             
             // Grosor de línea basado en profundidad
             ctx.lineWidth = 0.5 + (avgZ * 1.5);
@@ -894,7 +890,7 @@ export const NeuralNetworkBackground: React.FC = () => {
             width: '48px',
             height: '24px',
             borderRadius: '12px',
-            background: isNightMode ? '#10b981' : '#9ca3af',
+            background: isNightMode ? 'transparent' : '#9ca3af',
             transition: 'all 0.3s ease',
             cursor: 'pointer'
           }}>

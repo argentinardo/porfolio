@@ -1,0 +1,174 @@
+{
+  "navigation": {
+    "intro": "Introducción",
+    "services": "Servicios",
+    "projects": "Proyectos",
+    "experience": "Experiencia",
+    "contact": "Contacto"
+  },
+  "intro": {
+    "title": "Frontend developer",
+    "subtitle": "Damián Nardini",
+    "content": [
+      "10+ años de experiencia en desarrollo web frontend",
+      "Especializado en React, TypeScript y tecnologías modernas",
+      "Enfocado en crear experiencias de usuario excepcionales"
+    ],
+    "notebook": {
+      "code": "const developer = {\n  name: \"Damián Nardini\",\n  experience: \"10+ años en Frontend\",\n  specialization: \"React • TypeScript • UI/UX\",\n  passion: \"Crear experiencias web únicas\",\n  location: \"Barcelona\",\n  available: true,\n};\n\nconsole.log(\"¡Hola! Soy \" + developer.name);\nconsole.log(\"Con \" + developer.experience + \" de experiencia\");\nconsole.log(\"¿Trabajamos juntos?\");\n\n ¡Hola! Soy Damián Nardini\n Con 10+ años en Frontend de experiencia  \n¿Trabajamos juntos?"
+    }
+  },
+  "experience": {
+    "title": "Experiencia Laboral",
+    "subtitle": "Mis tareas",
+    "content": [
+      "Desarrollo frontend especializado en React y Vue.js",
+      "Arquitectura CSS escalable con metodologías BEMIT",
+      "Optimización de rendimiento en aplicaciones web",
+      "Colaboración con equipos multidisciplinarios",
+      "Implementación de metodologías ágiles"
+    ],
+    "notebook": {
+      "code": "console.log(damian.experience)\n\nDESARROLLO FRONTEND AVANZADO\n   • Reducción de tiempos de carga en 40% en aplicaciones críticas\n   • Implementación de lazy loading y code splitting\n   • Desarrollo de componentes reutilizables con React\n   • Colaboración en proyectos para sectores inmobiliario y logística\n\nARQUITECTURA CSS ESCALABLE\n   • Creación de sistemas de diseño mantenibles con metodología BEMIT\n   • Optimización de flujos de trabajo con Git y GitHub\n   • Desarrollo con Less, Sass y JavaScript moderno\n   • Implementación de metodologías ágiles (Scrum, Jira)\n\nDESARROLLO VUE.JS\n   • Construcción de interfaces complejas con Vue.js\n   • Implementación de layout responsivo con Vuefy\n   • Configuración de bundlers y herramientas de build\n   • Diseño de componentes visuales interactivos\n\nLAYOUT Y EMAIL MARKETING\n   • Creación de sistemas de layout CSS/HTML\n   • Implementación de templates con Sass y Handlebars\n   • Desarrollo de emails compatibles responsivos\n   • Optimización de flujos de trabajo con Webpack\n\nDESARROLLO WORDPRESS\n   • Diseño y desarrollo de temas WordPress completos\n   • Implementación de funcionalidades con Less y Bootstrap\n   • Creación de experiencias de usuario únicas\n   • Optimización de SEO y rendimiento\n\nDESARROLLO FRONTEND CORPORATIVO\n   • Desarrollo de interfaces para empresas Fortune 500\n   • Implementación de HTML5/CSS3 y JavaScript avanzado\n   • Trabajo con frameworks Bootstrap y Foundation\n   • Optimización con preprocesadores Sass y Less"
+    }
+  },
+  "services": {
+    "title": "Servicios Profesionales",
+    "subtitle": "Lo Que Ofrezco",
+    "items": [
+      {
+        "title": "n8n",
+        "description": "Orquestación de procesos y flujos de trabajo con n8n",
+        "icon": "CogIcon",
+        "features": [
+          "Flujos de trabajo automatizados con n8n",
+          "Integraciones API y CRM",
+          "Conectores personalizados",
+          "Monitoreo, logs y alertas"
+        ],
+        "price": "Desde €2.500"
+      },
+      {
+        "title": "IA Local",
+        "description": "Instalación y configuración de modelos LLM en tu infraestructura",
+        "icon": "CpuChipIcon",
+        "features": [
+          "Ollama / llama.cpp / LM Studio",
+          "RAG con bases de datos locales",
+          "Privacidad y seguridad on-premise",
+          "Fine-tuning y evaluación de modelos"
+        ],
+        "price": "Desde €3.500"
+      },
+      {
+        "title": "Mantenimiento IA",
+        "description": "Planes de mantenimiento y soporte para flujos y modelos de IA",
+        "icon": "WrenchScrewdriverIcon",
+        "features": [
+          "Soporte mensual y SLA",
+          "Actualizaciones de flujos y dependencias",
+          "Monitoreo continuo y optimización",
+          "Backups y recuperación"
+        ],
+        "price": "Desde €1.800"
+      },
+      {
+        "title": "Consultoría IA",
+        "description": "Estrategia, auditoría y formación en IA aplicada",
+        "icon": "AcademicCapIcon",
+        "features": [
+          "Identificación de casos de uso",
+          "ROI y roadmap de adopción",
+          "Mejores prácticas de prompts",
+          "Talleres personalizados"
+        ],
+        "price": "€150/hora"
+      },
+      {
+        "title": "Frontend",
+        "description": "Aplicaciones web modernas con React y TypeScript",
+        "icon": "CodeBracketIcon",
+        "features": [
+          "Componentes reutilizables",
+          "TypeScript para código robusto",
+          "Optimización de rendimiento",
+          "Testing y debugging"
+        ],
+        "price": "Desde €2.500"
+      }
+    ],
+    "consult": "Consultar",
+    "contact": "Contáctame"
+  },
+  "projects": {
+    "title": "Proyectos Destacados",
+    "subtitle": "Trabajo Reciente",
+    "filters": {
+      "all": "Todos",
+      "game": "Juegos",
+      "ecommerce": "E-commerce",
+      "dashboard": "Dashboards",
+      "corporate": "Sitios Corporativos",
+      "pwa": "Apps PWA",
+      "landing": "Landing Pages"
+    },
+    "items": [
+      {
+        "title": "Mecano Game",
+        "description": "Juego web interactivo desarrollado con JavaScript vanilla. Una experiencia de juego mecánico con física y animaciones fluidas.",
+        "technologies": ["JavaScript", "HTML5", "CSS3"],
+        "category": "game",
+        "year": 2025,
+        "liveUrl": "https://mecano-game.netlify.app",
+        "githubUrl": "https://github.com/damiannardini/mecano-game"
+      },
+      {
+        "title": "Run Ninja Run",
+        "description": "Desarrollo integral de un juego hecho con Pixi.js y TypeScript, asistido con inteligencia artificial. Juego de plataformas con mecánicas dinámicas.",
+        "technologies": ["Pixi.js", "TypeScript", "AI-Assisted"],
+        "category": "game",
+        "year": 2025,
+        "liveUrl": "https://upit.com/@Damián Nardini/play/iS4sHgHhbG",
+        "githubUrl": "https://github.com/damiannardini/run-ninja-run"
+      }
+    ],
+    "buttons": {
+      "playDemo": "Jugar Demo",
+      "viewDemo": "Ver Demo",
+      "viewCode": "Ver Código"
+    },
+    "description": "Proyectos personales que he desarrollado por mi cuenta como investigación y hobby. Experimentos con diferentes tecnologías y conceptos que me interesan.",
+    "notebook": {
+      "code": "// Proyectos personales desarrollados como hobby\nconst personalProjects = {\n  mecanoGame: {\n    title: \"Mecano Game\",\n    description: \"Juego web interactivo con JavaScript vanilla\",\n    technologies: [\"JavaScript\", \"HTML5\", \"CSS3\"],\n    features: [\"Física y animaciones\", \"Experiencia mecánica\", \"Interactivo\", \"Responsive\"]\n  },\n  runNinjaRun: {\n    title: \"Run Ninja Run\",\n    description: \"Juego de plataformas con Pixi.js y TypeScript\",\n    technologies: [\"Pixi.js\", \"TypeScript\", \"AI-Assisted\"],\n    features: [\"Mecánicas dinámicas\", \"Asistido por IA\", \"Plataformas\", \"Animaciones\"]\n  }\n};\n\nconsole.log(\"Proyectos personales:\", Object.keys(personalProjects));\nconsole.log(\"Tecnologías: JavaScript, TypeScript, Pixi.js\");\nconsole.log(\"Enfoque: Experimentación y aprendizaje\");"
+    }
+  },
+  "contact": {
+    "title": "Trabajemos Juntos",
+    "subtitle": "Ponte en Contacto",
+    "description": "Siempre estoy abierto a nuevos desafíos y colaboraciones emocionantes. ¡Hablemos de tu proyecto!",
+    "form": {
+      "name": "Nombre",
+      "email": "Email",
+      "message": "Mensaje",
+      "send": "Enviar Mensaje",
+      "sending": "Enviando...",
+      "success": "Mensaje enviado con éxito",
+      "error": "Error al enviar mensaje",
+      "subject": "Consulta desde el sitio web",
+      "errors": {
+        "nameRequired": "El nombre es requerido",
+        "nameMinLength": "El nombre debe tener al menos 2 caracteres",
+        "emailRequired": "El email es requerido",
+        "emailInvalid": "Por favor ingresa un email válido",
+        "messageRequired": "El mensaje es requerido",
+        "messageMinLength": "El mensaje debe tener al menos 10 caracteres"
+      }
+    }
+  },
+  "common": {
+    "language": "Idioma",
+    "theme": "Tema",
+    "dark": "Oscuro",
+    "light": "Claro"
+  }
+}

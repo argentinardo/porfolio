@@ -1,11 +1,13 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { 
   CodeBracketIcon, 
-  BoltIcon, 
-  LightBulbIcon,
   CpuChipIcon,
   XMarkIcon,
-  WrenchScrewdriverIcon
+  WrenchScrewdriverIcon,
+  // Nuevos iconos más profesionales
+  CogIcon,
+  AcademicCapIcon
 } from '@heroicons/react/24/outline';
 
 interface ServiceCard {
@@ -21,69 +23,27 @@ interface ServiceCardsProps {
 }
 
 const ServiceCards: React.FC<ServiceCardsProps> = ({ isVisible, minimal = false }) => {
+  const { t } = useTranslation();
   const [selectedService, setSelectedService] = useState<ServiceCard | null>(null);
   const modalRef = useRef<HTMLDivElement>(null);
 
-  const services: ServiceCard[] = [
-    {
-      title: "n8n",
-      description: "Orquestación de procesos y flujos sin fricción con n8n",
-      icon: BoltIcon,
-      features: [
-        "Workflows automatizados con n8n",
-        "Integraciones con APIs y CRMs",
-        "Conectores personalizados",
-        "Monitoreo, logs y alertas"
-      ]
-    },
-    {
-      title: "LLM local",
-      description: "Instalación y configuración de modelos LLM en tu infraestructura",
-      icon: CpuChipIcon,
-      features: [
-        "Ollama / llama.cpp / LM Studio",
-        "RAG con bases de datos locales",
-        "Privacidad y seguridad on‑premise",
-        "Afinado y evaluación de modelos"
-      ]
-    },
-    {
-      title: "Mantenimiento IA",
-      description: "Planes de mantenimiento y soporte para flujos y modelos de IA",
-      icon: WrenchScrewdriverIcon,
-      features: [
-        "Soporte mensual y SLA",
-        "Actualización de flujos y dependencias",
-        "Monitorización y optimización continua",
-        "Backups y recuperación"
-      ]
-    },
-    {
-      title: "Asesoría IA",
-      description: "Estrategia, auditoría y capacitación en IA aplicada",
-      icon: LightBulbIcon,
-      features: [
-        "Identificación de casos de uso",
-        "ROI y roadmap de adopción",
-        "Mejores prácticas de prompts",
-        "Workshops a medida"
-      ]
-    },
-    {
-      title: "Frontend",
-      description: "Aplicaciones web modernas con React y TypeScript",
-      icon: CodeBracketIcon,
-      features: [
-        "Componentes reutilizables",
-        "TypeScript para código robusto",
-        "Optimización de performance",
-        "Testing y debugging"
-      ]
-    }
-  ];
+  const servicesData = t('services.items', { returnObjects: true }) as any[];
+  
+  const iconMap: { [key: string]: React.ElementType } = {
+    CogIcon,
+    CpuChipIcon,
+    WrenchScrewdriverIcon,
+    AcademicCapIcon,
+    CodeBracketIcon
+  };
+
+  const services: ServiceCard[] = servicesData.map(service => ({
+    ...service,
+    icon: iconMap[service.icon] || CodeBracketIcon
+  }));
 
 
-  // Cerrar modal al hacer click fuera
+  // Cerrar modal al hacer click fuera o presionar Escape
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
@@ -91,12 +51,20 @@ const ServiceCards: React.FC<ServiceCardsProps> = ({ isVisible, minimal = false 
       }
     };
 
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setSelectedService(null);
+      }
+    };
+
     if (selectedService) {
       document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener('keydown', handleEscape);
     }
 
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', handleEscape);
     };
   }, [selectedService]);
 
@@ -142,8 +110,8 @@ const ServiceCards: React.FC<ServiceCardsProps> = ({ isVisible, minimal = false 
 
         {/* Modal para servicio seleccionado */}
         {selectedService && (
-          <div className="service-modal-overlay">
-            <div className="service-modal" ref={modalRef}>
+          <div className="service-modal-overlay" onClick={() => setSelectedService(null)}>
+            <div className="service-modal" ref={modalRef} onClick={(e) => e.stopPropagation()}>
               <div className="service-modal-header">
                 <div className="service-modal-title-section">
                   <div className="service-modal-icon">
@@ -198,9 +166,97 @@ const ServiceCards: React.FC<ServiceCardsProps> = ({ isVisible, minimal = false 
   }
 
   return (
-    <div className={`services-showcase ${isVisible ? 'visible' : ''}`}>
+    <>
+      <div className={`services-showcase ${isVisible ? 'visible' : ''}`}>
+        <div className="services-grid">
+          {services.map((service, index) => {
+            const IconComponent = service.icon;
+            return (
+              <div 
+                key={index} 
+                className="service-card"
+                onClick={() => setSelectedService(service)}
+              >
+                <div className="service-header">
+                  <div className="service-icon">
+                    <IconComponent />
+                  </div>
+                  <h3 className="service-title">{service.title}</h3>
+                  
+                </div>
+                <p className="service-description">{service.description}</p>
+                <div className="service-features">
+                  <ul>
+                    {service.features.map((feature, featureIndex) => (
+                      <li key={featureIndex}>{feature}</li>
+                    ))}
+                  </ul>
+                </div>
+                <div className="service-footer">
+                  <button className="learn-more-btn">
+                    Ver más
+                  </button>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
 
-    </div>
+      {/* Modal para servicio seleccionado - Renderizado fuera del contenedor */}
+      {selectedService && (
+        <div className="service-modal-overlay" onClick={() => setSelectedService(null)}>
+          <div className="service-modal" ref={modalRef} onClick={(e) => e.stopPropagation()}>
+            <div className="service-modal-header">
+              <div className="service-modal-title-section">
+                <div className="service-modal-icon">
+                  {React.createElement(selectedService.icon)}
+                </div>
+                <h2 className="service-modal-title">{selectedService.title}</h2>
+              </div>
+              <button 
+                className="service-modal-close"
+                onClick={() => setSelectedService(null)}
+                aria-label="Cerrar modal"
+              >
+                <XMarkIcon />
+              </button>
+            </div>
+            <div className="service-modal-content">
+              <p className="service-modal-description">{selectedService.description}</p>
+              <div className="service-modal-features">
+                <h4>Características:</h4>
+                <ul>
+                  {selectedService.features.map((feature, index) => (
+                    <li key={index}>{feature}</li>
+                  ))}
+                </ul>
+              </div>
+              <div className="service-modal-actions">
+                <button 
+                  className="service-modal-contact-btn"
+                  onClick={() => {
+                    setSelectedService(null);
+                    // Prefill y scroll a la sección de contacto
+                    try {
+                      localStorage.setItem('contactPrefill', JSON.stringify({
+                        subject: `${selectedService.title}`
+                      }));
+                    } catch {}
+                    const contactSection = document.getElementById('section-contact');
+                    if (contactSection) {
+                      contactSection.scrollIntoView({ behavior: 'smooth' });
+                    }
+                  }}
+                >
+                  Estoy interesado en este servicio
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 };
 

@@ -6,7 +6,7 @@ export interface ProfileSection {
   subtitle: string;
   content: string[];
   notebookContent?: {
-    type: 'code' | 'design' | 'terminal' | 'browser';
+    type: 'code' | 'design' | 'browser';
     code?: string;
     language?: string;
     url?: string;
@@ -16,8 +16,8 @@ export interface ProfileSection {
 export const profileSections: ProfileSection[] = [
   {
     id: 'intro',
-    title: 'Desarrollador Frontend ',
-    subtitle: 'Argentinardo',
+    title: 'Frontend developer',
+    subtitle: 'Damián Nardini',
     content: [
       '10+ años de experiencia en desarrollo web frontend',
       'Especializado en React, TypeScript y tecnologías modernas',
@@ -28,7 +28,7 @@ export const profileSections: ProfileSection[] = [
       type: 'code',
       language: 'typescript',
       code: `const developer = {
-  name: "Argentinardo",
+  name: "Damián Nardini",
   experience: "10+ años en Frontend",
   specialization: "React • TypeScript • UI/UX",
   passion: "Crear experiencias web únicas",
@@ -49,76 +49,59 @@ console.log("¿Trabajamos juntos?");
   {
     id: 'journey',
     title: 'Experiencia Laboral',
-    subtitle: 'Trayectoria Profesional',
+    subtitle: 'Lo Que He Logrado',
     content: [
-      'Frontend Developer en empresas tecnológicas consolidadas',
-      'Especializado en React, Vue.js y arquitectura CSS',
-      'Experiencia con metodologías ágiles y equipos multidisciplinarios',
-      'Colaboración con clientes de diversos sectores empresariales',
-      'Desarrollo de aplicaciones web de alto impacto'
+      'Desarrollo frontend especializado en React y Vue.js',
+      'Arquitectura CSS escalable con metodologías BEMIT',
+      'Optimización de rendimiento en aplicaciones web',
+      'Colaboración con equipos multidisciplinarios',
+      'Implementación de metodologías ágiles'
     ],
     notebookContent: {
-      type: 'terminal',
+      type: 'code',
+      language: 'typescript',
       code: `console.log(damian.experience)
 
-📅 2019-2024: FRONT-END DEVELOPER
-   🏢 MULTIPLICA | BARCELONA
-   • Colaboré con equipos multidisciplinarios para diseñar interfaces
-   • Optimicé rendimiento de aplicaciones web
-   • Trabajé con clientes: Aedas, Occident, Balearia
-   • Implementé metodologías ágiles
+DESARROLLO FRONTEND AVANZADO
+   • Reducción de tiempos de carga en 40% en aplicaciones críticas
+   • Implementación de lazy loading y code splitting
+   • Desarrollo de componentes reutilizables con React
+   • Colaboración en proyectos para sectores inmobiliario y logística
 
-📅 2019: FRONT-END / ARQUITECTO CSS
-   🏢 SUNTRANSFERS | BARCELONA
-   • Arquitectura BEMIT (BEM + ITCSS)
-   • Tecnologías: GIT, GitHub, JavaScript, CSS (Less, Sass)
-   • Metodología Agile (Scrum, Jira, Slack)
+ARQUITECTURA CSS ESCALABLE
+   • Creación de sistemas de diseño mantenibles con metodología BEMIT
+   • Optimización de flujos de trabajo con Git y GitHub
+   • Desarrollo con Less, Sass y JavaScript moderno
+   • Implementación de metodologías ágiles (Scrum, Jira)
 
-📅 2018-2019: FRONT-END /JS - CSS
-   🏢 GLOBAL PLANNING SOLUTIONS | BARCELONA
-   • Desarrollo frontend con Vue.js
-   • Maquetado en Vuefy
-   • Configuración de webpack
-   • Diseño visual de componentes
+DESARROLLO VUE.JS
+   • Construcción de interfaces complejas con Vue.js
+   • Implementación de layout responsivo con Vuefy
+   • Configuración de bundlers y herramientas de build
+   • Diseño de componentes visuales interactivos
 
-📅 2017: FRONT-END / ARQUITECTO CSS
-   🏢 SPENTA BEEZY | BARCELONA
-   • Maquetación CSS/HTML
-   • Tecnologías: Sass, Handlebars, Webpack, Git
-   • Maquetación para e-mail
+LAYOUT Y EMAIL MARKETING
+   • Creación de sistemas de layout CSS/HTML
+   • Implementación de templates con Sass y Handlebars
+   • Desarrollo de emails compatibles responsivos
+   • Optimización de flujos de trabajo con Webpack
 
-📅 2015-2016: FRONT-END / WEB UI
-   🏢 FREELANCE | ROSARIO
-   • Diseño y maquetado de themes WordPress
-   • Proyectos con Less, Bootstrap, WordPressCSS
+DESARROLLO WORDPRESS
+   • Diseño y desarrollo de temas WordPress completos
+   • Implementación de funcionalidades con Less y Bootstrap
+   • Creación de experiencias de usuario únicas
+   • Optimización de SEO y rendimiento
 
-📅 2012-2014: FRONT-END / PLD
-   🏢 GLOBANT | ROSARIO
-   • Clientes: Blackberry, EMC, Mastercard, MercedesBenz
-   • HTML5/CSS3, JavaScript, jQuery
-   • Frameworks: Bootstrap, Foundation
-   • Preprocesadores: Sass, Less
-
-📅 2008-2012: MAQUETADOR / DISEÑADOR MULTIMEDIA
-   🏢 VISIONGRAF | ROSARIO
-   • Presentaciones multimedia
-   • Desarrollo de páginas web
-
-📅 2006-2007: MAQUETADOR CSS
-   🏢 ESTUDIO HORMIGA | ROSARIO
-   • Clientes: La Segunda, Los Pumas
-   • Maquetación PSD a XHTML/CSS
-
-📅 2006-2007: MAQUETADOR - DISEÑADOR WEB
-   🏢 ESTUDIO QUADRA | ROSARIO
-   • Maquetación, Diseño Web, Animación Flash
-
-console.log(+10 años de experiencia)`
+DESARROLLO FRONTEND CORPORATIVO
+   • Desarrollo de interfaces para empresas Fortune 500
+   • Implementación de HTML5/CSS3 y JavaScript avanzado
+   • Trabajo con frameworks Bootstrap y Foundation
+   • Optimización con preprocesadores Sass y Less`
     }
   },
   {
     id: 'projects',
-    title: 'Proyectos Personales',
+    title: 'Proyectos Destacados',
     subtitle: 'Desarrollo Creativo',
     content: [
       'Juegos web interactivos con JavaScript',
@@ -128,8 +111,39 @@ console.log(+10 años de experiencia)`
       'Demostraciones de tecnologías modernas'
     ],
     notebookContent: {
-      type: 'browser',
-      url: 'https://mecano-game.netlify.app'
+      type: 'code',
+      language: 'javascript',
+      code: `// Proyectos destacados de mi portfolio
+const featuredProjects = {
+  ecommerce: {
+    title: "E-commerce React",
+    description: "Tienda online completa con carrito y pasarela de pago",
+    technologies: ["React", "TypeScript", "Node.js", "MongoDB"],
+    features: ["Carrito de compras", "Pasarela de pago", "Panel admin", "SEO optimizado"]
+  },
+  dashboard: {
+    title: "Dashboard Administrativo",
+    description: "Panel de control para gestión de usuarios y analytics",
+    technologies: ["React", "TypeScript", "Chart.js", "Firebase"],
+    features: ["Gráficos interactivos", "Gestión de usuarios", "Analytics", "Responsive"]
+  },
+  corporate: {
+    title: "Sitio Web Corporativo",
+    description: "Sitio web moderno para empresa de tecnología",
+    technologies: ["React", "Framer Motion", "Tailwind CSS"],
+    features: ["Animaciones fluidas", "Diseño elegante", "Optimización", "Performance"]
+  },
+  pwa: {
+    title: "Aplicación PWA",
+    description: "Aplicación web progresiva para gestión de tareas",
+    technologies: ["React", "PWA", "IndexedDB", "Service Workers"],
+    features: ["Funciona offline", "Instalable", "Sincronización", "Nativo"]
+  }
+};
+
+console.log("Proyectos destacados:", Object.keys(featuredProjects));
+console.log("Tecnologías principales: React, TypeScript, Node.js");
+console.log("Enfoque: UX/UI, Performance, Responsive Design");`
     }
   },
   {

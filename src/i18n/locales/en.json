@@ -1,0 +1,175 @@
+{
+  "navigation": {
+    "intro": "Introduction",
+    "services": "Services",
+    "projects": "Projects",
+    "experience": "Experience",
+    "contact": "Contact"
+  },
+  "intro": {
+    "title": "Frontend Developer",
+    "subtitle": "Damián Nardini",
+    "content": [
+      "10+ years of frontend web development experience",
+      "Specialized in React, TypeScript and modern technologies",
+      "Available for freelance projects and collaborations",
+      "Focused on creating exceptional user experiences"
+    ],
+    "notebook": {
+      "code": "const developer = {\n  name: \"Damián Nardini\",\n  experience: \"10+ years in Frontend\",\n  specialization: \"React • TypeScript • UI/UX\",\n  passion: \"Create unique web experiences\",\n  location: \"Barcelona\",\n  available: true,\n};\n\nconsole.log(\"Hello! I'm \" + developer.name);\nconsole.log(\"With \" + developer.experience + \" of experience\");\nconsole.log(\"Shall we work together?\");\n\n Hello! I'm Damian Nardini\n With 10+ years in Frontend of experience  \nShall we work together?"
+    }
+  },
+  "experience": {
+    "title": "Work Experience",
+    "subtitle": "What I've Achieved",
+    "content": [
+      "Frontend development specialized in React and Vue.js",
+      "Scalable CSS architecture with BEMIT methodologies",
+      "Performance optimization in web applications",
+      "Collaboration with multidisciplinary teams",
+      "Implementation of agile methodologies"
+    ],
+    "notebook": {
+      "terminal": "console.log(damian.experience)\n\nADVANCED FRONTEND DEVELOPMENT\n   • Reduced loading times by 40% in critical applications\n   • Implemented lazy loading and code splitting\n   • Developed reusable components with React\n   • Collaborated on projects for real estate and logistics sectors\n\nSCALABLE CSS ARCHITECTURE\n   • Created maintainable design systems with BEMIT methodology\n   • Optimized workflows with Git and GitHub\n   • Developed with Less, Sass and modern JavaScript\n   • Implemented agile methodologies (Scrum, Jira)\n\nVUE.JS DEVELOPMENT\n   • Built complex interfaces with Vue.js\n   • Implemented responsive layout with Vuefy\n   • Configured bundlers and build tools\n   • Designed interactive visual components\n\nLAYOUT AND EMAIL MARKETING\n   • Created CSS/HTML layout systems\n   • Implemented templates with Sass and Handlebars\n   • Developed responsive compatible emails\n   • Optimized workflows with Webpack\n\nWORDPRESS DEVELOPMENT\n   • Designed and developed complete WordPress themes\n   • Implemented functionalities with Less and Bootstrap\n   • Created unique user experiences\n   • Optimized SEO and performance\n\nCORPORATE FRONTEND DEVELOPMENT\n   • Developed interfaces for Fortune 500 companies\n   • Implemented HTML5/CSS3 and advanced JavaScript\n   • Worked with Bootstrap and Foundation frameworks\n   • Optimized with Sass and Less preprocessors\n\nMULTIMEDIA DESIGN"
+    }
+  },
+  "services": {
+    "title": "Professional Services",
+    "subtitle": "What I Offer",
+    "items": [
+      {
+        "title": "n8n",
+        "description": "Process and workflow orchestration with n8n",
+        "icon": "CogIcon",
+        "features": [
+          "Automated workflows with n8n",
+          "API and CRM integrations",
+          "Custom connectors",
+          "Monitoring, logs and alerts"
+        ],
+        "price": "From €2,500"
+      },
+      {
+        "title": "Local LLM",
+        "description": "Installation and configuration of LLM models in your infrastructure",
+        "icon": "CpuChipIcon",
+        "features": [
+          "Ollama / llama.cpp / LM Studio",
+          "RAG with local databases",
+          "On-premise privacy and security",
+          "Model fine-tuning and evaluation"
+        ],
+        "price": "From €3,500"
+      },
+      {
+        "title": "AI Maintenance",
+        "description": "Maintenance and support plans for AI flows and models",
+        "icon": "WrenchScrewdriverIcon",
+        "features": [
+          "Monthly support and SLA",
+          "Flow and dependency updates",
+          "Continuous monitoring and optimization",
+          "Backups and recovery"
+        ],
+        "price": "From €1,800"
+      },
+      {
+        "title": "AI Consulting",
+        "description": "Strategy, audit and training in applied AI",
+        "icon": "AcademicCapIcon",
+        "features": [
+          "Use case identification",
+          "ROI and adoption roadmap",
+          "Best prompt practices",
+          "Custom workshops"
+        ],
+        "price": "€150/hour"
+      },
+      {
+        "title": "Frontend",
+        "description": "Modern web applications with React and TypeScript",
+        "icon": "CodeBracketIcon",
+        "features": [
+          "Reusable components",
+          "TypeScript for robust code",
+          "Performance optimization",
+          "Testing and debugging"
+        ],
+        "price": "From €2,500"
+      }
+    ],
+    "consult": "Consult",
+    "contact": "Contact me"
+  },
+  "projects": {
+    "title": "Featured Projects",
+    "subtitle": "Recent Work",
+    "filters": {
+      "all": "All",
+      "game": "Games",
+      "ecommerce": "E-commerce",
+      "dashboard": "Dashboards",
+      "corporate": "Corporate Sites",
+      "pwa": "PWA Apps",
+      "landing": "Landing Pages"
+    },
+    "items": [
+      {
+        "title": "Mecano Game",
+        "description": "Interactive web game developed with vanilla JavaScript. A mechanical gaming experience with physics and fluid animations.",
+        "technologies": ["JavaScript", "HTML5", "CSS3"],
+        "category": "game",
+        "year": 2025,
+        "liveUrl": "https://mecano-game.netlify.app",
+        "githubUrl": "https://github.com/damiannardini/mecano-game"
+      },
+      {
+        "title": "Run Ninja Run",
+        "description": "Comprehensive development of a game made with Pixi.js and TypeScript, assisted with artificial intelligence. Platform game with dynamic mechanics.",
+        "technologies": ["Pixi.js", "TypeScript", "AI-Assisted"],
+        "category": "game",
+        "year": 2025,
+        "liveUrl": "https://upit.com/@Damián Nardini/play/iS4sHgHhbG",
+        "githubUrl": "https://github.com/damiannardini/run-ninja-run"
+      }
+    ],
+    "buttons": {
+      "playDemo": "Play Demo",
+      "viewDemo": "View Demo",
+      "viewCode": "View Code"
+    },
+    "description": "Personal projects I've developed on my own as research and hobby. Experiments with different technologies and concepts that interest me.",
+    "notebook": {
+      "code": "// Personal projects developed as hobby\nconst personalProjects = {\n  mecanoGame: {\n    title: \"Mecano Game\",\n    description: \"Interactive web game with vanilla JavaScript\",\n    technologies: [\"JavaScript\", \"HTML5\", \"CSS3\"],\n    features: [\"Physics and animations\", \"Mechanical experience\", \"Interactive\", \"Responsive\"]\n  },\n  runNinjaRun: {\n    title: \"Run Ninja Run\",\n    description: \"Platform game with Pixi.js and TypeScript\",\n    technologies: [\"Pixi.js\", \"TypeScript\", \"AI-Assisted\"],\n    features: [\"Dynamic mechanics\", \"AI-Assisted\", \"Platforms\", \"Animations\"]\n  }\n};\n\nconsole.log(\"Personal projects:\", Object.keys(personalProjects));\nconsole.log(\"Technologies: JavaScript, TypeScript, Pixi.js\");\nconsole.log(\"Focus: Experimentation and learning\");"
+    }
+  },
+  "contact": {
+    "title": "Let's Work Together",
+    "subtitle": "Get in Touch",
+    "description": "I'm always open to new challenges and exciting collaborations. Let's discuss your project!",
+    "form": {
+      "name": "Name",
+      "email": "Email",
+      "message": "Message",
+      "send": "Send Message",
+      "sending": "Sending...",
+      "success": "Message sent successfully",
+      "error": "Error sending message",
+      "subject": "Inquiry from website",
+      "errors": {
+        "nameRequired": "Name is required",
+        "nameMinLength": "Name must be at least 2 characters",
+        "emailRequired": "Email is required",
+        "emailInvalid": "Please enter a valid email",
+        "messageRequired": "Message is required",
+        "messageMinLength": "Message must be at least 10 characters"
+      }
+    }
+  },
+  "common": {
+    "language": "Language",
+    "theme": "Theme",
+    "dark": "Dark",
+    "light": "Light"
+  }
+}

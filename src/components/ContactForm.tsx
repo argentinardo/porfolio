@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useForm, ValidationError } from '@formspree/react';
 
 interface ContactFormProps {
@@ -6,10 +7,11 @@ interface ContactFormProps {
 }
 
 const ContactForm: React.FC<ContactFormProps> = ({ isVisible }) => {
+  const { t } = useTranslation();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    subject: 'Consulta desde la web',
+    subject: t('contact.form.subject', 'Consulta desde la web'),
     message: ''
   });
   
@@ -29,7 +31,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ isVisible }) => {
           setFormData(prev => ({
             ...prev,
             message: '',
-            subject: data.subject ? String(data.subject) : (prev.subject || 'Consulta desde la web')
+            subject: data.subject ? String(data.subject) : (prev.subject || t('contact.form.subject'))
           }));
           // Limpiar el prefill para no volver a aplicarlo
           localStorage.removeItem('contactPrefill');
@@ -44,7 +46,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ isVisible }) => {
         if (subjectParam || messageParam) {
           setFormData(prev => ({
             ...prev,
-            subject: subjectParam ? subjectParam : (prev.subject || 'Consulta desde la web'),
+            subject: subjectParam ? subjectParam : (prev.subject || t('contact.form.subject')),
             message: ''
           }));
           // Limpiar los parámetros de la URL para no dejarlos visibles
@@ -68,24 +70,24 @@ const ContactForm: React.FC<ContactFormProps> = ({ isVisible }) => {
 
     // Validar nombre
     if (!formData.name.trim()) {
-      newErrors.name = 'El nombre es requerido';
+      newErrors.name = t('contact.form.errors.nameRequired');
     } else if (formData.name.trim().length < 2) {
-      newErrors.name = 'El nombre debe tener al menos 2 caracteres';
+      newErrors.name = t('contact.form.errors.nameMinLength');
     }
 
     // Validar email
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!formData.email.trim()) {
-      newErrors.email = 'El email es requerido';
+      newErrors.email = t('contact.form.errors.emailRequired');
     } else if (!emailRegex.test(formData.email)) {
-      newErrors.email = 'Ingresa un email válido';
+      newErrors.email = t('contact.form.errors.emailInvalid');
     }
 
     // Validar mensaje
     if (!formData.message.trim()) {
-      newErrors.message = 'El mensaje es requerido';
+      newErrors.message = t('contact.form.errors.messageRequired');
     } else if (formData.message.trim().length < 10) {
-      newErrors.message = 'El mensaje debe tener al menos 10 caracteres';
+      newErrors.message = t('contact.form.errors.messageMinLength');
     }
 
     setErrors(newErrors);
@@ -130,7 +132,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ isVisible }) => {
       setFormData({
         name: '',
         email: '',
-        subject: 'Consulta desde la web',
+        subject: t('contact.form.subject'),
         message: ''
       });
       setErrors({});
@@ -148,7 +150,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ isVisible }) => {
         <div className="form-fields">
           <div className="form-row">
             <div className="form-group">
-              <label htmlFor="name">Nombre:</label>
+              <label htmlFor="name">{t('contact.form.name')}:</label>
               <input
                 ref={nameInputRef}
                 type="text"
@@ -157,7 +159,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ isVisible }) => {
                 value={formData.name}
                 onChange={handleInputChange}
                 className={errors.name ? 'error' : ''}
-                placeholder="Tu nombre"
+                placeholder={t('contact.form.name')}
                 aria-describedby={errors.name ? 'name-error' : undefined}
                 aria-invalid={!!errors.name}
               />
@@ -165,7 +167,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ isVisible }) => {
                 {errors.name || '\u00A0'}
               </span>
               <ValidationError 
-                prefix="Nombre" 
+                prefix={t('contact.form.name')} 
                 field="name"
                 errors={state.errors}
                 className="error-message has-error"
@@ -173,7 +175,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ isVisible }) => {
             </div>
 
             <div className="form-group">
-              <label htmlFor="email">Email:</label>
+              <label htmlFor="email">{t('contact.form.email')}:</label>
               <input
                 type="email"
                 id="email"
@@ -189,7 +191,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ isVisible }) => {
                 {errors.email || '\u00A0'}
               </span>
               <ValidationError 
-                prefix="Email" 
+                prefix={t('contact.form.email')} 
                 field="email"
                 errors={state.errors}
                 className="error-message has-error"
@@ -198,7 +200,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ isVisible }) => {
           </div>
 
           <div className="form-group">
-            <label htmlFor="subject">Asunto:</label>
+            <label htmlFor="subject">{t('contact.form.subject')}:</label>
             <input
               type="text"
               id="subject"
@@ -206,7 +208,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ isVisible }) => {
               value={formData.subject}
               onChange={handleInputChange}
               className={errors.subject ? 'error' : ''}
-              placeholder="Asunto del mensaje"
+              placeholder={t('contact.form.subject')}
               aria-describedby={errors.subject ? 'subject-error' : undefined}
               aria-invalid={!!errors.subject}
             />
@@ -214,7 +216,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ isVisible }) => {
               {errors.subject || '\u00A0'}
             </span>
             <ValidationError 
-              prefix="Asunto" 
+              prefix={t('contact.form.subject')} 
               field="subject"
               errors={state.errors}
               className="error-message has-error"
@@ -222,14 +224,14 @@ const ContactForm: React.FC<ContactFormProps> = ({ isVisible }) => {
           </div>
 
           <div className="form-group">
-            <label htmlFor="message">Mensaje:</label>
+            <label htmlFor="message">{t('contact.form.message')}:</label>
             <textarea
               id="message"
               name="message"
               value={formData.message}
               onChange={handleInputChange}
               className={errors.message ? 'error' : ''}
-              placeholder="Cuéntame sobre tu proyecto..."
+              placeholder={t('contact.form.message')}
               rows={5}
               aria-describedby={errors.message ? 'message-error' : undefined}
               aria-invalid={!!errors.message}
@@ -238,7 +240,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ isVisible }) => {
               {errors.message || '\u00A0'}
             </span>
             <ValidationError 
-              prefix="Mensaje" 
+              prefix={t('contact.form.message')} 
               field="message"
               errors={state.errors}
               className="error-message has-error"
@@ -253,19 +255,25 @@ const ContactForm: React.FC<ContactFormProps> = ({ isVisible }) => {
             disabled={state.submitting}
             aria-describedby={state.submitting ? 'submitting-status' : undefined}
           >
-            {state.submitting ? 'Enviando...' : 'Enviar'}
+            {state.submitting ? t('contact.form.sending') : t('contact.form.send')}
           </button>
-          {state.submitting && <span id="submitting-status" className="sr-only">Enviando formulario...</span>}
+          {state.submitting && <span id="submitting-status" className="sr-only">{t('contact.form.sending')}</span>}
           
           {state.succeeded && (
             <div className="form-message success" role="alert" aria-live="polite">
-              ✓ Mensaje enviado correctamente
+              <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+              </svg>
+              {t('contact.form.success')}
             </div>
           )}
 
           {state.errors && Array.isArray(state.errors) && state.errors.length > 0 && (
             <div className="form-message error" role="alert" aria-live="polite">
-              ✗ Error al enviar el mensaje
+              <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+              {t('contact.form.error')}
             </div>
           )}
         </div>

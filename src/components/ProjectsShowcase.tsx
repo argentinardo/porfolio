@@ -1,14 +1,9 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { projects, projectCategories, Project } from '../data/projectsData';
+import { PlayIcon, GlobeAltIcon, FolderIcon } from '@heroicons/react/24/outline';
 
-interface PersonalGame {
-  id: string;
-  title: string;
-  year: string;
-  description: string;
-  technologies: string[];
-  gameUrl: string;
-}
+
 
 interface ProjectsShowcaseProps {
   isVisible: boolean;
@@ -16,28 +11,16 @@ interface ProjectsShowcaseProps {
   onPlayGame?: (gameUrl: string, gameTitle: string) => void;
 }
 
-const personalGames: PersonalGame[] = [
-  {
-    id: 'mecano-game',
-    title: 'Mecano Game',
-    year: '2025',
-    description: 'Juego web interactivo desarrollado con JavaScript vanilla. Una experiencia de juego mecánico con física y animaciones fluidas.',
-    technologies: ['JavaScript', 'HTML5', 'CSS3'],
-    gameUrl: 'https://mecano-game.netlify.app'
-  },
-  {
-    id: 'run-ninja-run',
-    title: 'Run Ninja Run',
-    year: '2025',
-    description: 'Desarrollo integral de un juego hecho con Pixi.js y TypeScript, asistido con inteligencia artificial. Juego de plataformas con mecánicas dinámicas.',
-    technologies: ['Pixi.js', 'TypeScript', 'AI-Assisted'],
-    gameUrl: 'https://upit.com/@argentinardo/play/iS4sHgHhbG'
-  }
-];
+
 
 const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({ isVisible, minimal = false, onPlayGame }) => {
+  const { t } = useTranslation();
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+
+  // Obtener proyectos traducidos
+  const translatedProjects = t('projects.items', { returnObjects: true }) as any[];
+  const translatedButtons = t('projects.buttons', { returnObjects: true }) as any;
 
   const filteredProjects = selectedCategory === 'all' 
     ? projects 
@@ -53,9 +36,8 @@ const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({ isVisible, minimal 
   if (minimal) {
     return (
       <div className="projects-minimal">
-        <h2 className="projects-minimal-title">Proyectos Personales</h2>
-        {personalGames.map((game) => (
-          <div key={game.id} className="project-minimal-card" data-id={game.id}>
+        {translatedProjects.map((game) => (
+          <div key={game.title} className="project-minimal-card" data-id={game.title.toLowerCase().replace(/\s+/g, '-')}>
             <div className="project-minimal-header">
               <h3 className="project-minimal-title">{game.title}</h3>
               <span className="project-minimal-year">{game.year}</span>
@@ -64,27 +46,29 @@ const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({ isVisible, minimal 
               {game.description}
             </p>
             <div className="project-minimal-tech">
-              {game.technologies.map((tech) => (
+              {game.technologies.map((tech: string) => (
                 <span key={tech} className="tech-tag">{tech}</span>
               ))}
             </div>
             <div className="project-minimal-links">
               {onPlayGame ? (
                 <button 
-                  onClick={() => onPlayGame(game.gameUrl, game.title)}
+                  onClick={() => onPlayGame(game.liveUrl, game.title)}
                   className="project-minimal-link"
                   type="button"
                 >
-                  🎮 Jugar Demo
+                  <PlayIcon className="w-4 h-4 mr-2" />
+                  {translatedButtons.playDemo}
                 </button>
               ) : (
                 <a 
-                  href={game.gameUrl} 
+                  href={game.liveUrl} 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="project-minimal-link"
                 >
-                  🌐 Jugar Demo
+                  <GlobeAltIcon className="w-4 h-4 mr-2" />
+                  {translatedButtons.playDemo}
                 </a>
               )}
             </div>
@@ -189,28 +173,30 @@ const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({ isVisible, minimal 
               </div>
               
               <div className="modal-links">
-                {selectedProject.liveUrl && (
-                  <a 
-                    href={selectedProject.liveUrl} 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="modal-link live"
-                    aria-label={`Ver demo de ${selectedProject.title}`}
-                  >
-                    🌐 Ver Demo
-                  </a>
-                )}
-                {selectedProject.githubUrl && (
-                  <a 
-                    href={selectedProject.githubUrl} 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="modal-link github"
-                    aria-label={`Ver código de ${selectedProject.title} en GitHub`}
-                  >
-                    📁 Ver Código
-                  </a>
-                )}
+                                 {selectedProject.liveUrl && (
+                   <a 
+                     href={selectedProject.liveUrl} 
+                     target="_blank" 
+                     rel="noopener noreferrer"
+                     className="modal-link live"
+                     aria-label={`Ver demo de ${selectedProject.title}`}
+                   >
+                     <GlobeAltIcon className="w-4 h-4 mr-2" />
+                     Ver Demo
+                   </a>
+                 )}
+                                 {selectedProject.githubUrl && (
+                   <a 
+                     href={selectedProject.githubUrl} 
+                     target="_blank" 
+                     rel="noopener noreferrer"
+                     className="modal-link github"
+                     aria-label={`Ver código de ${selectedProject.title} en GitHub`}
+                   >
+                     <FolderIcon className="w-4 h-4 mr-2" />
+                     Ver Código
+                   </a>
+                 )}
               </div>
             </div>
           </div>
