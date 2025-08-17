@@ -19,7 +19,7 @@ export const profileSections: ProfileSection[] = [
     title: 'Frontend developer',
     subtitle: 'Damián Nardini',
     content: [
-      '10+ años de experiencia en desarrollo web frontend',
+      '15+ años de experiencia en desarrollo web frontend',
       'Especializado en React, TypeScript y tecnologías modernas',
       'Disponible para proyectos freelance y colaboraciones',
       'Enfocado en crear experiencias de usuario excepcionales'
@@ -29,7 +29,7 @@ export const profileSections: ProfileSection[] = [
       language: 'typescript',
       code: `const developer = {
   name: "Damián Nardini",
-  experience: "10+ años en Frontend",
+  experience: "15+ años en Frontend",
   specialization: "React • TypeScript • UI/UX",
   passion: "Crear experiencias web únicas",
   location: "Barcelona",
@@ -38,11 +38,11 @@ export const profileSections: ProfileSection[] = [
 
 console.log("¡Hola! Soy " + developer.name);
 console.log("Con " + developer.experience + " de experiencia");
-console.log("¿Trabajamos juntos?");
+console.log("¿En que puedo ayudarte?");
 
  ¡Hola! Soy Damian Nardini
- Con 10+ años en Frontend de experiencia  
-¿Trabajamos juntos?
+ Con 15+ años en Frontend de experiencia  
+¿En que puedo ayudarte?
 `
     }
   },
@@ -101,7 +101,7 @@ DESARROLLO FRONTEND CORPORATIVO
   },
   {
     id: 'projects',
-    title: 'Proyectos Destacados',
+    title: 'Proyectos Personales',
     subtitle: 'Desarrollo Creativo',
     content: [
       'Juegos web interactivos con JavaScript',
@@ -113,7 +113,7 @@ DESARROLLO FRONTEND CORPORATIVO
     notebookContent: {
       type: 'code',
       language: 'javascript',
-      code: `// Proyectos destacados de mi portfolio
+      code: `// Proyectos Personales de mi portfolio
 const featuredProjects = {
   ecommerce: {
     title: "E-commerce React",
@@ -141,7 +141,7 @@ const featuredProjects = {
   }
 };
 
-console.log("Proyectos destacados:", Object.keys(featuredProjects));
+console.log("Proyectos Personales:", Object.keys(featuredProjects));
 console.log("Tecnologías principales: React, TypeScript, Node.js");
 console.log("Enfoque: UX/UI, Performance, Responsive Design");`
     }
@@ -216,7 +216,7 @@ export default freelanceServices;`
   },
   {
     id: 'contact',
-    title: 'Trabajemos Juntos',
+    title: 'Cuéntame tu idea',
     subtitle: 'Disponible para Nuevos Proyectos',
     content: [
       'Busco proyectos freelance interesantes',

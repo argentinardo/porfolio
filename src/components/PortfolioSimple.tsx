@@ -48,13 +48,34 @@ const AnimatedText: React.FC<{ text: string; speed?: number; className?: string 
   const [displayedText, setDisplayedText] = useState('');
   const [currentIndex, setCurrentIndex] = useState(0);
   const [showCursor, setShowCursor] = useState(true);
+  const [isMobile, setIsMobile] = useState(false);
+  const { i18n } = useTranslation();
+
+  // Detectar si es móvil
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   useEffect(() => {
     setDisplayedText('');
     setCurrentIndex(0);
-  }, [text]);
+  }, [text, i18n.language]);
 
   useEffect(() => {
+    // En móvil, mostrar todo el texto inmediatamente sin animación
+    if (isMobile) {
+      setDisplayedText(text);
+      setCurrentIndex(text.length);
+      return;
+    }
+
     if (currentIndex < text.length) {
       const timer = setTimeout(() => {
         setDisplayedText(prev => prev + text[currentIndex]);
@@ -62,20 +83,22 @@ const AnimatedText: React.FC<{ text: string; speed?: number; className?: string 
       }, speed);
       return () => clearTimeout(timer);
     }
-  }, [currentIndex, text, speed]);
+  }, [currentIndex, text, speed, isMobile]);
 
-  // Cursor parpadeante
+  // Cursor parpadeante solo en desktop
   useEffect(() => {
+    if (isMobile) return;
+    
     const cursorTimer = setInterval(() => {
       setShowCursor(prev => !prev);
     }, 500);
     return () => clearInterval(cursorTimer);
-  }, []);
+  }, [isMobile]);
 
   return (
     <span className={className}>
       {displayedText}
-      {showCursor && <span className="blinking-cursor">|</span>}
+      {!isMobile && showCursor && <span className="blinking-cursor">|</span>}
     </span>
   );
 };
@@ -158,7 +181,7 @@ const PortfolioSimple: React.FC = () => {
       content: [],
       notebookContent: {
         type: 'code' as const,
-        code: `// Servicios Profesionales Disponibles\n\nconst servicios = {\n  n8n: {\n    descripcion: "Orquestación de procesos y flujos de trabajo",\n    precio: "Desde €2.500",\n    caracteristicas: [\n      "Flujos de trabajo automatizados",\n      "Integraciones API y CRM",\n      "Conectores personalizados",\n      "Monitoreo y alertas"\n    ]\n  },\n  \n  iaLocal: {\n    descripcion: "Instalación y configuración de LLM",\n    precio: "Desde €3.500",\n    caracteristicas: [\n      "Ollama / llama.cpp / LM Studio",\n      "RAG con bases de datos locales",\n      "Privacidad on-premise",\n      "Fine-tuning de modelos"\n    ]\n  },\n  \n  mantenimiento: {\n    descripcion: "Mantenimiento y soporte para IA",\n    precio: "Desde €1.800",\n    caracteristicas: [\n      "Soporte mensual y SLA",\n      "Actualizaciones de flujos",\n      "Monitoreo continuo",\n      "Backups y recuperación"\n    ]\n  },\n  \n  consultoria: {\n    descripcion: "Estrategia y formación en IA",\n    precio: "€150/hora",\n    caracteristicas: [\n      "Identificación de casos de uso",\n      "ROI y roadmap de adopción",\n      "Mejores prácticas de prompts",\n      "Talleres personalizados"\n    ]\n  },\n  \n  frontend: {\n    descripcion: "Aplicaciones web modernas",\n    precio: "Desde €2.500",\n    caracteristicas: [\n      "React y TypeScript",\n      "Componentes reutilizables",\n      "Optimización de rendimiento",\n      "Testing y debugging"\n    ]\n  }\n};\n\nconsole.log("Servicios disponibles:", Object.keys(servicios));\nconsole.log("¿Te interesa alguno? ¡Contáctame!");`,
+        code: t('services.notebook.code'),
         language: 'javascript'
       }
     },
@@ -192,12 +215,22 @@ const PortfolioSimple: React.FC = () => {
       ],
       notebookContent: {
         type: 'code' as const,
-        code: `// Formulario de Contacto\n\nconst contactForm = {\n  campos: {\n    nombre: {\n      tipo: "text",\n      placeholder: "Tu nombre",\n      requerido: true\n    },\n    email: {\n      tipo: "email",\n      placeholder: "tu@email.com",\n      requerido: true\n    },\n    mensaje: {\n      tipo: "textarea",\n      placeholder: "Cuéntame sobre tu proyecto...",\n      requerido: true\n    }\n  },\n  \n  validacion: {\n    email: /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/,\n    nombre: /^[a-zA-Z\\s]{2,50}$/\n  },\n  \n  enviar: async (datos) => {\n    try {\n      const respuesta = await fetch('/api/contact', {\n        method: 'POST',\n        headers: { 'Content-Type': 'application/json' },\n        body: JSON.stringify(datos)\n      });\n      \n      if (respuesta.ok) {\n        console.log("¡Mensaje enviado con éxito!");\n        return { exito: true };\n      } else {\n        throw new Error('Error al enviar');\n      }\n    } catch (error) {\n      console.error("Error:", error);\n      return { exito: false, error };\n    }\n  }\n};\n\nconsole.log("Formulario listo para recibir mensajes");\nconsole.log("¡Hablemos sobre tu proyecto!");`,
+        code: t('contact.notebook.code'),
         language: 'javascript'
       }
     }
   ];
   }, [t]);
+
+  // Asegurar que el contenido se actualice cuando cambie el idioma
+  useEffect(() => {
+    // Forzar la actualización del contenido cuando cambie el idioma
+    const currentSection = profileSections[displaySection];
+    if (currentSection && currentSection.notebookContent) {
+      // Esto asegura que el contenido se actualice inmediatamente
+      setDisplaySection(displaySection);
+    }
+  }, [t, profileSections, displaySection]);
 
 
 
@@ -569,7 +602,7 @@ const PortfolioSimple: React.FC = () => {
                   </div>
                   <div className="content-list" role="list">
                     <p className="content-item">
-                      Ofrezco servicios especializados en automatización, inteligencia artificial local y desarrollo web. 
+                      Ofrezco soluciones de front-end, y servicios especializados en automatización, inteligencia artificial local y desarrollo web. 
                       Cada solución está diseñada para optimizar procesos empresariales y mejorar la eficiencia operativa.
                     </p>
                   </div>

@@ -1153,7 +1153,7 @@ body.light-mode {
 }
 
 body.light-mode .subtitle {
-  color: #1d4ed8;
+  color: #374151;
   font-family: var(--font-subtitle);
 }
 
@@ -1509,13 +1509,13 @@ body.light-mode .project-modal {
 body.light-mode .tech-tag {
   background: rgba(55, 65, 81, 0.15);
   border-color: rgba(55, 65, 81, 0.4);
-  color: #374151;
+  color: var(--primary-color);
 }
 
 body.light-mode .tech-item {
   background: rgba(55, 65, 81, 0.15);
   border-color: rgba(55, 65, 81, 0.4);
-  color: #374151;
+  color: var(--primary-color);
 }
 
 /* Responsive */
@@ -1750,7 +1750,7 @@ body.light-mode .tech-item {
   content: "✓";
   position: absolute;
   left: 0;
-  color: var(--accent-color);
+  color: var(--success-color);
   font-weight: bold;
 }
 
@@ -1784,7 +1784,7 @@ body.light-mode .tech-item {
 
 /* Ajustes para modo claro */
 body.light-mode .service-card {
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.8);
   border-color: #d1d5db;
 }
 
@@ -1794,7 +1794,7 @@ body.light-mode .service-card:hover {
 }
 
 body.light-mode .service-title {
-  color: #111827;
+  color: #374151;
 }
 
 body.light-mode .service-icon {
@@ -2761,6 +2761,7 @@ body.light-mode .submit-btn:hover:not(:disabled) {
   border-radius: 0.5rem;
   padding: 0.5rem;
   border: 1px solid rgba(75, 85, 99, 0.3);
+  width: 60px;
 }
 
 .lang-btn {
@@ -2961,6 +2962,9 @@ body.light-mode .progress-dot.active .progress-indicator-icon {
     left: 0;
     right: 0;
   }
+  .language-selector {
+    display: none;
+  }
 }
 
 
@@ -2981,4 +2985,8 @@ body.light-mode .progress-dot.active .progress-indicator-icon {
     position: absolute !important;
     pointer-events: none !important;
   }
+}
+
+.desktop-controls svg{
+  stroke: gray;
 }

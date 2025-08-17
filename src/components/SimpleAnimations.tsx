@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { SunIcon, MoonIcon, Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
+import { useTranslation } from 'react-i18next';
 
 
 interface SimpleAnimationsProps {
@@ -80,6 +81,48 @@ export const NeuralNetworkBackground: React.FC = () => {
   const mouse = useRef({ x: -1000, y: -1000 });
   const [isNightMode, setIsNightMode] = useState(true);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { i18n } = useTranslation();
+  const [currentLanguage, setCurrentLanguage] = useState(i18n.language);
+
+  // Función para mapear idiomas del navegador a idiomas soportados
+  const mapBrowserLanguage = (browserLang: string): string => {
+    const languageMap: { [key: string]: string } = {
+      'es': 'es',
+      'en': 'en',
+      'ca': 'ca',
+      'es-ES': 'es',
+      'en-US': 'en',
+      'en-GB': 'en',
+      'ca-ES': 'ca'
+    };
+    return languageMap[browserLang] || 'es';
+  };
+
+  // Actualizar el idioma actual cuando cambie
+  useEffect(() => {
+    const handleLanguageChange = () => {
+      setCurrentLanguage(i18n.language);
+    };
+
+    // Escuchar cambios de idioma
+    i18n.on('languageChanged', handleLanguageChange);
+    
+    // Establecer el idioma inicial si no hay uno guardado
+    if (!localStorage.getItem('i18nextLng')) {
+      const browserLang = navigator.language;
+      const defaultLang = mapBrowserLanguage(browserLang);
+      i18n.changeLanguage(defaultLang);
+    }
+
+    return () => {
+      i18n.off('languageChanged', handleLanguageChange);
+    };
+  }, [i18n]);
+
+  const changeLanguage = (lng: string) => {
+    i18n.changeLanguage(lng);
+    setCurrentLanguage(lng);
+  };
 
   useEffect(() => {
     // Aplicar clase al body según el modo
@@ -1065,6 +1108,87 @@ export const NeuralNetworkBackground: React.FC = () => {
             }}>
               <MoonIcon />
             </div>
+          </div>
+        </div>
+
+        {/* Selector de idiomas para móvil */}
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          padding: '0.5rem 0'
+        }}>
+          <span style={{
+            color: isNightMode ? '#ffffff' : '#000000',
+            fontSize: '0.875rem',
+            fontWeight: '500'
+          }}>
+            Idioma
+          </span>
+          <div style={{
+            display: 'flex',
+            gap: '0.5rem'
+          }}>
+            <button
+              onClick={() => changeLanguage('es')}
+              style={{
+                padding: '0.25rem 0.5rem',
+                borderRadius: '0.375rem',
+                fontSize: '0.75rem',
+                fontWeight: '500',
+                border: 'none',
+                cursor: 'pointer',
+                transition: 'all 0.2s ease',
+                background: currentLanguage === 'es' 
+                  ? (isNightMode ? '#10b981' : '#059669')
+                  : (isNightMode ? 'rgba(75, 85, 99, 0.3)' : 'rgba(0, 0, 0, 0.1)'),
+                color: currentLanguage === 'es' 
+                  ? '#ffffff' 
+                  : (isNightMode ? '#ffffff' : '#000000')
+              }}
+            >
+              ES
+            </button>
+            <button
+              onClick={() => changeLanguage('ca')}
+              style={{
+                padding: '0.25rem 0.5rem',
+                borderRadius: '0.375rem',
+                fontSize: '0.75rem',
+                fontWeight: '500',
+                border: 'none',
+                cursor: 'pointer',
+                transition: 'all 0.2s ease',
+                background: currentLanguage === 'ca' 
+                  ? (isNightMode ? '#10b981' : '#059669')
+                  : (isNightMode ? 'rgba(75, 85, 99, 0.3)' : 'rgba(0, 0, 0, 0.1)'),
+                color: currentLanguage === 'ca' 
+                  ? '#ffffff' 
+                  : (isNightMode ? '#ffffff' : '#000000')
+              }}
+            >
+              CA
+            </button>
+            <button
+              onClick={() => changeLanguage('en')}
+              style={{
+                padding: '0.25rem 0.5rem',
+                borderRadius: '0.375rem',
+                fontSize: '0.75rem',
+                fontWeight: '500',
+                border: 'none',
+                cursor: 'pointer',
+                transition: 'all 0.2s ease',
+                background: currentLanguage === 'en' 
+                  ? (isNightMode ? '#10b981' : '#059669')
+                  : (isNightMode ? 'rgba(75, 85, 99, 0.3)' : 'rgba(0, 0, 0, 0.1)'),
+                color: currentLanguage === 'en' 
+                  ? '#ffffff' 
+                  : (isNightMode ? '#ffffff' : '#000000')
+              }}
+            >
+              EN
+            </button>
           </div>
         </div>
 

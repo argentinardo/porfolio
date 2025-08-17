@@ -1,6 +1,6 @@
 # Portfolio Scroll - Damian Nardini
 
-Portfolio interactivo y moderno de Damian Nardini, desarrollador frontend  con 10+ años de experiencia.
+Portfolio interactivo y moderno de Damian Nardini, desarrollador frontend  con 15+ años de experiencia.
 
 ## 🚀 Características
 

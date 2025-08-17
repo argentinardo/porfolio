@@ -10,12 +10,12 @@
     "title": "Frontend developer",
     "subtitle": "Damián Nardini",
     "content": [
-      "10+ años de experiencia en desarrollo web frontend",
+      "15+ años de experiencia en desarrollo web frontend",
       "Especializado en React, TypeScript y tecnologías modernas",
       "Enfocado en crear experiencias de usuario excepcionales"
     ],
     "notebook": {
-      "code": "const developer = {\n  name: \"Damián Nardini\",\n  experience: \"10+ años en Frontend\",\n  specialization: \"React • TypeScript • UI/UX\",\n  passion: \"Crear experiencias web únicas\",\n  location: \"Barcelona\",\n  available: true,\n};\n\nconsole.log(\"¡Hola! Soy \" + developer.name);\nconsole.log(\"Con \" + developer.experience + \" de experiencia\");\nconsole.log(\"¿Trabajamos juntos?\");\n\n ¡Hola! Soy Damián Nardini\n Con 10+ años en Frontend de experiencia  \n¿Trabajamos juntos?"
+      "code": "const developer = {\n  name: \"Damián Nardini\",\n  experience: \"15+ años en Frontend\",\n  specialization: \"React • TypeScript • UI/UX\",\n  passion: \"Crear experiencias web únicas\",\n  location: \"Barcelona\",\n};\n\nconsole.log(\"¡Hola! Soy \" + developer.name);\nconsole.log(\"Con \" + developer.experience + \" de experiencia\");\nconsole.log(\"¿En que puedo ayudarte?\");\n\n ¡Hola! Soy Damián Nardini\n Con 15+ años en Frontend de experiencia  \n¿En que puedo ayudarte?"
     }
   },
   "experience": {
@@ -29,7 +29,7 @@
       "Implementación de metodologías ágiles"
     ],
     "notebook": {
-      "code": "console.log(damian.experience)\n\nDESARROLLO FRONTEND AVANZADO\n   • Reducción de tiempos de carga en 40% en aplicaciones críticas\n   • Implementación de lazy loading y code splitting\n   • Desarrollo de componentes reutilizables con React\n   • Colaboración en proyectos para sectores inmobiliario y logística\n\nARQUITECTURA CSS ESCALABLE\n   • Creación de sistemas de diseño mantenibles con metodología BEMIT\n   • Optimización de flujos de trabajo con Git y GitHub\n   • Desarrollo con Less, Sass y JavaScript moderno\n   • Implementación de metodologías ágiles (Scrum, Jira)\n\nDESARROLLO VUE.JS\n   • Construcción de interfaces complejas con Vue.js\n   • Implementación de layout responsivo con Vuefy\n   • Configuración de bundlers y herramientas de build\n   • Diseño de componentes visuales interactivos\n\nLAYOUT Y EMAIL MARKETING\n   • Creación de sistemas de layout CSS/HTML\n   • Implementación de templates con Sass y Handlebars\n   • Desarrollo de emails compatibles responsivos\n   • Optimización de flujos de trabajo con Webpack\n\nDESARROLLO WORDPRESS\n   • Diseño y desarrollo de temas WordPress completos\n   • Implementación de funcionalidades con Less y Bootstrap\n   • Creación de experiencias de usuario únicas\n   • Optimización de SEO y rendimiento\n\nDESARROLLO FRONTEND CORPORATIVO\n   • Desarrollo de interfaces para empresas Fortune 500\n   • Implementación de HTML5/CSS3 y JavaScript avanzado\n   • Trabajo con frameworks Bootstrap y Foundation\n   • Optimización con preprocesadores Sass y Less"
+      "code": "console.log(damian.experience)\n\nDESARROLLO FRONTEND AVANZADO\n   • Reducción de tiempos de carga en aplicaciones críticas\n   • Implementación de lazy loading y code splitting\n   • Desarrollo de componentes reutilizables con React\n   • Colaboración en proyectos para sectores inmobiliario y logística\n\nARQUITECTURA CSS ESCALABLE\n   • Creación de sistemas de diseño mantenibles con metodología BEMIT\n   • Optimización de flujos de trabajo con Git y GitHub\n   • Desarrollo con Less, Sass y JavaScript moderno\n   • Implementación de metodologías ágiles (Scrum, Jira)\n\nDESARROLLO VUE.JS\n   • Construcción de interfaces complejas con Vue.js\n   • Implementación de layout responsivo con Vuefy\n   • Configuración de bundlers y herramientas de build\n   • Diseño de componentes visuales interactivos\n\nLAYOUT Y EMAIL MARKETING\n   • Creación de sistemas de layout CSS/HTML\n   • Implementación de templates con Sass y Handlebars\n   • Desarrollo de emails compatibles responsivos\n   • Optimización de flujos de trabajo con Webpack\n\nDESARROLLO WORDPRESS\n   • Diseño y desarrollo de temas WordPress completos\n   • Implementación de funcionalidades con Less y Bootstrap\n   • Creación de experiencias de usuario únicas\n   • Optimización de SEO y rendimiento\n\nDESARROLLO FRONTEND CORPORATIVO\n   • Desarrollo de interfaces para empresas Fortune 500\n   • Implementación de HTML5/CSS3 y JavaScript avanzado\n   • Trabajo con frameworks Bootstrap y Foundation\n   • Optimización con preprocesadores Sass y Less"
     }
   },
   "services": {
@@ -98,10 +98,13 @@
       }
     ],
     "consult": "Consultar",
-    "contact": "Contáctame"
+    "contact": "Contáctame",
+    "notebook": {
+      "code": "// Servicios Profesionales Disponibles\n\nconst servicios = {\n  n8n: {\n    descripcion: \"Orquestación de procesos y flujos de trabajo\",\n    precio: \"Desde €2.500\",\n    caracteristicas: [\n      \"Flujos de trabajo automatizados\",\n      \"Integraciones API y CRM\",\n      \"Conectores personalizados\",\n      \"Monitoreo y alertas\"\n    ]\n  },\n  \n  iaLocal: {\n    descripcion: \"Instalación y configuración de LLM\",\n    precio: \"Desde €3.500\",\n    caracteristicas: [\n      \"Ollama / llama.cpp / LM Studio\",\n      \"RAG con bases de datos locales\",\n      \"Privacidad on-premise\",\n      \"Fine-tuning de modelos\"\n    ]\n  },\n  \n  mantenimiento: {\n    descripcion: \"Mantenimiento y soporte para IA\",\n    precio: \"Desde €1.800\",\n    caracteristicas: [\n      \"Soporte mensual y SLA\",\n      \"Actualizaciones de flujos\",\n      \"Monitoreo continuo\",\n      \"Backups y recuperación\"\n    ]\n  },\n  \n  consultoria: {\n    descripcion: \"Estrategia y formación en IA\",\n    precio: \"€150/hora\",\n    caracteristicas: [\n      \"Identificación de casos de uso\",\n      \"ROI y roadmap de adopción\",\n      \"Mejores prácticas de prompts\",\n      \"Talleres personalizados\"\n    ]\n  },\n  \n  frontend: {\n    descripcion: \"Aplicaciones web modernas\",\n    precio: \"Desde €2.500\",\n    caracteristicas: [\n      \"React y TypeScript\",\n      \"Componentes reutilizables\",\n      \"Optimización de rendimiento\",\n      \"Testing y debugging\"\n    ]\n  }\n};\n\nconsole.log(\"Servicios disponibles:\", Object.keys(servicios));\nconsole.log(\"¿Te interesa alguno? ¡Contáctame!\");"
+    }
   },
   "projects": {
-    "title": "Proyectos Destacados",
+    "title": "Proyectos Personales",
     "subtitle": "Trabajo Reciente",
     "filters": {
       "all": "Todos",
@@ -128,7 +131,7 @@
         "technologies": ["Pixi.js", "TypeScript", "AI-Assisted"],
         "category": "game",
         "year": 2025,
-        "liveUrl": "https://upit.com/@Damián Nardini/play/iS4sHgHhbG",
+        "liveUrl": "https://upit.com/game-template/index-0.0.5.html?frameid=0&v2=1&1754303752957",
         "githubUrl": "https://github.com/damiannardini/run-ninja-run"
       }
     ],
@@ -143,9 +146,12 @@
     }
   },
   "contact": {
-    "title": "Trabajemos Juntos",
+    "title": "Cuéntame tu idea",
     "subtitle": "Ponte en Contacto",
     "description": "Siempre estoy abierto a nuevos desafíos y colaboraciones emocionantes. ¡Hablemos de tu proyecto!",
+    "notebook": {
+      "code": "// Formulario de Contacto\n\nconst contactForm = {\n  campos: {\n    nombre: {\n      tipo: \"text\",\n      placeholder: \"Tu nombre\",\n      requerido: true\n    },\n    email: {\n      tipo: \"email\",\n      placeholder: \"tu@email.com\",\n      requerido: true\n    },\n    mensaje: {\n      tipo: \"textarea\",\n      placeholder: \"Cuéntame sobre tu proyecto...\",\n      requerido: true\n    }\n  },\n  \n  validacion: {\n    email: /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/,\n    nombre: /^[a-zA-Z\\s]{2,50}$/\n  },\n  \n  enviar: async (datos) => {\n    try {\n      const respuesta = await fetch('/api/contact', {\n        method: 'POST',\n        headers: { 'Content-Type': 'application/json' },\n        body: JSON.stringify(datos)\n      });\n      \n      if (respuesta.ok) {\n        console.log(\"¡Mensaje enviado con éxito!\");\n        return { exito: true };\n      } else {\n        throw new Error('Error al enviar');\n      }\n    } catch (error) {\n      console.error(\"Error:\", error);\n      return { exito: false, error };\n    }\n  }\n};\n\nconsole.log(\"Formulario listo para recibir mensajes\");\nconsole.log(\"¡Hablemos sobre tu proyecto!\");"
+    },
     "form": {
       "name": "Nombre",
       "email": "Email",

@@ -10,13 +10,12 @@
     "title": "Frontend Developer",
     "subtitle": "Damián Nardini",
     "content": [
-      "10+ years of frontend web development experience",
+      "15+ years of frontend web development experience",
       "Specialized in React, TypeScript and modern technologies",
-      "Available for freelance projects and collaborations",
       "Focused on creating exceptional user experiences"
     ],
     "notebook": {
-      "code": "const developer = {\n  name: \"Damián Nardini\",\n  experience: \"10+ years in Frontend\",\n  specialization: \"React • TypeScript • UI/UX\",\n  passion: \"Create unique web experiences\",\n  location: \"Barcelona\",\n  available: true,\n};\n\nconsole.log(\"Hello! I'm \" + developer.name);\nconsole.log(\"With \" + developer.experience + \" of experience\");\nconsole.log(\"Shall we work together?\");\n\n Hello! I'm Damian Nardini\n With 10+ years in Frontend of experience  \nShall we work together?"
+      "code": "const developer = {\n  name: \"Damián Nardini\",\n  experience: \"15+ years in Frontend\",\n  specialization: \"React • TypeScript • UI/UX\",\n  passion: \"Create unique web experiences\",\n  location: \"Barcelona\",\n};\n\nconsole.log(\"Hello! I'm \" + developer.name);\nconsole.log(\"With \" + developer.experience + \" of experience\");\nconsole.log(\"How can I help you?\");\n\n Hello! I'm Damian Nardini\n With 15+ years in Frontend of experience  \nHow can I help you?"
     }
   },
   "experience": {
@@ -30,7 +29,7 @@
       "Implementation of agile methodologies"
     ],
     "notebook": {
-      "terminal": "console.log(damian.experience)\n\nADVANCED FRONTEND DEVELOPMENT\n   • Reduced loading times by 40% in critical applications\n   • Implemented lazy loading and code splitting\n   • Developed reusable components with React\n   • Collaborated on projects for real estate and logistics sectors\n\nSCALABLE CSS ARCHITECTURE\n   • Created maintainable design systems with BEMIT methodology\n   • Optimized workflows with Git and GitHub\n   • Developed with Less, Sass and modern JavaScript\n   • Implemented agile methodologies (Scrum, Jira)\n\nVUE.JS DEVELOPMENT\n   • Built complex interfaces with Vue.js\n   • Implemented responsive layout with Vuefy\n   • Configured bundlers and build tools\n   • Designed interactive visual components\n\nLAYOUT AND EMAIL MARKETING\n   • Created CSS/HTML layout systems\n   • Implemented templates with Sass and Handlebars\n   • Developed responsive compatible emails\n   • Optimized workflows with Webpack\n\nWORDPRESS DEVELOPMENT\n   • Designed and developed complete WordPress themes\n   • Implemented functionalities with Less and Bootstrap\n   • Created unique user experiences\n   • Optimized SEO and performance\n\nCORPORATE FRONTEND DEVELOPMENT\n   • Developed interfaces for Fortune 500 companies\n   • Implemented HTML5/CSS3 and advanced JavaScript\n   • Worked with Bootstrap and Foundation frameworks\n   • Optimized with Sass and Less preprocessors\n\nMULTIMEDIA DESIGN"
+      "code": "console.log(damian.experience)\n\nADVANCED FRONTEND DEVELOPMENT\n   • Reduced loading times by 40% in critical applications\n   • Implemented lazy loading and code splitting\n   • Developed reusable components with React\n   • Collaborated on projects for real estate and logistics sectors\n\nSCALABLE CSS ARCHITECTURE\n   • Created maintainable design systems with BEMIT methodology\n   • Optimized workflows with Git and GitHub\n   • Developed with Less, Sass and modern JavaScript\n   • Implemented agile methodologies (Scrum, Jira)\n\nVUE.JS DEVELOPMENT\n   • Built complex interfaces with Vue.js\n   • Implemented responsive layout with Vuefy\n   • Configured bundlers and build tools\n   • Designed interactive visual components\n\nLAYOUT AND EMAIL MARKETING\n   • Created CSS/HTML layout systems\n   • Implemented templates with Sass and Handlebars\n   • Developed responsive compatible emails\n   • Optimized workflows with Webpack\n\nWORDPRESS DEVELOPMENT\n   • Designed and developed complete WordPress themes\n   • Implemented functionalities with Less and Bootstrap\n   • Created unique user experiences\n   • Optimized SEO and performance\n\nCORPORATE FRONTEND DEVELOPMENT\n   • Developed interfaces for Fortune 500 companies\n   • Implemented HTML5/CSS3 and advanced JavaScript\n   • Worked with Bootstrap and Foundation frameworks\n   • Optimized with Sass and Less preprocessors\n\nMULTIMEDIA DESIGN"
     }
   },
   "services": {
@@ -99,10 +98,13 @@
       }
     ],
     "consult": "Consult",
-    "contact": "Contact me"
+    "contact": "Contact me",
+    "notebook": {
+      "code": "// Professional Services Available\n\nconst services = {\n  n8n: {\n    description: \"Process and workflow orchestration\",\n    price: \"From €2,500\",\n    features: [\n      \"Automated workflows with n8n\",\n      \"API and CRM integrations\",\n      \"Custom connectors\",\n      \"Monitoring and alerts\"\n    ]\n  },\n  \n  localAI: {\n    description: \"LLM installation and configuration\",\n    price: \"From €3,500\",\n    features: [\n      \"Ollama / llama.cpp / LM Studio\",\n      \"RAG with local databases\",\n      \"On-premise privacy\",\n      \"Model fine-tuning\"\n    ]\n  },\n  \n  maintenance: {\n    description: \"AI maintenance and support\",\n    price: \"From €1,800\",\n    features: [\n      \"Monthly support and SLA\",\n      \"Flow and dependency updates\",\n      \"Continuous monitoring\",\n      \"Backups and recovery\"\n    ]\n  },\n  \n  consulting: {\n    description: \"AI strategy and training\",\n    price: \"€150/hour\",\n    features: [\n      \"Use case identification\",\n      \"ROI and adoption roadmap\",\n      \"Best prompt practices\",\n      \"Custom workshops\"\n    ]\n  },\n  \n  frontend: {\n    description: \"Modern web applications\",\n    price: \"From €2,500\",\n    features: [\n      \"React and TypeScript\",\n      \"Reusable components\",\n      \"Performance optimization\",\n      \"Testing and debugging\"\n    ]\n  }\n};\n\nconsole.log(\"Available services:\", Object.keys(services));\nconsole.log(\"Interested in any? Contact me!\");"
+    }
   },
   "projects": {
-    "title": "Featured Projects",
+    "title": "Personal Projects",
     "subtitle": "Recent Work",
     "filters": {
       "all": "All",
@@ -129,7 +131,7 @@
         "technologies": ["Pixi.js", "TypeScript", "AI-Assisted"],
         "category": "game",
         "year": 2025,
-        "liveUrl": "https://upit.com/@Damián Nardini/play/iS4sHgHhbG",
+        "liveUrl": "https://upit.com/game-template/index-0.0.5.html?frameid=0&v2=1&1754303752957",
         "githubUrl": "https://github.com/damiannardini/run-ninja-run"
       }
     ],
@@ -144,9 +146,12 @@
     }
   },
   "contact": {
-    "title": "Let's Work Together",
+    "title": "Tell me your idea",
     "subtitle": "Get in Touch",
     "description": "I'm always open to new challenges and exciting collaborations. Let's discuss your project!",
+    "notebook": {
+      "code": "// Contact Form\n\nconst contactForm = {\n  fields: {\n    name: {\n      type: \"text\",\n      placeholder: \"Your name\",\n      required: true\n    },\n    email: {\n      type: \"email\",\n      placeholder: \"your@email.com\",\n      required: true\n    },\n    message: {\n      type: \"textarea\",\n      placeholder: \"Tell me about your project...\",\n      required: true\n    }\n  },\n  \n  validation: {\n    email: /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/,\n    name: /^[a-zA-Z\\s]{2,50}$/\n  },\n  \n  send: async (data) => {\n    try {\n      const response = await fetch('/api/contact', {\n        method: 'POST',\n        headers: { 'Content-Type': 'application/json' },\n        body: JSON.stringify(data)\n      });\n      \n      if (response.ok) {\n        console.log(\"Message sent successfully!\");\n        return { success: true };\n      } else {\n        throw new Error('Error sending');\n      }\n    } catch (error) {\n      console.error(\"Error:\", error);\n      return { success: false, error };\n    }\n  }\n};\n\nconsole.log(\"Form ready to receive messages\");\nconsole.log(\"Let's talk about your project!\");"
+    },
     "form": {
       "name": "Name",
       "email": "Email",

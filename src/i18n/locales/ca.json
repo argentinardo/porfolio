@@ -10,13 +10,12 @@
     "title": "Frontend developer",
     "subtitle": "Damián Nardini",
     "content": [
-      "10+ anys d'experiència en desenvolupament web frontend",
+      "15+ anys d'experiència en desenvolupament web frontend",
       "Especialitzat en React, TypeScript i tecnologies modernes",
-      "Disponible per a projectes freelance i col·laboracions",
       "Centrat en crear experiències d'usuari excepcionals"
     ],
     "notebook": {
-      "code": "const developer = {\n  name: \"Damián Nardini\",\n  experience: \"10+ anys en Frontend\",\n  specialization: \"React • TypeScript • UI/UX\",\n  passion: \"Crear experiències web úniques\",\n  location: \"Barcelona\",\n  available: true,\n};\n\nconsole.log(\"Hola! Sóc \" + developer.name);\nconsole.log(\"Amb \" + developer.experience + \" d'experiència\");\nconsole.log(\"Treballem junts?\");\n\n Hola! Sóc Damián Nardini\n Amb 10+ anys en Frontend d'experiència  \nTreballem junts?"
+      "code": "const developer = {\n  name: \"Damián Nardini\",\n  experience: \"15+ anys en Frontend\",\n  specialization: \"React • TypeScript • UI/UX\",\n  passion: \"Crear experiències web úniques\",\n  location: \"Barcelona\",\n};\n\nconsole.log(\"Hola! Sóc \" + developer.name);\nconsole.log(\"Amb \" + developer.experience + \" d'experiència\");\nconsole.log(\"En què puc ajudar-te?\");\n\n Hola! Sóc Damián Nardini\n Amb 15+ anys en Frontend d'experiència  \nEn què puc ajudar-te?"
     }
   },
   "experience": {
@@ -30,7 +29,7 @@
       "Implementació de metodologies àgils"
     ],
     "notebook": {
-      "terminal": "console.log(damian.experience)\n\nDESENVOLUPAMENT FRONTEND AVANÇAT\n   • Reducció de temps de càrrega en 40% en aplicacions crítiques\n   • Implementació de lazy loading i code splitting\n   • Desenvolupament de components reutilitzables amb React\n   • Col·laboració en projectes per a sectors immobiliari i logística\n\nARQUITECTURA CSS ESCALABLE\n   • Creació de sistemes de disseny mantenibles amb metodologia BEMIT\n   • Optimització de fluxos de treball amb Git i GitHub\n   • Desenvolupament amb Less, Sass i JavaScript modern\n   • Implementació de metodologies àgils (Scrum, Jira)\n\nDESENVOLUPAMENT VUE.JS\n   • Construcció d'interfícies complexes amb Vue.js\n   • Implementació de layout responsiu amb Vuefy\n   • Configuració de bundlers i eines de build\n   • Disseny de components visuals interactius\n\nLAYOUT I EMAIL MARKETING\n   • Creació de sistemes de layout CSS/HTML\n   • Implementació de templates amb Sass i Handlebars\n   • Desenvolupament d'emails compatibles responsius\n   • Optimització de fluxos de treball amb Webpack\n\nDESENVOLUPAMENT WORDPRESS\n   • Disseny i desenvolupament de temes WordPress complets\n   • Implementació de funcionalitats amb Less i Bootstrap\n   • Creació d'experiències d'usuari úniques\n   • Optimització de SEO i rendiment\n\nDESENVOLUPAMENT FRONTEND CORPORATIU\n   • Desenvolupament d'interfícies per a empreses Fortune 500\n   • Implementació d'HTML5/CSS3 i JavaScript avançat\n   • Treball amb frameworks Bootstrap i Foundation\n   • Optimització amb preprocessadors Sass i Less\n\nDISSENY MULTIMÈDIA"
+      "code": "console.log(damian.experience)\n\nDESENVOLUPAMENT FRONTEND AVANÇAT\n   • Reducció de temps de càrrega en 40% en aplicacions crítiques\n   • Implementació de lazy loading i code splitting\n   • Desenvolupament de components reutilitzables amb React\n   • Col·laboració en projectes per a sectors immobiliari i logística\n\nARQUITECTURA CSS ESCALABLE\n   • Creació de sistemes de disseny mantenibles amb metodologia BEMIT\n   • Optimització de fluxos de treball amb Git i GitHub\n   • Desenvolupament amb Less, Sass i JavaScript modern\n   • Implementació de metodologies àgils (Scrum, Jira)\n\nDESENVOLUPAMENT VUE.JS\n   • Construcció d'interfícies complexes amb Vue.js\n   • Implementació de layout responsiu amb Vuefy\n   • Configuració de bundlers i eines de build\n   • Disseny de components visuals interactius\n\nLAYOUT I EMAIL MARKETING\n   • Creació de sistemes de layout CSS/HTML\n   • Implementació de templates amb Sass i Handlebars\n   • Desenvolupament d'emails compatibles responsius\n   • Optimització de fluxos de treball amb Webpack\n\nDESENVOLUPAMENT WORDPRESS\n   • Disseny i desenvolupament de temes WordPress complets\n   • Implementació de funcionalitats amb Less i Bootstrap\n   • Creació d'experiències d'usuari úniques\n   • Optimització de SEO i rendiment\n\nDESENVOLUPAMENT FRONTEND CORPORATIU\n   • Desenvolupament d'interfícies per a empreses Fortune 500\n   • Implementació d'HTML5/CSS3 i JavaScript avançat\n   • Treball amb frameworks Bootstrap i Foundation\n   • Optimització amb preprocessadors Sass i Less\n\nDISSENY MULTIMÈDIA"
     }
   },
   "services": {
@@ -99,10 +98,13 @@
       }
     ],
     "consult": "Consultar",
-    "contact": "Contacta'm"
+    "contact": "Contacta'm",
+    "notebook": {
+      "code": "// Serveis Professionals Disponibles\n\nconst serveis = {\n  n8n: {\n    descripcio: \"Orquestració de processos i fluxos de treball\",\n    preu: \"Des de €2.500\",\n    caracteristiques: [\n      \"Fluxos de treball automatitzats\",\n      \"Integracions API i CRM\",\n      \"Connectors personalitzats\",\n      \"Monitoratge i alertes\"\n    ]\n  },\n  \n  iaLocal: {\n    descripcio: \"Instal·lació i configuració de LLM\",\n    preu: \"Des de €3.500\",\n    caracteristiques: [\n      \"Ollama / llama.cpp / LM Studio\",\n      \"RAG amb bases de dades locals\",\n      \"Privadesa on-premise\",\n      \"Fine-tuning de models\"\n    ]\n  },\n  \n  manteniment: {\n    descripcio: \"Manteniment i suport per a IA\",\n    preu: \"Des de €1.800\",\n    caracteristiques: [\n      \"Suport mensual i SLA\",\n      \"Actualitzacions de fluxos\",\n      \"Monitoratge continu\",\n      \"Backups i recuperació\"\n    ]\n  },\n  \n  consultoria: {\n    descripcio: \"Estratègia i formació en IA\",\n    preu: \"€150/hora\",\n    caracteristiques: [\n      \"Identificació de casos d'ús\",\n      \"ROI i roadmap d'adopció\",\n      \"Millors pràctiques de prompts\",\n      \"Tallers personalitzats\"\n    ]\n  },\n  \n  frontend: {\n    descripcio: \"Aplicacions web modernes\",\n    preu: \"Des de €2.500\",\n    caracteristiques: [\n      \"React i TypeScript\",\n      \"Components reutilitzables\",\n      \"Optimització de rendiment\",\n      \"Testing i debugging\"\n    ]\n  }\n};\n\nconsole.log(\"Serveis disponibles:\", Object.keys(serveis));\nconsole.log(\"T'interessa algun? Contacta'm!\");"
+    }
   },
   "projects": {
-    "title": "Projectes Destacats",
+    "title": "Projectes Personals",
     "subtitle": "Treball Recent",
     "filters": {
       "all": "Tots",
@@ -129,7 +131,7 @@
         "technologies": ["Pixi.js", "TypeScript", "AI-Assisted"],
         "category": "game",
         "year": 2025,
-        "liveUrl": "https://upit.com/@Damián Nardini/play/iS4sHgHhbG",
+        "liveUrl": "https://upit.com/game-template/index-0.0.5.html?frameid=0&v2=1&1754303752957",
         "githubUrl": "https://github.com/damiannardini/run-ninja-run"
       }
     ],
@@ -144,9 +146,12 @@
     }
   },
   "contact": {
-    "title": "Treballem Junts",
+    "title": "Explica'm la teva idea",
     "subtitle": "Posa't en Contacte",
     "description": "Sempre estic obert a nous reptes i col·laboracions emocionants. Parlem del teu projecte!",
+    "notebook": {
+      "code": "// Formulari de Contacte\n\nconst contactForm = {\n  camps: {\n    nom: {\n      tipus: \"text\",\n      placeholder: \"El teu nom\",\n      requerit: true\n    },\n    email: {\n      tipus: \"email\",\n      placeholder: \"el.teu@email.com\",\n      requerit: true\n    },\n    missatge: {\n      tipus: \"textarea\",\n      placeholder: \"Explica'm sobre el teu projecte...\",\n      requerit: true\n    }\n  },\n  \n  validacio: {\n    email: /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/,\n    nom: /^[a-zA-Z\\s]{2,50}$/\n  },\n  \n  enviar: async (dades) => {\n    try {\n      const resposta = await fetch('/api/contact', {\n        method: 'POST',\n        headers: { 'Content-Type': 'application/json' },\n        body: JSON.stringify(dades)\n      });\n      \n      if (resposta.ok) {\n        console.log(\"Missatge enviat amb èxit!\");\n        return { exit: true };\n      } else {\n        throw new Error('Error en enviar');\n      }\n    } catch (error) {\n      console.error(\"Error:\", error);\n      return { exit: false, error };\n    }\n  }\n};\n\nconsole.log(\"Formulari llest per a rebre missatges\");\nconsole.log(\"Parlem del teu projecte!\");"
+    },
     "form": {
       "name": "Nom",
       "email": "Email",
