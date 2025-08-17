@@ -415,6 +415,84 @@ const PortfolioSimple: React.FC = () => {
   };
 
   const renderMobileNotebook = (section: ProfileSection) => {
+    // Caso especial para el formulario de contacto
+    if (section.id === 'contact') {
+      return (
+        <div className="window-base contact">
+          <div className="editor-header">
+            <div className="window-controls">
+              <button 
+                className="control-btn red" 
+                aria-label="Cerrar ventana"
+                disabled
+              >
+                <XMarkIcon className="control-icon" />
+              </button>
+              <button 
+                className="control-btn yellow" 
+                aria-label="Minimizar ventana"
+                disabled
+              >
+                <ChevronDownIcon className="control-icon" />
+              </button>
+              <button 
+                className="control-btn green" 
+                aria-label="Maximizar ventana"
+                disabled
+              >
+                <WindowIcon className="control-icon" />
+              </button>
+            </div>
+            <span className="editor-filename">
+              {section.title}
+            </span>
+          </div>
+          <div className="code-content">
+            <ContactForm isVisible={true} />
+          </div>
+        </div>
+      );
+    }
+
+    // Caso especial para la sección de proyectos
+    if (section.id === 'projects') {
+      return (
+        <div className="window-base projects">
+          <div className="editor-header">
+            <div className="window-controls">
+              <button 
+                className="control-btn red" 
+                aria-label="Cerrar ventana"
+                disabled
+              >
+                <XMarkIcon className="control-icon" />
+              </button>
+              <button 
+                className="control-btn yellow" 
+                aria-label="Minimizar ventana"
+                disabled
+              >
+                <ChevronDownIcon className="control-icon" />
+              </button>
+              <button 
+                className="control-btn green" 
+                aria-label="Maximizar ventana"
+                disabled
+              >
+                <WindowIcon className="control-icon" />
+              </button>
+            </div>
+            <span className="editor-filename">
+              {section.title}
+            </span>
+          </div>
+          <div className="code-content">
+            <ProjectsShowcase isVisible={true} minimal={true} onPlayGame={handlePlayGame} />
+          </div>
+        </div>
+      );
+    }
+
     if (!section.notebookContent) return null;
 
     const notebookContent = section.notebookContent;
