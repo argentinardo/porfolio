@@ -84,6 +84,25 @@ export const NeuralNetworkBackground: React.FC = () => {
   const { i18n } = useTranslation();
   const [currentLanguage, setCurrentLanguage] = useState(i18n.language);
 
+  // Escuchar eventos para controlar el menú móvil
+  useEffect(() => {
+    const handleCloseMobileMenu = () => {
+      setIsMobileMenuOpen(false);
+    };
+
+    const handleToggleMobileMenu = (event: CustomEvent) => {
+      setIsMobileMenuOpen(event.detail.isOpen);
+    };
+
+    window.addEventListener('closeMobileMenu', handleCloseMobileMenu);
+    window.addEventListener('toggleMobileMenu', handleToggleMobileMenu as EventListener);
+    
+    return () => {
+      window.removeEventListener('closeMobileMenu', handleCloseMobileMenu);
+      window.removeEventListener('toggleMobileMenu', handleToggleMobileMenu as EventListener);
+    };
+  }, []);
+
   // Función para mapear idiomas del navegador a idiomas soportados
   const mapBrowserLanguage = (browserLang: string): string => {
     const languageMap: { [key: string]: string } = {
@@ -986,7 +1005,7 @@ export const NeuralNetworkBackground: React.FC = () => {
         </div>
       </div>
 
-      {/* Botón de menú móvil */}
+      {/* Botón de menú móvil - ahora manejado por la barra sticky */}
       <div className="mobile-menu-button" style={{
         position: 'fixed',
         top: '20px',
@@ -1021,11 +1040,11 @@ export const NeuralNetworkBackground: React.FC = () => {
       {/* Menú móvil desplegable */}
       <div className="mobile-menu" style={{
         position: 'fixed',
-        top: '80px',
-        right: '20px',
+        top: '4rem',
+        right: '1rem',
         zIndex: 14,
         pointerEvents: 'auto',
-        display: 'none',
+        display: isMobileMenuOpen ? 'flex' : 'none',
         flexDirection: 'column',
         gap: '1rem',
         padding: '1.5rem',

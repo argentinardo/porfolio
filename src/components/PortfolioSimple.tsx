@@ -4,6 +4,7 @@ import { NeuralNetworkBackground } from './SimpleAnimations';
 import ServiceCards from './ServiceCards';
 import ContactForm from './ContactForm';
 import ProjectsShowcase from './ProjectsShowcase';
+import MobileStickyBar from './MobileStickyBar';
 import { socialLinks } from '../data/profileData';
 import { 
   CodeBracketIcon,
@@ -146,6 +147,7 @@ const ListItemWithIcon: React.FC<{ text: string; index: number; sectionId: strin
 const PortfolioSimple: React.FC = () => {
   const { t } = useTranslation();
   const [activeSection, setActiveSection] = useState(0);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [displaySection, setDisplaySection] = useState(0);
   const [isNotebookElevated, setIsNotebookElevated] = useState(false);
   const [isNotebookClosed, setIsNotebookClosed] = useState(false);
@@ -588,10 +590,60 @@ const PortfolioSimple: React.FC = () => {
   };
 
   const scrollToSection = (index: number) => {
-    const targetScroll = (index / (profileSections.length - 1)) * 
-      (document.documentElement.scrollHeight - window.innerHeight);
-    window.scrollTo({ top: targetScroll, behavior: 'smooth' });
+    const section = profileSections[index];
+    if (!section) return;
+
+    // Buscar el elemento subtitle de la sección
+    const subtitleElement = document.getElementById(`subtitle-${section.id}`);
+    if (subtitleElement) {
+      // Calcular la posición del subtitle
+      const rect = subtitleElement.getBoundingClientRect();
+      const scrollTop = window.pageYOffset + rect.top;
+      
+      // Ajustar para la barra sticky en mobile (4rem = 64px) + 20px de separación
+      const isMobile = window.innerWidth <= 768;
+      const offset = isMobile ? 84 : 20; // 64px (barra sticky) + 20px (separación)
+      
+      window.scrollTo({ 
+        top: scrollTop - offset, 
+        behavior: 'smooth' 
+      });
+    } else {
+      // Fallback: usar el método anterior
+      const targetScroll = (index / (profileSections.length - 1)) * 
+        (document.documentElement.scrollHeight - window.innerHeight);
+      window.scrollTo({ top: targetScroll, behavior: 'smooth' });
+    }
   };
+
+  const handleMobileMenuToggle = (isOpen: boolean) => {
+    setIsMobileMenuOpen(isOpen);
+    
+    // Enviar evento para sincronizar el estado del menú
+    const event = new CustomEvent('toggleMobileMenu', { detail: { isOpen } });
+    window.dispatchEvent(event);
+    
+    // Cerrar el menú después de hacer click en una sección
+    if (!isOpen) {
+      setTimeout(() => {
+        const closeEvent = new CustomEvent('closeMobileMenu');
+        window.dispatchEvent(closeEvent);
+      }, 100);
+    }
+  };
+
+  // Escuchar eventos para sincronizar el estado del menú
+  useEffect(() => {
+    const handleCloseMobileMenu = () => {
+      setIsMobileMenuOpen(false);
+    };
+
+    window.addEventListener('closeMobileMenu', handleCloseMobileMenu);
+    
+    return () => {
+      window.removeEventListener('closeMobileMenu', handleCloseMobileMenu);
+    };
+  }, []);
 
   // Insertar marcadores en el menú móvil
   useEffect(() => {
@@ -604,17 +656,11 @@ const PortfolioSimple: React.FC = () => {
         marker.onclick = () => {
           scrollToSection(index);
           // Cerrar el menú móvil después de hacer click
-          const mobileMenu = document.querySelector('.mobile-menu') as HTMLElement;
-          const mobileMenuButton = document.querySelector('.mobile-menu-button button') as HTMLElement;
-          if (mobileMenu && mobileMenuButton) {
-            mobileMenu.style.transform = 'translateX(100%)';
-            mobileMenu.style.opacity = '0';
-            // Actualizar el estado del menú (esto se maneja en el componente SimpleAnimations)
-            setTimeout(() => {
-              const event = new CustomEvent('closeMobileMenu');
-              window.dispatchEvent(event);
-            }, 300);
-          }
+          setIsMobileMenuOpen(false);
+          setTimeout(() => {
+            const event = new CustomEvent('closeMobileMenu');
+            window.dispatchEvent(event);
+          }, 100);
         };
         marker.innerHTML = `
           <ChevronRightIcon class="mobile-progress-indicator-icon" />
@@ -629,6 +675,13 @@ const PortfolioSimple: React.FC = () => {
     <div className="portfolio-container" role="main" aria-label="Portfolio de Damian Nardini">
       <SkipLink />
       <NeuralNetworkBackground />
+      
+      {/* Barra sticky para mobile */}
+      <MobileStickyBar 
+        activeSection={activeSection}
+        onMenuToggle={handleMobileMenuToggle}
+        isMenuOpen={isMobileMenuOpen}
+      />
       
       {/* Layout fijo con notebook */}
       <div className="fixed-layout" aria-hidden="true">
