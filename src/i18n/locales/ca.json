@@ -128,22 +128,32 @@
       },
       {
         "title": "Run Ninja Run",
-        "description": "Desenvolupament integral d'un joc fet amb Pixi.js i TypeScript, assistit amb intel·ligència artificial. Joc de plataformes amb mecàniques dinàmiques.",
-        "technologies": ["Pixi.js", "TypeScript", "AI-Assisted"],
+        "description": "Joc de plataformes desenvolupat a la plataforma FRVR d'Upit. Mecàniques dinàmiques amb Pixi.js i TypeScript, assistit amb intel·ligència artificial.",
+        "technologies": ["Pixi.js", "TypeScript", "AI-Assisted", "FRVR Platform"],
         "category": "game",
         "year": 2025,
-        "liveUrl": "https://upit.com/game-template/index-0.0.5.html?frameid=0&v2=1&1754303752957",
+        "liveUrl": "https://upit.com/@argentinardo/play/iS4sHgHhbG",
         "githubUrl": "https://github.com/damiannardini/run-ninja-run"
+      },
+      {
+        "title": "Gatatack",
+        "description": "Joc d'acció desenvolupat a la plataforma FRVR d'Upit. Experiència de joc dinàmica amb mecàniques úniques i disseny atractiu.",
+        "technologies": ["FRVR Platform", "Game Development", "Interactive Design"],
+        "category": "game",
+        "year": 2025,
+        "liveUrl": "https://upit.com/@argentinardo/play/WwGOgTSW91",
+        "githubUrl": ""
       }
     ],
     "buttons": {
       "playDemo": "Jugar Demo",
       "viewDemo": "Veure Demo",
-      "viewCode": "Veure Codi"
+      "viewCode": "Veure Codi",
+      "visit": "Visitar"
     },
     "description": "Projectes personals que he desenvolupat per la meva compte com a recerca i hobby. Experiments amb diferents tecnologies i conceptes que m'interessen.",
     "notebook": {
-      "code": "// Projectes personals desenvolupats com a hobby\nconst personalProjects = {\n  mecanoGame: {\n    title: \"Mecano Game\",\n    description: \"Joc web interactiu amb JavaScript vanilla\",\n    technologies: [\"JavaScript\", \"HTML5\", \"CSS3\"],\n    features: [\"Física i animacions\", \"Experiència mecànica\", \"Interactiu\", \"Responsiu\"]\n  },\n  runNinjaRun: {\n    title: \"Run Ninja Run\",\n    description: \"Joc de plataformes amb Pixi.js i TypeScript\",\n    technologies: [\"Pixi.js\", \"TypeScript\", \"AI-Assisted\"],\n    features: [\"Mecàniques dinàmiques\", \"Assistit per IA\", \"Plataformes\", \"Animacions\"]\n  }\n};\n\nconsole.log(\"Projectes personals:\", Object.keys(personalProjects));\nconsole.log(\"Tecnologies: JavaScript, TypeScript, Pixi.js\");\nconsole.log(\"Enfocament: Experimentació i aprenentatge\");"
+      "code": "// Projectes personals desenvolupats com a hobby\nconst personalProjects = {\n  mecanoGame: {\n    title: \"Mecano Game\",\n    description: \"Joc web interactiu amb JavaScript vanilla\",\n    technologies: [\"JavaScript\", \"HTML5\", \"CSS3\"],\n    features: [\"Física i animacions\", \"Experiència mecànica\", \"Interactiu\", \"Responsiu\"]\n  },\n  runNinjaRun: {\n    title: \"Run Ninja Run\",\n    description: \"Joc de plataformes a la plataforma FRVR d'Upit\",\n    technologies: [\"Pixi.js\", \"TypeScript\", \"AI-Assisted\", \"FRVR Platform\"],\n    features: [\"Mecàniques dinàmiques\", \"Assistit per IA\", \"Plataformes\", \"Animacions\"]\n  },\n  gatatack: {\n    title: \"Gatatack\",\n    description: \"Joc d'acció a la plataforma FRVR d'Upit\",\n    technologies: [\"FRVR Platform\", \"Game Development\", \"Interactive Design\"],\n    features: [\"Mecàniques úniques\", \"Disseny atractiu\", \"Experiència dinàmica\", \"Plataforma FRVR\"]\n  }\n};\n\nconsole.log(\"Projectes personals:\", Object.keys(personalProjects));\nconsole.log(\"Tecnologies: JavaScript, TypeScript, Pixi.js, FRVR Platform\");\nconsole.log(\"Enfocament: Experimentació i aprenentatge en plataformes de jocs\");"
     }
   },
   "contact": {

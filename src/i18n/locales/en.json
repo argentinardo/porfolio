@@ -128,22 +128,32 @@
       },
       {
         "title": "Run Ninja Run",
-        "description": "Comprehensive development of a game made with Pixi.js and TypeScript, assisted with artificial intelligence. Platform game with dynamic mechanics.",
-        "technologies": ["Pixi.js", "TypeScript", "AI-Assisted"],
+        "description": "Platform game developed on the FRVR platform of Upit. Dynamic mechanics with Pixi.js and TypeScript, assisted with artificial intelligence.",
+        "technologies": ["Pixi.js", "TypeScript", "AI-Assisted", "FRVR Platform"],
         "category": "game",
         "year": 2025,
-        "liveUrl": "https://upit.com/game-template/index-0.0.5.html?frameid=0&v2=1&1754303752957",
+        "liveUrl": "https://upit.com/@argentinardo/play/iS4sHgHhbG",
         "githubUrl": "https://github.com/damiannardini/run-ninja-run"
+      },
+      {
+        "title": "Gatatack",
+        "description": "Action game developed on the FRVR platform of Upit. Dynamic gaming experience with unique mechanics and attractive design.",
+        "technologies": ["FRVR Platform", "Game Development", "Interactive Design"],
+        "category": "game",
+        "year": 2025,
+        "liveUrl": "https://upit.com/@argentinardo/play/WwGOgTSW91",
+        "githubUrl": ""
       }
     ],
     "buttons": {
       "playDemo": "Play Demo",
       "viewDemo": "View Demo",
-      "viewCode": "View Code"
+      "viewCode": "View Code",
+      "visit": "Visit"
     },
     "description": "Personal projects I've developed on my own as research and hobby. Experiments with different technologies and concepts that interest me.",
     "notebook": {
-      "code": "// Personal projects developed as hobby\nconst personalProjects = {\n  mecanoGame: {\n    title: \"Mecano Game\",\n    description: \"Interactive web game with vanilla JavaScript\",\n    technologies: [\"JavaScript\", \"HTML5\", \"CSS3\"],\n    features: [\"Physics and animations\", \"Mechanical experience\", \"Interactive\", \"Responsive\"]\n  },\n  runNinjaRun: {\n    title: \"Run Ninja Run\",\n    description: \"Platform game with Pixi.js and TypeScript\",\n    technologies: [\"Pixi.js\", \"TypeScript\", \"AI-Assisted\"],\n    features: [\"Dynamic mechanics\", \"AI-Assisted\", \"Platforms\", \"Animations\"]\n  }\n};\n\nconsole.log(\"Personal projects:\", Object.keys(personalProjects));\nconsole.log(\"Technologies: JavaScript, TypeScript, Pixi.js\");\nconsole.log(\"Focus: Experimentation and learning\");"
+      "code": "// Personal projects developed as hobby\nconst personalProjects = {\n  mecanoGame: {\n    title: \"Mecano Game\",\n    description: \"Interactive web game with vanilla JavaScript\",\n    technologies: [\"JavaScript\", \"HTML5\", \"CSS3\"],\n    features: [\"Physics and animations\", \"Mechanical experience\", \"Interactive\", \"Responsive\"]\n  },\n  runNinjaRun: {\n    title: \"Run Ninja Run\",\n    description: \"Platform game on FRVR platform of Upit\",\n    technologies: [\"Pixi.js\", \"TypeScript\", \"AI-Assisted\", \"FRVR Platform\"],\n    features: [\"Dynamic mechanics\", \"AI-Assisted\", \"Platforms\", \"Animations\"]\n  },\n  gatatack: {\n    title: \"Gatatack\",\n    description: \"Action game on FRVR platform of Upit\",\n    technologies: [\"FRVR Platform\", \"Game Development\", \"Interactive Design\"],\n    features: [\"Unique mechanics\", \"Attractive design\", \"Dynamic experience\", \"FRVR Platform\"]\n  }\n};\n\nconsole.log(\"Personal projects:\", Object.keys(personalProjects));\nconsole.log(\"Technologies: JavaScript, TypeScript, Pixi.js, FRVR Platform\");\nconsole.log(\"Focus: Experimentation and learning on gaming platforms\");"
     }
   },
   "contact": {

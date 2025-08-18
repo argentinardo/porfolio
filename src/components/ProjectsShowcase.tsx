@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { projects, projectCategories, Project } from '../data/projectsData';
 import { PlayIcon, GlobeAltIcon, FolderIcon } from '@heroicons/react/24/outline';
@@ -17,6 +17,19 @@ const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({ isVisible, minimal 
   const { t } = useTranslation();
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Detectar si estamos en mobile
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   // Obtener proyectos traducidos
   const translatedProjects = t('projects.items', { returnObjects: true }) as Array<{
@@ -28,6 +41,7 @@ const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({ isVisible, minimal 
   }>;
   const translatedButtons = t('projects.buttons', { returnObjects: true }) as {
     playDemo: string;
+    visit: string;
   };
 
   const filteredProjects = selectedCategory === 'all' 
@@ -59,7 +73,19 @@ const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({ isVisible, minimal 
               ))}
             </div>
             <div className="project-minimal-links">
-              {onPlayGame ? (
+              {isMobile ? (
+                // En mobile, siempre redirigir directamente a la URL
+                <a 
+                  href={game.liveUrl} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="project-minimal-link"
+                >
+                  <GlobeAltIcon className="w-4 h-4 mr-2" />
+                  {translatedButtons.visit}
+                </a>
+              ) : onPlayGame ? (
+                // En desktop, usar el popup si está disponible
                 <button 
                   onClick={() => onPlayGame(game.liveUrl, game.title)}
                   className="project-minimal-link"
@@ -69,6 +95,7 @@ const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({ isVisible, minimal 
                   {translatedButtons.playDemo}
                 </button>
               ) : (
+                // En desktop, redirigir directamente si no hay popup
                 <a 
                   href={game.liveUrl} 
                   target="_blank" 
