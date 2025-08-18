@@ -72,11 +72,12 @@ const ContactForm: React.FC<ContactFormProps> = ({ isVisible, onOpenPopup, onSuc
         }
       } catch {}
 
-      if (nameInputRef.current) {
-        setTimeout(() => {
-          nameInputRef.current?.focus();
-        }, 100);
-      }
+      // Removido el focus automático para evitar que se abra el modal automáticamente en móvil
+      // if (nameInputRef.current) {
+      //   setTimeout(() => {
+      //     nameInputRef.current?.focus();
+      //   }, 100);
+      // }
     }
   }, [isVisible, t]);
 
@@ -125,10 +126,15 @@ const ContactForm: React.FC<ContactFormProps> = ({ isVisible, onOpenPopup, onSuc
     }
   };
 
-  const handleInputFocus = () => {
-    // Abrir popup automáticamente en mobile al hacer focus en cualquier campo
+  const handleInputFocus = (e: React.FocusEvent) => {
+    // Solo abrir popup en mobile cuando el usuario haga focus manualmente
+    // No abrir automáticamente al cargar la página
     if (isMobile && onOpenPopup) {
-      onOpenPopup();
+      // Verificar que el focus sea intencional (no programático)
+      const isUserInteraction = e.nativeEvent.isTrusted;
+      if (isUserInteraction) {
+        onOpenPopup();
+      }
     }
   };
 

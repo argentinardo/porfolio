@@ -152,7 +152,7 @@ const PortfolioSimple: React.FC = () => {
   const [isContactPopupOpen, setIsContactPopupOpen] = useState(false);
   const [showStickyBar, setShowStickyBar] = useState(false);
   const [displaySection, setDisplaySection] = useState(0);
-  const [isMobileNotebookExpanded, setIsMobileNotebookExpanded] = useState(false);
+  const [expandedSections, setExpandedSections] = useState<{[key: string]: boolean}>({});
   const [isNotebookElevated, setIsNotebookElevated] = useState(false);
   const [isNotebookClosed, setIsNotebookClosed] = useState(false);
   const [isWindowMinimized, setIsWindowMinimized] = useState(false);
@@ -427,7 +427,10 @@ const PortfolioSimple: React.FC = () => {
     // Caso especial para el formulario de contacto
     if (section.id === 'contact') {
       return (
-        <div className={`window-base contact ${isMobileNotebookExpanded ? 'expanded' : ''}`}>
+        <div 
+          className={`window-base contact ${isSectionExpanded('contact') ? 'expanded' : ''}`}
+          data-section="contact"
+        >
           <div className="editor-header">
             <div className="window-controls">
               <button 
@@ -455,13 +458,6 @@ const PortfolioSimple: React.FC = () => {
             <span className="editor-filename">
               {section.title}
             </span>
-            <button
-              className="mobile-expand-btn"
-              onClick={handleMobileNotebookToggle}
-              aria-label={isMobileNotebookExpanded ? 'Contraer pantalla' : 'Expandir pantalla'}
-            >
-              <ChevronDownIcon className="expand-icon" />
-            </button>
           </div>
           <div className="code-content">
             <ContactForm 
@@ -469,6 +465,17 @@ const PortfolioSimple: React.FC = () => {
               onOpenPopup={() => handleContactPopupToggle(true)}
             />
           </div>
+          {sectionsWithExpand['contact'] && (
+            <div className="mobile-footer">
+              <button
+                className="mobile-expand-btn"
+                onClick={() => handleMobileNotebookToggle('contact')}
+                aria-label={isSectionExpanded('contact') ? 'Contraer pantalla' : 'Expandir pantalla'}
+              >
+                <ChevronDownIcon className="expand-icon" />
+              </button>
+            </div>
+          )}
         </div>
       );
     }
@@ -476,7 +483,10 @@ const PortfolioSimple: React.FC = () => {
     // Caso especial para la sección de proyectos
     if (section.id === 'projects') {
       return (
-        <div className={`window-base projects ${isMobileNotebookExpanded ? 'expanded' : ''}`}>
+        <div 
+          className={`window-base projects ${isSectionExpanded('projects') ? 'expanded' : ''}`}
+          data-section="projects"
+        >
           <div className="editor-header">
             <div className="window-controls">
               <button 
@@ -504,17 +514,21 @@ const PortfolioSimple: React.FC = () => {
             <span className="editor-filename">
               {section.title}
             </span>
-            <button
-              className="mobile-expand-btn"
-              onClick={handleMobileNotebookToggle}
-              aria-label={isMobileNotebookExpanded ? 'Contraer pantalla' : 'Expandir pantalla'}
-            >
-              <ChevronDownIcon className="expand-icon" />
-            </button>
           </div>
           <div className="code-content">
             <ProjectsShowcase isVisible={true} minimal={true} onPlayGame={handlePlayGame} />
           </div>
+          {sectionsWithExpand['projects'] && (
+            <div className="mobile-footer">
+              <button
+                className="mobile-expand-btn"
+                onClick={() => handleMobileNotebookToggle('projects')}
+                aria-label={isSectionExpanded('projects') ? 'Contraer pantalla' : 'Expandir pantalla'}
+              >
+                <ChevronDownIcon className="expand-icon" />
+              </button>
+            </div>
+          )}
         </div>
       );
     }
@@ -554,20 +568,16 @@ const PortfolioSimple: React.FC = () => {
         <span className="editor-filename">
           {section.title}
         </span>
-        <button
-          className="mobile-expand-btn"
-          onClick={handleMobileNotebookToggle}
-          aria-label={isMobileNotebookExpanded ? 'Contraer pantalla' : 'Expandir pantalla'}
-        >
-          <ChevronDownIcon className="expand-icon" />
-        </button>
       </div>
     );
 
     switch (type) {
       case 'code':
         return (
-          <div className={`window-base ${type} ${isMobileNotebookExpanded ? 'expanded' : ''}`}>
+          <div 
+            className={`window-base ${type} ${isSectionExpanded(section.id) ? 'expanded' : ''}`}
+            data-section={section.id}
+          >
             {windowHeader}
             <pre className="code-content">
               <code>
@@ -578,6 +588,17 @@ const PortfolioSimple: React.FC = () => {
                 />
               </code>
             </pre>
+            {sectionsWithExpand[section.id] && (
+              <div className="mobile-footer">
+                <button
+                  className="mobile-expand-btn"
+                  onClick={() => handleMobileNotebookToggle(section.id)}
+                  aria-label={isSectionExpanded(section.id) ? 'Contraer pantalla' : 'Expandir pantalla'}
+                >
+                  <ChevronDownIcon className="expand-icon" />
+                </button>
+              </div>
+            )}
           </div>
         );
 
@@ -667,9 +688,44 @@ const PortfolioSimple: React.FC = () => {
     setIsContactPopupOpen(isOpen);
   };
 
-  const handleMobileNotebookToggle = () => {
-    setIsMobileNotebookExpanded(!isMobileNotebookExpanded);
+  const handleMobileNotebookToggle = (sectionId: string) => {
+    setExpandedSections(prev => ({
+      ...prev,
+      [sectionId]: !prev[sectionId]
+    }));
   };
+
+  const isSectionExpanded = (sectionId: string) => {
+    return expandedSections[sectionId] || false;
+  };
+
+  // Función para verificar si el contenido supera los 510px
+  const checkContentHeight = (sectionId: string) => {
+    const contentElement = document.querySelector(`.mobile-notebook .window-base[data-section="${sectionId}"] .code-content`);
+    if (contentElement) {
+      return contentElement.scrollHeight > 510;
+    }
+    return false;
+  };
+
+  // Estado para controlar qué secciones deben mostrar el botón de expansión
+  const [sectionsWithExpand, setSectionsWithExpand] = useState<{[key: string]: boolean}>({});
+
+  // Verificar altura del contenido después del render
+  useEffect(() => {
+    const checkAllSections = () => {
+      const newSectionsWithExpand: {[key: string]: boolean} = {};
+      profileSections.forEach(section => {
+        newSectionsWithExpand[section.id] = checkContentHeight(section.id);
+      });
+      setSectionsWithExpand(newSectionsWithExpand);
+    };
+
+    // Verificar después de un pequeño delay para asegurar que el contenido se haya renderizado
+    const timeoutId = setTimeout(checkAllSections, 100);
+    
+    return () => clearTimeout(timeoutId);
+  }, [profileSections, activeSection]);
 
   // Escuchar eventos para sincronizar el estado del menú
   useEffect(() => {
@@ -818,26 +874,7 @@ const PortfolioSimple: React.FC = () => {
                       />
                     ))}
                   </div>
-                  <nav className="social-links" aria-label="Enlaces sociales">
-                    <a
-                      href={socialLinks.linkedin}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="social-link primary"
-                      aria-label="Visitar perfil de LinkedIn"
-                    >
-                      LinkedIn
-                    </a>
-                    <a
-                      href={socialLinks.github}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="social-link secondary"
-                      aria-label="Visitar perfil de GitHub"
-                    >
-                      GitHub
-                    </a>
-                  </nav>
+
                 </>
               ) : (
                 <>
@@ -881,7 +918,7 @@ const PortfolioSimple: React.FC = () => {
             <div className="mobile-notebook-container">
               <div className="mobile-notebook active">
                 <div className="laptop-base"></div>
-                <div className={`laptop-screen ${isMobileNotebookExpanded ? 'expanded' : ''}`}>
+                <div className={`laptop-screen ${Object.values(expandedSections).some(expanded => expanded) ? 'expanded' : ''}`}>
                   <div className="screen-content">
                     {renderMobileNotebook(section)}
                   </div>
@@ -889,6 +926,30 @@ const PortfolioSimple: React.FC = () => {
                 </div>
               </div>
             </div>
+            
+            {/* Social links en móvil - solo para la sección de contacto */}
+            {section.id === 'contact' && (
+              <nav className="social-links mobile-social-links" aria-label="Enlaces sociales">
+                <a
+                  href={socialLinks.linkedin}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="social-link primary"
+                  aria-label="Visitar perfil de LinkedIn"
+                >
+                  LinkedIn
+                </a>
+                <a
+                  href={socialLinks.github}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="social-link secondary"
+                  aria-label="Visitar perfil de GitHub"
+                >
+                  GitHub
+                </a>
+              </nav>
+            )}
           </section>
         ))}
       </div>

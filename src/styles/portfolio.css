@@ -976,6 +976,19 @@ body::-webkit-scrollbar-thumb:active {
       z-index: 10;
     }
 
+    /* Footer móvil con botón de expansión */
+    .mobile-footer {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 0 0.75rem;
+      background-color: #111827;
+      border-top: 1px solid var(--border-color);
+      pointer-events: auto;
+      position: relative;
+      z-index: 10;
+    }
+
     /* Botón de expansión para mobile */
     .mobile-expand-btn {
       background: transparent;
@@ -985,7 +998,6 @@ body::-webkit-scrollbar-thumb:active {
       border-radius: 0.25rem;
       cursor: pointer;
       transition: all 0.3s ease;
-      margin-left: auto;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -1057,6 +1069,21 @@ body::-webkit-scrollbar-thumb:active {
       flex: 1;
       display: flex;
       flex-direction: column;
+    }
+    
+    /* Social links en móvil */
+    .mobile-social-links {
+      margin-top: 1.5rem;
+      padding: 1rem 0;
+      justify-content: center;
+      gap: 1rem;
+      order: 2;
+    }
+    
+    .mobile-social-links .social-link {
+      padding: 0.5rem 1rem;
+      font-size: 0.875rem;
+      border-radius: 0.375rem;
     }
     
     .mobile-notebook .form-fields {
@@ -1751,11 +1778,12 @@ body.light-mode .tech-item {
   margin: 0 auto;
   padding: 0 2rem;
   display: flex;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: center;
   width: 100%;
   min-height: 100vh;
   scroll-snap-align: start;
+  flex-direction: column;
 }
 
 /* En móvil, desactivar scroll snap y ajustar márgenes */
