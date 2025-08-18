@@ -921,6 +921,7 @@ body::-webkit-scrollbar-thumb:active {
       width: 100%;
       height: auto;
       min-height: 20rem;
+      max-height: 470px;
       background-color: #111827;
       border-radius: 0.5rem 0.5rem 0 0;
       box-shadow: 0 25px 50px var(--shadow-color);
@@ -929,6 +930,11 @@ body::-webkit-scrollbar-thumb:active {
       transform-origin: bottom center;
       transform-style: preserve-3d;
       backface-visibility: hidden;
+      transition: max-height 0.3s ease;
+    }
+
+    .mobile-notebook .laptop-screen.expanded {
+      max-height: none;
     }
     
     .mobile-notebook .screen-content {
@@ -969,15 +975,52 @@ body::-webkit-scrollbar-thumb:active {
       position: relative;
       z-index: 10;
     }
+
+    /* Botón de expansión para mobile */
+    .mobile-expand-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-secondary);
+      padding: 0.25rem;
+      border-radius: 0.25rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .mobile-expand-btn:hover {
+      background: rgba(156, 163, 175, 0.1);
+      color: var(--accent-color);
+    }
+
+    .mobile-expand-btn .expand-icon {
+      width: 1rem;
+      height: 1rem;
+      transition: transform 0.3s ease;
+    }
+
+    .mobile-notebook .window-base.expanded .mobile-expand-btn .expand-icon {
+      transform: rotate(180deg);
+    }
     
     .mobile-notebook .code-content {
       padding: 0.75rem;
       height: auto;
       min-height: calc(20rem - 3rem);
+      max-height: calc(470px - 3rem);
       overflow: visible;
       font-family: var(--font-code);
       font-size: 0.875rem;
       line-height: 1.5;
+      transition: max-height 0.3s ease;
+    }
+
+    .mobile-notebook .window-base.expanded .code-content {
+      max-height: none;
+      overflow-y: auto;
     }
     
     /* Estilos específicos para el formulario de contacto en mobile notebook */
@@ -985,8 +1028,14 @@ body::-webkit-scrollbar-thumb:active {
       padding: 0.5rem;
       height: auto;
       min-height: calc(20rem - 3rem);
+      max-height: calc(470px - 3rem);
       overflow-y: auto;
       background: linear-gradient(135deg, #111827 0%, #16213e 100%);
+      transition: max-height 0.3s ease;
+    }
+
+    .mobile-notebook .window-base.contact.expanded .code-content {
+      max-height: none;
     }
     
     .mobile-notebook .contact-form-container {
@@ -2676,7 +2725,11 @@ body.light-mode .project-minimal-link[type="button"]:hover {
   color: var(--success-color);
 
 }
-
+.form-message.success svg,
+.form-message.error svg {
+  width: 20px;
+  height: auto;
+}
 .form-message.error {
   color: #fa4d4d;
 
@@ -2907,7 +2960,14 @@ body.light-mode .lang-btn.active {
   backdrop-filter: blur(15px);
   border-bottom: 1px solid rgba(75, 85, 99, 0.3);
   display: none;
+  opacity: 0;
+  transform: translateY(-100%);
   transition: all 0.3s ease;
+}
+
+.mobile-sticky-bar.visible {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .mobile-sticky-bar .sticky-bar-content {
@@ -2936,9 +2996,9 @@ body.light-mode .lang-btn.active {
 .mobile-sticky-bar .mobile-menu-toggle {
   width: 44px;
   height: 44px;
-  border-radius: 50%;
-  background: rgba(16, 185, 129, 0.1);
-  border: 1px solid rgba(16, 185, 129, 0.3);
+
+  background: transparent;
+  border: none;
   cursor: pointer;
   transition: all 0.3s ease;
   display: flex;
@@ -2948,8 +3008,7 @@ body.light-mode .lang-btn.active {
 }
 
 .mobile-sticky-bar .mobile-menu-toggle:hover {
-  background: rgba(16, 185, 129, 0.2);
-  border-color: rgba(16, 185, 129, 0.5);
+
   transform: scale(1.05);
 }
 
@@ -2983,6 +3042,246 @@ body.light-mode .mobile-sticky-bar .mobile-menu-toggle {
 body.light-mode .mobile-sticky-bar .mobile-menu-toggle:hover {
   background: rgba(16, 185, 129, 0.2);
   border-color: rgba(16, 185, 129, 0.5);
+}
+
+/* Popup del formulario de contacto */
+.contact-form-popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(8px);
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.contact-form-popup {
+  background: #111827;
+  border: 1px solid var(--border-color);
+  width: 100%;
+  max-width: 500px;
+  max-height: 90vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  animation: slideInUp 0.4s ease-out;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+}
+
+.popup-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 16px;
+  border-bottom: 1px solid var(--border-color);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.popup-title {
+  color: var(--primary-color);
+  font-family: var(--font-subtitle);
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.popup-close-btn {
+  width: 40px;
+  height: 40px;
+  color: #ef4444;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: transparent;
+  border: none;
+}
+
+.popup-close-btn:hover {
+  transform: scale(1.05);
+}
+
+.popup-close-btn:active {
+  transform: scale(0.95);
+}
+
+.popup-close-btn .close-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.popup-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1rem;
+}
+
+/* Animaciones del popup */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(50px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+
+
+/* Estilos específicos para el formulario dentro del popup */
+.contact-form-popup .contact-form-container {
+  padding: 0;
+  max-height: none;
+  overflow-y: visible;
+  opacity: 1;
+  transform: none;
+  min-height: auto;
+}
+
+.contact-form-popup .contact-form {
+  padding: 0;
+}
+
+.contact-form-popup .form-fields {
+  gap: 1rem;
+}
+
+.contact-form-popup .form-row {
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+.contact-form-popup .form-group label {
+  font-size: 0.875rem;
+  margin-bottom: 0.5rem;
+}
+
+.contact-form-popup .form-group input,
+.contact-form-popup .form-group textarea {
+  padding: 0.75rem;
+  font-size: 0.875rem;
+}
+
+.contact-form-popup .form-group textarea {
+  min-height: 100px;
+}
+
+.contact-form-popup .form-actions {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.contact-form-popup .submit-btn {
+  width: 100%;
+  padding: 0.75rem;
+  font-size: 0.875rem;
+}
+
+/* Mensaje de éxito */
+.success-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 2rem 1rem;
+  min-height: 300px;
+}
+
+.success-icon {
+  width: 48px;
+  height: 48px;
+  color: #10b981;
+  margin-bottom: 1.5rem;
+  animation: successPulse 0.6s ease-out;
+}
+
+.success-title {
+  color: #10b981;
+  font-family: var(--font-subtitle);
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0 0 1rem 0;
+}
+
+.success-description {
+  color: #9ca3af;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.6;
+  margin: 0 0 2rem 0;
+  max-width: 300px;
+}
+
+.success-close-btn {
+  background: #10b981;
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.75rem 2rem;
+  font-family: var(--font-code);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.success-close-btn:hover {
+  background: #059669;
+  transform: translateY(-2px);
+}
+
+.success-close-btn:active {
+  transform: translateY(0);
+}
+
+@keyframes successPulse {
+  0% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Estilos para modo claro */
+body.light-mode .contact-form-popup {
+  background: #111827;
+  border-color: rgba(107, 114, 128, 0.2);
+}
+
+body.light-mode .popup-header {
+  background: rgba(255, 255, 255, 0.05);
+  border-bottom-color: rgba(107, 114, 128, 0.2);
+}
+
+body.light-mode .popup-title {
+  color: var(--primary-color);
 }
 
 /* Skip Link para accesibilidad */

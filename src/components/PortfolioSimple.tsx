@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { NeuralNetworkBackground } from './SimpleAnimations';
 import ServiceCards from './ServiceCards';
 import ContactForm from './ContactForm';
+import ContactFormPopup from './ContactFormPopup';
 import ProjectsShowcase from './ProjectsShowcase';
 import MobileStickyBar from './MobileStickyBar';
 import { socialLinks } from '../data/profileData';
@@ -148,7 +149,10 @@ const PortfolioSimple: React.FC = () => {
   const { t } = useTranslation();
   const [activeSection, setActiveSection] = useState(0);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isContactPopupOpen, setIsContactPopupOpen] = useState(false);
+  const [showStickyBar, setShowStickyBar] = useState(false);
   const [displaySection, setDisplaySection] = useState(0);
+  const [isMobileNotebookExpanded, setIsMobileNotebookExpanded] = useState(false);
   const [isNotebookElevated, setIsNotebookElevated] = useState(false);
   const [isNotebookClosed, setIsNotebookClosed] = useState(false);
   const [isWindowMinimized, setIsWindowMinimized] = useState(false);
@@ -380,7 +384,10 @@ const PortfolioSimple: React.FC = () => {
         <div className="window-base contact">
           {windowHeader}
           <div className="code-content">
-            <ContactForm isVisible={true} />
+            <ContactForm 
+              isVisible={true} 
+              onOpenPopup={() => handleContactPopupToggle(true)}
+            />
           </div>
         </div>
       );
@@ -420,7 +427,7 @@ const PortfolioSimple: React.FC = () => {
     // Caso especial para el formulario de contacto
     if (section.id === 'contact') {
       return (
-        <div className="window-base contact">
+        <div className={`window-base contact ${isMobileNotebookExpanded ? 'expanded' : ''}`}>
           <div className="editor-header">
             <div className="window-controls">
               <button 
@@ -448,9 +455,19 @@ const PortfolioSimple: React.FC = () => {
             <span className="editor-filename">
               {section.title}
             </span>
+            <button
+              className="mobile-expand-btn"
+              onClick={handleMobileNotebookToggle}
+              aria-label={isMobileNotebookExpanded ? 'Contraer pantalla' : 'Expandir pantalla'}
+            >
+              <ChevronDownIcon className="expand-icon" />
+            </button>
           </div>
           <div className="code-content">
-            <ContactForm isVisible={true} />
+            <ContactForm 
+              isVisible={true} 
+              onOpenPopup={() => handleContactPopupToggle(true)}
+            />
           </div>
         </div>
       );
@@ -459,7 +476,7 @@ const PortfolioSimple: React.FC = () => {
     // Caso especial para la sección de proyectos
     if (section.id === 'projects') {
       return (
-        <div className="window-base projects">
+        <div className={`window-base projects ${isMobileNotebookExpanded ? 'expanded' : ''}`}>
           <div className="editor-header">
             <div className="window-controls">
               <button 
@@ -487,6 +504,13 @@ const PortfolioSimple: React.FC = () => {
             <span className="editor-filename">
               {section.title}
             </span>
+            <button
+              className="mobile-expand-btn"
+              onClick={handleMobileNotebookToggle}
+              aria-label={isMobileNotebookExpanded ? 'Contraer pantalla' : 'Expandir pantalla'}
+            >
+              <ChevronDownIcon className="expand-icon" />
+            </button>
           </div>
           <div className="code-content">
             <ProjectsShowcase isVisible={true} minimal={true} onPlayGame={handlePlayGame} />
@@ -530,13 +554,20 @@ const PortfolioSimple: React.FC = () => {
         <span className="editor-filename">
           {section.title}
         </span>
+        <button
+          className="mobile-expand-btn"
+          onClick={handleMobileNotebookToggle}
+          aria-label={isMobileNotebookExpanded ? 'Contraer pantalla' : 'Expandir pantalla'}
+        >
+          <ChevronDownIcon className="expand-icon" />
+        </button>
       </div>
     );
 
     switch (type) {
       case 'code':
         return (
-          <div className={`window-base ${type}`}>
+          <div className={`window-base ${type} ${isMobileNotebookExpanded ? 'expanded' : ''}`}>
             {windowHeader}
             <pre className="code-content">
               <code>
@@ -632,6 +663,14 @@ const PortfolioSimple: React.FC = () => {
     }
   };
 
+  const handleContactPopupToggle = (isOpen: boolean) => {
+    setIsContactPopupOpen(isOpen);
+  };
+
+  const handleMobileNotebookToggle = () => {
+    setIsMobileNotebookExpanded(!isMobileNotebookExpanded);
+  };
+
   // Escuchar eventos para sincronizar el estado del menú
   useEffect(() => {
     const handleCloseMobileMenu = () => {
@@ -642,6 +681,21 @@ const PortfolioSimple: React.FC = () => {
     
     return () => {
       window.removeEventListener('closeMobileMenu', handleCloseMobileMenu);
+    };
+  }, []);
+
+  // Detectar scroll para mostrar/ocultar la barra sticky
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      const shouldShow = scrollTop > 100; // Mostrar después de 100px de scroll
+      setShowStickyBar(shouldShow);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
     };
   }, []);
 
@@ -681,6 +735,14 @@ const PortfolioSimple: React.FC = () => {
         activeSection={activeSection}
         onMenuToggle={handleMobileMenuToggle}
         isMenuOpen={isMobileMenuOpen}
+        isVisible={showStickyBar}
+        sections={profileSections}
+      />
+
+      {/* Popup del formulario de contacto */}
+      <ContactFormPopup 
+        isOpen={isContactPopupOpen}
+        onClose={() => handleContactPopupToggle(false)}
       />
       
       {/* Layout fijo con notebook */}
@@ -819,7 +881,7 @@ const PortfolioSimple: React.FC = () => {
             <div className="mobile-notebook-container">
               <div className="mobile-notebook active">
                 <div className="laptop-base"></div>
-                <div className="laptop-screen">
+                <div className={`laptop-screen ${isMobileNotebookExpanded ? 'expanded' : ''}`}>
                   <div className="screen-content">
                     {renderMobileNotebook(section)}
                   </div>

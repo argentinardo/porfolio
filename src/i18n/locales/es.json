@@ -160,6 +160,7 @@
       "send": "Enviar Mensaje",
       "sending": "Enviando...",
       "success": "Mensaje enviado con éxito",
+      "successDescription": "Gracias por contactarme. Te responderé lo antes posible.",
       "error": "Error al enviar mensaje",
       "subject": "Consulta desde el sitio web",
       "errors": {
@@ -176,6 +177,7 @@
     "language": "Idioma",
     "theme": "Tema",
     "dark": "Oscuro",
-    "light": "Claro"
+    "light": "Claro",
+    "close": "Cerrar"
   }
 }

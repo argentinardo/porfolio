@@ -1,18 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
-import { profileSections } from '../data/profileData';
+import { ProfileSection } from '../data/profileData';
 
 interface MobileStickyBarProps {
   activeSection: number;
   onMenuToggle: (isOpen: boolean) => void;
   isMenuOpen: boolean;
+  isVisible: boolean;
+  sections: ProfileSection[];
 }
 
 const MobileStickyBar: React.FC<MobileStickyBarProps> = ({ 
   activeSection, 
   onMenuToggle, 
-  isMenuOpen 
+  isMenuOpen,
+  isVisible,
+  sections
 }) => {
   const { t } = useTranslation();
   const [isNightMode, setIsNightMode] = useState(true);
@@ -32,15 +36,23 @@ const MobileStickyBar: React.FC<MobileStickyBarProps> = ({
     return () => observer.disconnect();
   }, []);
 
-  const currentSection = profileSections[activeSection];
+  const currentSection = sections[activeSection];
+
+  // Obtener el título de la sección actual
+  const getSectionTitle = () => {
+    if (!currentSection) return t('navigation.home');
+    
+    // Usar directamente el título de la sección actual que ya está traducido
+    return currentSection.title;
+  };
 
   return (
-    <div className="mobile-sticky-bar">
+    <div className={`mobile-sticky-bar ${isVisible ? 'visible' : ''}`}>
       <div className="sticky-bar-content">
         {/* Nombre de la sección actual */}
         <div className="section-title">
           <span className="section-name">
-            {currentSection?.title || t('navigation.home')}
+            {getSectionTitle()}
           </span>
         </div>
 

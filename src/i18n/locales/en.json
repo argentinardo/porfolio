@@ -160,6 +160,7 @@
       "send": "Send Message",
       "sending": "Sending...",
       "success": "Message sent successfully",
+      "successDescription": "Thank you for contacting me. I'll get back to you as soon as possible.",
       "error": "Error sending message",
       "subject": "Inquiry from website",
       "errors": {
@@ -176,6 +177,7 @@
     "language": "Language",
     "theme": "Theme",
     "dark": "Dark",
-    "light": "Light"
+    "light": "Light",
+    "close": "Close"
   }
 }

@@ -4,9 +4,24 @@ import { useForm, ValidationError } from '@formspree/react';
 
 interface ContactFormProps {
   isVisible: boolean;
+  onOpenPopup?: () => void;
+  onSuccess?: () => void;
 }
 
-const ContactForm: React.FC<ContactFormProps> = ({ isVisible }) => {
+const ContactForm: React.FC<ContactFormProps> = ({ isVisible, onOpenPopup, onSuccess }) => {
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Detectar si es móvil
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
   const { t } = useTranslation();
   const [formData, setFormData] = useState({
     name: '',
@@ -110,6 +125,13 @@ const ContactForm: React.FC<ContactFormProps> = ({ isVisible }) => {
     }
   };
 
+  const handleInputFocus = () => {
+    // Abrir popup automáticamente en mobile al hacer focus en cualquier campo
+    if (isMobile && onOpenPopup) {
+      onOpenPopup();
+    }
+  };
+
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -127,7 +149,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ isVisible }) => {
     // Usar el handleSubmit de Formspree
     await handleSubmit(formDataObj);
 
-    // Si el envío fue exitoso, limpiar el formulario
+    // Si el envío fue exitoso, limpiar el formulario y notificar
     if (state.succeeded) {
       setFormData({
         name: '',
@@ -136,6 +158,11 @@ const ContactForm: React.FC<ContactFormProps> = ({ isVisible }) => {
         message: ''
       });
       setErrors({});
+      
+      // Notificar éxito al componente padre
+      if (onSuccess) {
+        onSuccess();
+      }
     }
   };
 
@@ -158,6 +185,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ isVisible }) => {
                 name="name"
                 value={formData.name}
                 onChange={handleInputChange}
+                onFocus={handleInputFocus}
                 className={errors.name ? 'error' : ''}
                 placeholder={t('contact.form.name')}
                 aria-describedby={errors.name ? 'name-error' : undefined}
@@ -182,6 +210,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ isVisible }) => {
                 name="email"
                 value={formData.email}
                 onChange={handleInputChange}
+                onFocus={handleInputFocus}
                 className={errors.email ? 'error' : ''}
                 placeholder="tu@email.com"
                 aria-describedby={errors.email ? 'email-error' : undefined}
@@ -207,6 +236,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ isVisible }) => {
               name="subject"
               value={formData.subject}
               onChange={handleInputChange}
+              onFocus={handleInputFocus}
               className={errors.subject ? 'error' : ''}
               placeholder={t('contact.form.subject')}
               aria-describedby={errors.subject ? 'subject-error' : undefined}
@@ -230,6 +260,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ isVisible }) => {
               name="message"
               value={formData.message}
               onChange={handleInputChange}
+              onFocus={handleInputFocus}
               className={errors.message ? 'error' : ''}
               placeholder={t('contact.form.message')}
               rows={5}

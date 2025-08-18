@@ -160,6 +160,7 @@
       "send": "Enviar Missatge",
       "sending": "Enviant...",
       "success": "Missatge enviat amb èxit",
+      "successDescription": "Gràcies per contactar-me. Et respondré el més aviat possible.",
       "error": "Error en enviar missatge",
       "subject": "Consulta des del lloc web",
       "errors": {
@@ -176,6 +177,7 @@
     "language": "Idioma",
     "theme": "Tema",
     "dark": "Fosc",
-    "light": "Clar"
+    "light": "Clar",
+    "close": "Tancar"
   }
 }
