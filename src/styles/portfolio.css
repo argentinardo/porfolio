@@ -16,8 +16,8 @@
   
   /* Textos - Colores con mejor contraste */
   --text-color: #fcfcfc;         /* Blanco puro para máximo contraste */
-  --text-primary: #ffffff;       /* Blanco puro para máximo contraste */
-  --text-secondary: #f1f5f9;     /* Gris claro más visible */
+  --text-primary: #bbbbbb;       /* Blanco puro para máximo contraste */
+  --text-secondary: #d6d6d6;     /* Gris claro más visible */
   --text-muted: #e2e8f0;         /* Gris medio más claro */
   
   /* Bordes y sombras */
@@ -1807,6 +1807,94 @@ body.light-mode .tech-item {
   scrollbar-width: thin;
   scrollbar-color: var(--border-color) transparent;
   width: 100%;
+  opacity: 0;
+  transform: translateY(30px) scale(0.95);
+  transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.scrollable-text.animate-in {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+/* Animación para elementos internos con delay escalonado */
+.scrollable-text.animate-in .subtitle {
+  animation: slideInFromLeft 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.1s both;
+}
+
+.scrollable-text.animate-in .main-title {
+  animation: slideInFromRight 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.2s both;
+}
+
+.scrollable-text.animate-in .content-list {
+  animation: fadeInUp 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.3s both;
+}
+
+.scrollable-text.animate-in .social-links {
+  animation: fadeInUp 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.4s both;
+}
+
+/* Keyframes para las animaciones */
+@keyframes slideInFromLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInFromRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Efecto hover para scrollable-text */
+
+
+/* Efecto 3D con el mouse */
+.scrollable-text {
+  transform-style: preserve-3d;
+  transition: transform 0.2s ease-out;
+  will-change: transform;
+}
+
+.scrollable-text.animate-in {
+  transform-style: preserve-3d;
+}
+
+/* Efecto de pulso sutil para elementos animados */
+.scrollable-text.animate-in .main-title::before,
+.scrollable-text.animate-in .main-title::after {
+  animation: pulseGlow 2s ease-in-out infinite;
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    opacity: 0.7;
+  }
+  50% {
+    opacity: 1;
+  }
 }
 
 /* Estilos para las cards de servicios */
@@ -2049,7 +2137,6 @@ body.light-mode .learn-more-btn:hover {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.8);
   backdrop-filter: blur(10px);
   display: flex;
   align-items: center;

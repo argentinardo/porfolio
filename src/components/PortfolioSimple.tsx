@@ -727,6 +727,39 @@ const PortfolioSimple: React.FC = () => {
     return () => clearTimeout(timeoutId);
   }, [profileSections, activeSection]);
 
+  // Animación de entrada para scrollable-text
+  useEffect(() => {
+    const observerOptions = {
+      threshold: 0.3,
+      rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('animate-in');
+        } else {
+          // Resetear la animación al salir de la pantalla
+          entry.target.classList.remove('animate-in');
+        }
+      });
+    }, observerOptions);
+
+    // Observar todos los elementos scrollable-text
+    const scrollableTexts = document.querySelectorAll('.scrollable-text');
+    scrollableTexts.forEach((element) => {
+      observer.observe(element);
+    });
+
+    return () => {
+      scrollableTexts.forEach((element) => {
+        observer.unobserve(element);
+      });
+    };
+  }, [profileSections]);
+
+
+
   // Escuchar eventos para sincronizar el estado del menú
   useEffect(() => {
     const handleCloseMobileMenu = () => {
