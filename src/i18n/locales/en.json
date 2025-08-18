@@ -54,7 +54,7 @@
         "description": "Installation and configuration of LLM models in your infrastructure",
         "icon": "CpuChipIcon",
         "features": [
-          "Ollama / llama.cpp / LM Studio",
+          "Ollama / LM Studio",
           "RAG with local databases",
           "On-premise privacy and security",
           "Model fine-tuning and evaluation"
@@ -101,7 +101,7 @@
     "consult": "Consult",
     "contact": "Contact me",
     "notebook": {
-      "code": "// Professional Services Available\n\nconst services = {\n  n8n: {\n    description: \"Process and workflow orchestration\",\n    price: \"From €2,500\",\n    features: [\n      \"Automated workflows with n8n\",\n      \"API and CRM integrations\",\n      \"Custom connectors\",\n      \"Monitoring and alerts\"\n    ]\n  },\n  \n  localAI: {\n    description: \"LLM installation and configuration\",\n    price: \"From €3,500\",\n    features: [\n      \"Ollama / llama.cpp / LM Studio\",\n      \"RAG with local databases\",\n      \"On-premise privacy\",\n      \"Model fine-tuning\"\n    ]\n  },\n  \n  maintenance: {\n    description: \"AI maintenance and support\",\n    price: \"From €1,800\",\n    features: [\n      \"Monthly support and SLA\",\n      \"Flow and dependency updates\",\n      \"Continuous monitoring\",\n      \"Backups and recovery\"\n    ]\n  },\n  \n  consulting: {\n    description: \"AI strategy and training\",\n    price: \"€150/hour\",\n    features: [\n      \"Use case identification\",\n      \"ROI and adoption roadmap\",\n      \"Best prompt practices\",\n      \"Custom workshops\"\n    ]\n  },\n  \n  frontend: {\n    description: \"Modern web applications\",\n    price: \"From €2,500\",\n    features: [\n      \"React and TypeScript\",\n      \"Reusable components\",\n      \"Performance optimization\",\n      \"Testing and debugging\"\n    ]\n  }\n};\n\nconsole.log(\"Available services:\", Object.keys(services));\nconsole.log(\"Interested in any? Contact me!\");"
+      "code": "// Professional Services Available\n\nconst services = {\n  n8n: {\n    description: \"Process and workflow orchestration\",\n    price: \"From €2,500\",\n    features: [\n      \"Automated workflows with n8n\",\n      \"API and CRM integrations\",\n      \"Custom connectors\",\n      \"Monitoring and alerts\"\n    ]\n  },\n  \n  localAI: {\n    description: \"LLM installation and configuration\",\n    price: \"From €3,500\",\n    features: [\n      \"Ollama / LM Studio\",\n      \"RAG with local databases\",\n      \"On-premise privacy\",\n      \"Model fine-tuning\"\n    ]\n  },\n  \n  maintenance: {\n    description: \"AI maintenance and support\",\n    price: \"From €1,800\",\n    features: [\n      \"Monthly support and SLA\",\n      \"Flow and dependency updates\",\n      \"Continuous monitoring\",\n      \"Backups and recovery\"\n    ]\n  },\n  \n  consulting: {\n    description: \"AI strategy and training\",\n    price: \"€150/hour\",\n    features: [\n      \"Use case identification\",\n      \"ROI and adoption roadmap\",\n      \"Best prompt practices\",\n      \"Custom workshops\"\n    ]\n  },\n  \n  frontend: {\n    description: \"Modern web applications\",\n    price: \"From €2,500\",\n    features: [\n      \"React and TypeScript\",\n      \"Reusable components\",\n      \"Performance optimization\",\n      \"Testing and debugging\"\n    ]\n  }\n};\n\nconsole.log(\"Available services:\", Object.keys(services));\nconsole.log(\"Interested in any? Contact me!\");"
     }
   },
   "projects": {
