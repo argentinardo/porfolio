@@ -1,0 +1,20 @@
+{
+    "short_name": "Damian Nardini",
+    "name": "Damian Nardini - Desarrollador Frontend ",
+    "description": "Portfolio de Damian Nardini - Desarrollador Frontend  con 10+ años de experiencia en React, TypeScript y tecnologías modernas",
+  "icons": [
+    {
+      "src": "/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "theme_color": "#000000",
+  "background_color": "#000000",
+  "display": "standalone"
+}
