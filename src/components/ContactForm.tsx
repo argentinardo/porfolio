@@ -218,7 +218,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ isVisible, onOpenPopup, onSuc
                 onChange={handleInputChange}
                 onFocus={handleInputFocus}
                 className={errors.email ? 'error' : ''}
-                placeholder="tu@email.com"
+                placeholder={t('contact.form.placeholders.email')}
                 aria-describedby={errors.email ? 'email-error' : undefined}
                 aria-invalid={!!errors.email}
               />

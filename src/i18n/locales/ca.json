@@ -173,6 +173,12 @@
       "successDescription": "Gràcies per contactar-me. Et respondré el més aviat possible.",
       "error": "Error en enviar missatge",
       "subject": "Consulta des del lloc web",
+      "placeholders": {
+        "name": "El teu nom",
+        "email": "el.teu@email.com",
+        "subject": "Assumpte de la teva consulta",
+        "message": "Explica'm sobre el teu projecte..."
+      },
       "errors": {
         "nameRequired": "El nom és requerit",
         "nameMinLength": "El nom ha de tenir almenys 2 caràcters",

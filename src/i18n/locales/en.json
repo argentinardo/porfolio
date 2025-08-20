@@ -173,6 +173,12 @@
       "successDescription": "Thank you for contacting me. I'll get back to you as soon as possible.",
       "error": "Error sending message",
       "subject": "Inquiry from website",
+      "placeholders": {
+        "name": "Your name",
+        "email": "your@email.com",
+        "subject": "Subject of your inquiry",
+        "message": "Tell me about your project..."
+      },
       "errors": {
         "nameRequired": "Name is required",
         "nameMinLength": "Name must be at least 2 characters",

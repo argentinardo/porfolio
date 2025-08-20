@@ -173,6 +173,12 @@
       "successDescription": "Gracias por contactarme. Te responderé lo antes posible.",
       "error": "Error al enviar mensaje",
       "subject": "Consulta desde el sitio web",
+      "placeholders": {
+        "name": "Tu nombre",
+        "email": "tu@email.com",
+        "subject": "Asunto de tu consulta",
+        "message": "Cuéntame sobre tu proyecto..."
+      },
       "errors": {
         "nameRequired": "El nombre es requerido",
         "nameMinLength": "El nombre debe tener al menos 2 caracteres",
