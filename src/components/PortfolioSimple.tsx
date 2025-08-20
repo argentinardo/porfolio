@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useMemo } from 'react';
+import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { NeuralNetworkBackground } from './SimpleAnimations';
 import ServiceCards from './ServiceCards';
@@ -641,7 +641,7 @@ const PortfolioSimple: React.FC = () => {
     }
   };
 
-  const scrollToSection = (index: number) => {
+  const scrollToSection = useCallback((index: number) => {
     const section = profileSections[index];
     if (!section) return;
 
@@ -666,7 +666,7 @@ const PortfolioSimple: React.FC = () => {
         (document.documentElement.scrollHeight - window.innerHeight);
       window.scrollTo({ top: targetScroll, behavior: 'smooth' });
     }
-  };
+  }, [profileSections]);
 
   const handleMobileMenuToggle = (isOpen: boolean) => {
     setIsMobileMenuOpen(isOpen);
