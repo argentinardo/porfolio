@@ -199,7 +199,7 @@ const ServiceCards: React.FC<ServiceCardsProps> = ({ isVisible, minimal = false 
                 </div>
                 <div className="service-footer">
                   <button className="learn-more-btn">
-                    Ver más
+                    {t('services.learnMore')}
                   </button>
                 </div>
               </div>
@@ -254,7 +254,7 @@ const ServiceCards: React.FC<ServiceCardsProps> = ({ isVisible, minimal = false 
                     }
                   }}
                 >
-                  Estoy interesado en este servicio
+                  {t('services.interestedInService')}
                 </button>
               </div>
             </div>
