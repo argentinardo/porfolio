@@ -362,6 +362,7 @@ const PortfolioSimple: React.FC = () => {
                 src={activeGame.url}
                 title={activeGame.title}
                 allowFullScreen
+                sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"
               />
             </div>
           </div>
@@ -787,6 +788,70 @@ const PortfolioSimple: React.FC = () => {
       window.removeEventListener('scroll', handleScroll);
     };
   }, []);
+
+  // Bloquear scroll con flechas del teclado cuando hay un juego activo
+  useEffect(() => {
+    if (!activeGame) return;
+
+    let lastScrollPosition = window.pageYOffset || document.documentElement.scrollTop;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Si hay un juego activo, bloquear las flechas de navegación
+      if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+        e.preventDefault();
+        e.stopPropagation();
+        e.stopImmediatePropagation();
+        return false;
+      }
+    };
+
+    const handleKeyDownCapture = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+        e.preventDefault();
+        e.stopPropagation();
+        e.stopImmediatePropagation();
+        return false;
+      }
+    };
+
+    // Bloquear scroll con la rueda del mouse
+    const handleWheel = (e: WheelEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      e.stopImmediatePropagation();
+      return false;
+    };
+
+    // Bloquear scroll programático
+    const handleScroll = () => {
+      window.scrollTo(0, lastScrollPosition);
+    };
+
+    // Agregar el manejador en la fase de captura para interceptar antes que otros manejadores
+    document.addEventListener('keydown', handleKeyDown, true);
+    window.addEventListener('keydown', handleKeyDown, true);
+    
+    // Agregar también en la fase de burbuja por si acaso
+    document.addEventListener('keydown', handleKeyDownCapture, false);
+    window.addEventListener('keydown', handleKeyDownCapture, false);
+    
+    // Bloquear scroll con la rueda del mouse
+    document.addEventListener('wheel', handleWheel, { passive: false, capture: true });
+    window.addEventListener('wheel', handleWheel, { passive: false, capture: true });
+    
+    // Bloquear scroll programático
+    window.addEventListener('scroll', handleScroll, { passive: false });
+    
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown, true);
+      window.removeEventListener('keydown', handleKeyDown, true);
+      document.removeEventListener('keydown', handleKeyDownCapture, false);
+      window.removeEventListener('keydown', handleKeyDownCapture, false);
+      document.removeEventListener('wheel', handleWheel, true);
+      window.removeEventListener('wheel', handleWheel, true);
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [activeGame]);
 
   // Insertar marcadores en el menú móvil
   useEffect(() => {

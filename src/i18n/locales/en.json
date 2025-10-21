@@ -120,6 +120,15 @@
     },
     "items": [
       {
+        "title": "New H.E.R.O.",
+        "description": "Recreation of the classic ATARI H.E.R.O. game, developed with TypeScript. Web version and mobile application with modern mechanics and updated design.",
+        "technologies": ["TypeScript", "JavaScript", "HTML5", "CSS3", "Mobile"],
+        "category": "game",
+        "year": 2025,
+        "liveUrl": "https://newhero.netlify.app/",
+        "githubUrl": "https://github.com/damiannardini/hero"
+      },
+      {
         "title": "Mecano Game",
         "description": "Interactive web game developed with vanilla JavaScript. A mechanical gaming experience with physics and fluid animations.",
         "technologies": ["JavaScript", "HTML5", "CSS3"],
