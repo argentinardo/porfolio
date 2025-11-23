@@ -7,6 +7,12 @@
   CI = "false"
 
 [[redirects]]
+  from = "/newhero"
+  to = "https://newhero.netlify.app"
+  status = 301
+  force = true
+
+[[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200

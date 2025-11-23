@@ -1,5 +1,10 @@
 # Redirecciones para Netlify
-/*    /index.html   200
+
+# Redirección de /newhero a newhero.netlify.app
+/newhero    https://newhero.netlify.app    301
 
 # Redirección después del envío del formulario
-/form-success    /form-success.html   200 
+/form-success    /form-success.html   200
+
+# Redirección por defecto (debe ir al final)
+/*    /index.html   200 
