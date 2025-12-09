@@ -458,6 +458,7 @@ body {
   height: calc(100% - 2.5rem);
   overflow: hidden;
   width: 100%;
+  position: relative;
 }
 
 .game-content iframe {
@@ -465,6 +466,37 @@ body {
   border-radius: 0 0 0.5rem 0.5rem;
   height: 100%;
   width: 100%;
+}
+
+.game-maximize-btn {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background: rgba(0, 0, 0, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  color: #fff;
+  cursor: pointer;
+  opacity: 0;
+  transition: all 0.2s ease;
+  z-index: 10;
+  text-decoration: none;
+}
+
+.game-content:hover .game-maximize-btn {
+  opacity: 0.6;
+}
+
+.game-maximize-btn:hover {
+  background: rgba(0, 0, 0, 0.9);
+  border-color: var(--primary-color);
+  color: var(--primary-color);
+  transform: scale(1.05);
 }
 
 /* Estilos de scroll para el notebook */
@@ -2405,6 +2437,11 @@ body.light-mode .service-modal-contact-btn:hover:not(:disabled) {
   color: #e5e7eb;
 }
 
+.project-minimal-card:nth-child(even) .project-minimal-content {
+  flex-direction: row-reverse;
+  display: -webkit-flex;
+}
+
 .projects-minimal-title {
   font-size: 1.5rem;
   font-weight: 600;
@@ -2421,11 +2458,55 @@ body.light-mode .service-modal-contact-btn:hover:not(:disabled) {
   margin-bottom: 0.75rem;
 }
 
+.project-minimal-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  align-items: stretch;
+}
+
+.project-minimal-info {
+  display: flex;
+  flex-direction: column;
+}
+
 .project-minimal-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 0.75rem;
+}
+
+/* Video de YouTube en las cards */
+.project-video-container {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  background: #000;
+}
+
+.project-video-iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+  border-radius: 0.5rem;
+}
+
+/* Responsive para mobile - una sola columna */
+@media (max-width: 768px) {
+  .project-minimal-content {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .project-video-container {
+    order: -1; /* Video arriba en mobile */
+  }
 }
 
 .project-minimal-title {
@@ -2467,6 +2548,8 @@ body.light-mode .service-modal-contact-btn:hover:not(:disabled) {
 .project-minimal-links {
   display: flex;
   gap: 1rem;
+  justify-content: center;
+  margin-top: 1.5rem;
 }
 
 /* Espaciado entre múltiples tarjetas de proyectos */
@@ -2589,6 +2672,7 @@ body.light-mode .project-minimal-link[type="button"]:hover {
   height: calc(100% - 2.5rem);
   width: 100%;
   overflow: hidden;
+  position: relative;
 }
 
 .game-content iframe {

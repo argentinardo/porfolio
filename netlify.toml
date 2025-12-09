@@ -12,6 +12,13 @@
   status = 301
   force = true
 
+  [[redirects]]
+  from = "/mecanogame"
+  to = "https://mecano-game.netlify.app"
+  status = 301
+  force = true
+
+
 [[redirects]]
   from = "/*"
   to = "/index.html"

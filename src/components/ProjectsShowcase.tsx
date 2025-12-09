@@ -1,7 +1,42 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { projects, projectCategories, Project } from '../data/projectsData';
 import { PlayIcon, GlobeAltIcon, FolderIcon } from '@heroicons/react/24/outline';
+
+// Componente de video de YouTube con autoplay basado en visibilidad
+interface YouTubeVideoProps {
+  videoId: string;
+  isVisible: boolean;
+}
+
+const YouTubeVideo: React.FC<YouTubeVideoProps> = ({ videoId, isVisible }) => {
+  const iframeRef = useRef<HTMLIFrameElement>(null);
+  
+  // Controlar la reproducción del video según la visibilidad
+  useEffect(() => {
+    if (iframeRef.current && iframeRef.current.contentWindow) {
+      const message = isVisible 
+        ? '{"event":"command","func":"playVideo","args":""}' 
+        : '{"event":"command","func":"pauseVideo","args":""}';
+      iframeRef.current.contentWindow.postMessage(message, '*');
+    }
+  }, [isVisible]);
+
+  if (!videoId) return null;
+
+  return (
+    <div className="project-video-container">
+      <iframe
+        ref={iframeRef}
+        src={`https://www.youtube.com/embed/${videoId}?enablejsapi=1&autoplay=${isVisible ? 1 : 0}&mute=1&loop=1&playlist=${videoId}&controls=0&showinfo=0&rel=0&modestbranding=1`}
+        title="Project video"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowFullScreen
+        className="project-video-iframe"
+      />
+    </div>
+  );
+};
 
 
 
@@ -31,6 +66,10 @@ const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({ isVisible, minimal 
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
+  // Estado para controlar qué proyecto está visible
+  const [visibleProjectIndex, setVisibleProjectIndex] = useState<number>(0);
+  const projectRefs = useRef<(HTMLDivElement | null)[]>([]);
+
   // Obtener proyectos traducidos
   const translatedProjects = t('projects.items', { returnObjects: true }) as Array<{
     title: string;
@@ -38,11 +77,43 @@ const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({ isVisible, minimal 
     description: string;
     technologies: string[];
     liveUrl: string;
+    youtubeId?: string;
   }>;
   const translatedButtons = t('projects.buttons', { returnObjects: true }) as {
     playDemo: string;
     visit: string;
   };
+
+  // Observador de intersección para detectar qué proyecto está visible
+  useEffect(() => {
+    const observers: IntersectionObserver[] = [];
+    
+    projectRefs.current.forEach((ref, index) => {
+      if (ref) {
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting && entry.intersectionRatio > 0.5) {
+                setVisibleProjectIndex(index);
+              }
+            });
+          },
+          { threshold: 0.5 }
+        );
+        observer.observe(ref);
+        observers.push(observer);
+      }
+    });
+
+    return () => {
+      observers.forEach((observer) => observer.disconnect());
+    };
+  }, [translatedProjects.length]);
+
+  // Callback para asignar refs a los proyectos
+  const setProjectRef = useCallback((el: HTMLDivElement | null, index: number) => {
+    projectRefs.current[index] = el;
+  }, []);
 
   const filteredProjects = selectedCategory === 'all' 
     ? projects 
@@ -58,55 +129,73 @@ const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({ isVisible, minimal 
   if (minimal) {
     return (
       <div className="projects-minimal">
-        {translatedProjects.map((game) => (
-          <div key={game.title} className="project-minimal-card" data-id={game.title.toLowerCase().replace(/\s+/g, '-')}>
-            <div className="project-minimal-header">
-              <h3 className="project-minimal-title">{game.title}</h3>
-              <span className="project-minimal-year">{game.year}</span>
-            </div>
-            <p className="project-minimal-description">
-              {game.description}
-            </p>
-            <div className="project-minimal-tech">
-              {game.technologies.map((tech: string) => (
-                <span key={tech} className="tech-tag">{tech}</span>
-              ))}
-            </div>
-            <div className="project-minimal-links">
-              {isMobile ? (
-                // En mobile, siempre redirigir directamente a la URL
-                <a 
-                  href={game.liveUrl} 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="project-minimal-link"
-                >
-                  <GlobeAltIcon className="w-4 h-4 mr-2" />
-                  {translatedButtons.visit}
-                </a>
-              ) : onPlayGame ? (
-                // En desktop, usar el popup si está disponible
-                <button 
-                  onClick={() => onPlayGame(game.liveUrl, game.title)}
-                  className="project-minimal-link"
-                  type="button"
-                >
-                  <PlayIcon className="w-4 h-4 mr-2" />
-                  {translatedButtons.playDemo}
-                </button>
-              ) : (
-                // En desktop, redirigir directamente si no hay popup
-                <a 
-                  href={game.liveUrl} 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="project-minimal-link"
-                >
-                  <GlobeAltIcon className="w-4 h-4 mr-2" />
-                  {translatedButtons.playDemo}
-                </a>
+        {translatedProjects.map((game, index) => (
+          <div 
+            key={game.title} 
+            className="project-minimal-card" 
+            data-id={game.title.toLowerCase().replace(/\s+/g, '-')}
+            ref={(el) => setProjectRef(el, index)}
+          >
+                            <div className="project-minimal-header">
+                  <h3 className="project-minimal-title">{game.title}</h3>
+                  <span className="project-minimal-year">{game.year}</span>
+                </div>
+            <div className="project-minimal-content">
+
+              <div className="project-minimal-info">
+
+                <p className="project-minimal-description">
+                  {game.description}
+                </p>
+                <div className="project-minimal-tech">
+                  {game.technologies.map((tech: string) => (
+                    <span key={tech} className="tech-tag">{tech}</span>
+                  ))}
+                </div>
+
+              </div>
+              {game.youtubeId && (
+                <YouTubeVideo 
+                  videoId={game.youtubeId} 
+                  isVisible={isVisible && visibleProjectIndex === index}
+                />
               )}
             </div>
+            <div className="project-minimal-links">
+                  {isMobile ? (
+                    // En mobile, siempre redirigir directamente a la URL
+                    <a 
+                      href={game.liveUrl} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="project-minimal-link"
+                    >
+                      <GlobeAltIcon className="w-4 h-4 mr-2" />
+                      {translatedButtons.visit}
+                    </a>
+                  ) : onPlayGame ? (
+                    // En desktop, usar el popup si está disponible
+                    <button 
+                      onClick={() => onPlayGame(game.liveUrl, game.title)}
+                      className="project-minimal-link"
+                      type="button"
+                    >
+                      <PlayIcon className="w-4 h-4 mr-2" />
+                      {translatedButtons.playDemo}
+                    </button>
+                  ) : (
+                    // En desktop, redirigir directamente si no hay popup
+                    <a 
+                      href={game.liveUrl} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="project-minimal-link"
+                    >
+                      <GlobeAltIcon className="w-4 h-4 mr-2" />
+                      {translatedButtons.playDemo}
+                    </a>
+                  )}
+                </div>
           </div>
         ))}
       </div>

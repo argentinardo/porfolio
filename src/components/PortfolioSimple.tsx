@@ -21,6 +21,7 @@ import {
   XMarkIcon,
   WindowIcon,
   ChevronDownIcon,
+  ArrowsPointingOutIcon,
   // Nuevos iconos más profesionales
   AcademicCapIcon,
   ClockIcon
@@ -364,6 +365,15 @@ const PortfolioSimple: React.FC = () => {
                 allowFullScreen
                 sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"
               />
+              <a 
+                href={activeGame.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="game-maximize-btn"
+                title={t('buttons.openFullscreen', 'Abrir en pantalla completa')}
+              >
+                <ArrowsPointingOutIcon className="w-5 h-5" />
+              </a>
             </div>
           </div>
         );

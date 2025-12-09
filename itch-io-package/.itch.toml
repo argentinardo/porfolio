@@ -1,0 +1,12 @@
+# Configuración para itch.io
+# Este archivo ayuda a itch.io a entender cómo mostrar tu juego
+
+[game]
+title = "New H.E.R.O."
+description = "Recreation of the classic ATARI H.E.R.O. game, developed with TypeScript"
+version = "1.0.0"
+author = "Damian Nardini"
+
+[build]
+# itch.io buscará un archivo index.html en la raíz del ZIP
+# Asegúrate de que tu build genere un index.html en la raíz

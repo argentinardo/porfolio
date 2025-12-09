@@ -126,7 +126,8 @@
         "category": "game",
         "year": 2025,
         "liveUrl": "https://newhero.netlify.app/",
-        "githubUrl": "https://github.com/damiannardini/hero"
+        "githubUrl": "https://github.com/damiannardini/hero",
+        "youtubeId": "L7COAr3kwek"
       },
       {
         "title": "Mecano Game",
@@ -135,7 +136,8 @@
         "category": "game",
         "year": 2025,
         "liveUrl": "https://mecano-game.netlify.app",
-        "githubUrl": "https://github.com/damiannardini/mecano-game"
+        "githubUrl": "https://github.com/damiannardini/mecano-game",
+        "youtubeId": ""
       },
       {
         "title": "Run Ninja Run",
@@ -144,7 +146,8 @@
         "category": "game",
         "year": 2025,
         "liveUrl": "https://upit.com/@argentinardo/play/iS4sHgHhbG",
-        "githubUrl": "https://github.com/damiannardini/run-ninja-run"
+        "githubUrl": "https://github.com/damiannardini/run-ninja-run",
+        "youtubeId": ""
       },
       {
         "title": "Gatatack",
@@ -153,7 +156,8 @@
         "category": "game",
         "year": 2025,
         "liveUrl": "https://upit.com/@argentinardo/play/WwGOgTSW91",
-        "githubUrl": ""
+        "githubUrl": "",
+        "youtubeId": ""
       }
     ],
     "buttons": {
