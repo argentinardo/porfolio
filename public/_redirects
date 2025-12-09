@@ -3,6 +3,9 @@
 # Redirección de /newhero a newhero.netlify.app
 /newhero    https://newhero.netlify.app    301
 
+# Redirección de /mecanogame a mecano-game.netlify.app
+/mecanogame    https://mecano-game.netlify.app/    301
+
 # Redirección después del envío del formulario
 /form-success    /form-success.html   200
 

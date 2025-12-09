@@ -12,9 +12,9 @@
   status = 301
   force = true
 
-  [[redirects]]
+[[redirects]]
   from = "/mecanogame"
-  to = "https://mecano-game.netlify.app"
+  to = "https://mecano-game.netlify.app/"
   status = 301
   force = true
 
