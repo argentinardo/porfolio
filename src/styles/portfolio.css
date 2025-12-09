@@ -2437,11 +2437,6 @@ body.light-mode .service-modal-contact-btn:hover:not(:disabled) {
   color: #e5e7eb;
 }
 
-.project-minimal-card:nth-child(even) .project-minimal-content {
-  flex-direction: row-reverse;
-  display: -webkit-flex;
-}
-
 .projects-minimal-title {
   font-size: 1.5rem;
   font-weight: 600;
@@ -2463,6 +2458,31 @@ body.light-mode .service-modal-contact-btn:hover:not(:disabled) {
   grid-template-columns: 1fr 1fr;
   gap: 1.5rem;
   align-items: stretch;
+}
+
+/* Alternar posición de video: impar (1, 3, 5...) = video a la derecha, par (2, 4, 6...) = video a la izquierda */
+.project-minimal-card:nth-child(odd) .project-minimal-content {
+  grid-template-columns: 1fr 1fr;
+}
+
+.project-minimal-card:nth-child(odd) .project-minimal-info {
+  order: 1;
+}
+
+.project-minimal-card:nth-child(odd) .project-video-container {
+  order: 2;
+}
+
+.project-minimal-card:nth-child(even) .project-minimal-content {
+  grid-template-columns: 1fr 1fr;
+}
+
+.project-minimal-card:nth-child(even) .project-minimal-info {
+  order: 2;
+}
+
+.project-minimal-card:nth-child(even) .project-video-container {
+  order: 1;
 }
 
 .project-minimal-info {
