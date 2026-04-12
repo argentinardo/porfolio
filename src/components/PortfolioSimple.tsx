@@ -5,7 +5,7 @@ import ServiceCards from './ServiceCards';
 import ContactForm from './ContactForm';
 import ContactFormPopup from './ContactFormPopup';
 import ProjectsShowcase from './ProjectsShowcase';
-import MobileStickyBar from './MobileStickyBar';
+import SiteTopBar from './SiteTopBar';
 import { socialLinks } from '../data/profileData';
 import { 
   CodeBracketIcon,
@@ -17,7 +17,6 @@ import {
   EnvelopeIcon,
   GlobeAltIcon,
   CpuChipIcon,
-  ChevronRightIcon,
   XMarkIcon,
   WindowIcon,
   ChevronDownIcon,
@@ -27,7 +26,7 @@ import {
   ClockIcon
 } from '@heroicons/react/24/outline';
 import { SkipLink } from './SkipLink';
-import '../styles/portfolio.css';
+import './PortfolioSimple.css';
 
 interface ProfileSection {
   id: string;
@@ -40,6 +39,37 @@ interface ProfileSection {
     language?: string;
     url?: string;
   } | null;
+}
+
+function renderHeroTitle(title: string) {
+  const words = title.trim().split(/\s+/).filter(Boolean);
+  if (words.length === 0) return null;
+  if (words.length === 1) {
+    return <span className="text-primary">{words[0]}</span>;
+  }
+  if (words.length === 2) {
+    return (
+      <>
+        <span className="text-on-surface">{words[0]} </span>
+        <span className="text-primary">{words[1]}</span>
+      </>
+    );
+  }
+  const highlightIdx = Math.floor(words.length / 2);
+  return (
+    <>
+      {words.map((w, i) => (
+        <span key={`${w}-${i}`}>
+          {i > 0 && ' '}
+          {i === highlightIdx ? (
+            <span className="text-primary">{w}</span>
+          ) : (
+            <span className="text-on-surface">{w}</span>
+          )}
+        </span>
+      ))}
+    </>
+  );
 }
 
 // Componente para texto animado con cursor parpadeante
@@ -141,7 +171,7 @@ const ListItemWithIcon: React.FC<{ text: string; index: number; sectionId: strin
 
   return (
 
-      <p className="content-item">{text}</p>
+      <p className="content-item content-list text-secondary-dim text-base sm:text-lg max-w-md font-body leading-relaxed tracking-normal normal-case">{text}</p>
   );
 };
 
@@ -149,9 +179,7 @@ const ListItemWithIcon: React.FC<{ text: string; index: number; sectionId: strin
 const PortfolioSimple: React.FC = () => {
   const { t } = useTranslation();
   const [activeSection, setActiveSection] = useState(0);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isContactPopupOpen, setIsContactPopupOpen] = useState(false);
-  const [showStickyBar, setShowStickyBar] = useState(false);
   const [displaySection, setDisplaySection] = useState(0);
   const [expandedSections, setExpandedSections] = useState<{[key: string]: boolean}>({});
   const [isNotebookElevated, setIsNotebookElevated] = useState(false);
@@ -312,21 +340,21 @@ const PortfolioSimple: React.FC = () => {
       <div className="editor-header">
         <div className="window-controls">
           <button 
-            className="control-btn red" 
+            className="control-btn"
             aria-label="Cerrar ventana"
             onClick={() => handleWindowControl('close')}
           >
             <XMarkIcon className="control-icon" />
           </button>
           <button 
-            className="control-btn yellow" 
+            className="control-btn"
             aria-label="Minimizar ventana"
             onClick={() => handleWindowControl('minimize')}
           >
             <ChevronDownIcon className="control-icon" />
           </button>
           <button 
-            className="control-btn green" 
+            className="control-btn"
             aria-label="Maximizar ventana"
             onClick={() => handleWindowControl('maximize')}
           >
@@ -445,21 +473,21 @@ const PortfolioSimple: React.FC = () => {
           <div className="editor-header">
             <div className="window-controls">
               <button 
-                className="control-btn red" 
+                className="control-btn"
                 aria-label="Cerrar ventana"
                 disabled
               >
                 <XMarkIcon className="control-icon" />
               </button>
               <button 
-                className="control-btn yellow" 
+                className="control-btn"
                 aria-label="Minimizar ventana"
                 disabled
               >
                 <ChevronDownIcon className="control-icon" />
               </button>
               <button 
-                className="control-btn green" 
+                className="control-btn"
                 aria-label="Maximizar ventana"
                 disabled
               >
@@ -501,21 +529,21 @@ const PortfolioSimple: React.FC = () => {
           <div className="editor-header">
             <div className="window-controls">
               <button 
-                className="control-btn red" 
+                className="control-btn"
                 aria-label="Cerrar ventana"
                 disabled
               >
                 <XMarkIcon className="control-icon" />
               </button>
               <button 
-                className="control-btn yellow" 
+                className="control-btn"
                 aria-label="Minimizar ventana"
                 disabled
               >
                 <ChevronDownIcon className="control-icon" />
               </button>
               <button 
-                className="control-btn green" 
+                className="control-btn"
                 aria-label="Maximizar ventana"
                 disabled
               >
@@ -555,21 +583,21 @@ const PortfolioSimple: React.FC = () => {
       <div className="editor-header">
         <div className="window-controls">
           <button 
-            className="control-btn red" 
+            className="control-btn"
             aria-label="Cerrar ventana"
             disabled
           >
             <XMarkIcon className="control-icon" />
           </button>
           <button 
-            className="control-btn yellow" 
+            className="control-btn"
             aria-label="Minimizar ventana"
             disabled
           >
             <ChevronDownIcon className="control-icon" />
           </button>
           <button 
-            className="control-btn green" 
+            className="control-btn"
             aria-label="Maximizar ventana"
             disabled
           >
@@ -665,7 +693,8 @@ const PortfolioSimple: React.FC = () => {
       
       // Ajustar para la barra sticky en mobile (4rem = 64px) + 20px de separación
       const isMobile = window.innerWidth <= 768;
-      const offset = isMobile ? 84 : 20; // 64px (barra sticky) + 20px (separación)
+      const topbar = 56;
+      const offset = topbar + (isMobile ? 20 : 16);
       
       window.scrollTo({ 
         top: scrollTop - offset, 
@@ -679,35 +708,20 @@ const PortfolioSimple: React.FC = () => {
     }
   }, [profileSections]);
 
-  const handleMobileMenuToggle = (isOpen: boolean) => {
-    setIsMobileMenuOpen(isOpen);
-    
-    // Enviar evento para sincronizar el estado del menú
-    const event = new CustomEvent('toggleMobileMenu', { detail: { isOpen } });
-    window.dispatchEvent(event);
-    
-    // Cerrar el menú después de hacer click en una sección
-    if (!isOpen) {
-      setTimeout(() => {
-        const closeEvent = new CustomEvent('closeMobileMenu');
-        window.dispatchEvent(closeEvent);
-      }, 100);
-    }
-  };
-
   const handleContactPopupToggle = (isOpen: boolean) => {
     setIsContactPopupOpen(isOpen);
   };
 
   const handleMobileNotebookToggle = (sectionId: string) => {
-    setExpandedSections(prev => ({
-      ...prev,
-      [sectionId]: !prev[sectionId]
-    }));
+    setExpandedSections((prev) => {
+      const expanded = prev[sectionId] !== false;
+      return { ...prev, [sectionId]: !expanded };
+    });
   };
 
+  /** Por defecto expandido en móvil; solo contrae si el usuario pulsó el footer. */
   const isSectionExpanded = (sectionId: string) => {
-    return expandedSections[sectionId] || false;
+    return expandedSections[sectionId] !== false;
   };
 
   // Función para verificar si el contenido supera los 510px
@@ -770,34 +784,6 @@ const PortfolioSimple: React.FC = () => {
   }, [profileSections]);
 
 
-
-  // Escuchar eventos para sincronizar el estado del menú
-  useEffect(() => {
-    const handleCloseMobileMenu = () => {
-      setIsMobileMenuOpen(false);
-    };
-
-    window.addEventListener('closeMobileMenu', handleCloseMobileMenu);
-    
-    return () => {
-      window.removeEventListener('closeMobileMenu', handleCloseMobileMenu);
-    };
-  }, []);
-
-  // Detectar scroll para mostrar/ocultar la barra sticky
-  useEffect(() => {
-    const handleScroll = () => {
-      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-      const shouldShow = scrollTop > 100; // Mostrar después de 100px de scroll
-      setShowStickyBar(shouldShow);
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, []);
 
   // Bloquear scroll con flechas del teclado cuando hay un juego activo
   useEffect(() => {
@@ -863,45 +849,15 @@ const PortfolioSimple: React.FC = () => {
     };
   }, [activeGame]);
 
-  // Insertar marcadores en el menú móvil
-  useEffect(() => {
-    const mobileMarkersContainer = document.getElementById('mobile-navigation-markers');
-    if (mobileMarkersContainer) {
-      mobileMarkersContainer.innerHTML = '';
-      profileSections.forEach((section, index) => {
-        const marker = document.createElement('button');
-        marker.className = `mobile-progress-dot ${index === activeSection ? 'active' : ''}`;
-        marker.onclick = () => {
-          scrollToSection(index);
-          // Cerrar el menú móvil después de hacer click
-          setIsMobileMenuOpen(false);
-          setTimeout(() => {
-            const event = new CustomEvent('closeMobileMenu');
-            window.dispatchEvent(event);
-          }, 100);
-        };
-        marker.innerHTML = `
-          <ChevronRightIcon class="mobile-progress-indicator-icon" />
-          <span class="mobile-progress-dot-label">${section.title}</span>
-        `;
-        mobileMarkersContainer.appendChild(marker);
-      });
-    }
-  }, [activeSection, profileSections, scrollToSection]);
-
   return (
     <div className="portfolio-container" role="main" aria-label="Portfolio de Damian Nardini">
       <SkipLink />
-      <NeuralNetworkBackground />
-      
-      {/* Barra sticky para mobile */}
-      <MobileStickyBar 
-        activeSection={activeSection}
-        onMenuToggle={handleMobileMenuToggle}
-        isMenuOpen={isMobileMenuOpen}
-        isVisible={showStickyBar}
+      <SiteTopBar
         sections={profileSections}
+        activeSection={activeSection}
+        onSectionClick={scrollToSection}
       />
+      <NeuralNetworkBackground />
 
       {/* Popup del formulario de contacto */}
       <ContactFormPopup 
@@ -942,9 +898,23 @@ const PortfolioSimple: React.FC = () => {
             id={`section-${section?.id}`}
             aria-labelledby={`title-${section?.id}`}
           >
-            <div className="scrollable-text">
-              <p className="subtitle" id={`subtitle-${section?.id}`}>{section.subtitle}</p>
-              <h1 className="main-title" id={`title-${section?.id}`} data-text={section.title}>{section.title}</h1>
+            <div className="scrollable-text scrollable-text--editorial col-span-12 lg:col-span-5 flex flex-col gap-5 md:gap-7 w-full min-w-0 max-w-[min(100%,28rem)]">
+
+                <div
+                  className="hero-subtitle inline-flex items-center gap-2 text-primary font-label text-xs tracking-[0.3em] uppercase"
+                  id={`subtitle-${section?.id}`}
+                >
+                  <span className="w-8 h-px shrink-0 bg-primary" aria-hidden />
+                  {section.subtitle}
+                </div>
+
+              <h1
+                className="main-title main-title--plain text-[clamp(2rem,8vw,5.5rem)] sm:text-6xl md:text-7xl lg:text-8xl font-black font-headline tracking-tighter leading-[0.88] uppercase text-on-surface"
+                id={`title-${section?.id}`}
+                data-text={section.title}
+              >
+                {renderHeroTitle( section.title)}
+              </h1>
               {section?.id === 'services' ? (
                 <>
                   <div className="content-list" role="list">
@@ -1026,7 +996,7 @@ const PortfolioSimple: React.FC = () => {
             <div className="mobile-notebook-container">
               <div className="mobile-notebook active">
                 <div className="laptop-base"></div>
-                <div className={`laptop-screen ${Object.values(expandedSections).some(expanded => expanded) ? 'expanded' : ''}`}>
+                <div className={`laptop-screen ${isSectionExpanded(section.id) ? 'expanded' : ''}`}>
                   <div className="screen-content">
                     {renderMobileNotebook(section)}
                   </div>
@@ -1061,23 +1031,6 @@ const PortfolioSimple: React.FC = () => {
           </section>
         ))}
       </div>
-
-      <nav className="progress-indicators" aria-label="Navegación por secciones">
-                {/* Checkpoints con efectos de nodos */}
-        {profileSections.map((section, index) => (
-          <button
-            key={index}
-            className={`progress-dot ${index === activeSection ? 'active' : ''}`}
-            onClick={() => scrollToSection(index)}
-            aria-label={`Ir a sección: ${section.title}`}
-            aria-current={index === activeSection ? 'true' : 'false'}
-          >
-            <ChevronRightIcon className="progress-indicator-icon" />
-            <span className="progress-dot-label">{section.title}</span>
-          </button>
-        ))}
-      </nav>
-
 
     </div>
   );

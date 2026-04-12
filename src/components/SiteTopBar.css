@@ -1,0 +1,377 @@
+/* Topbar clásica: borde inferior, blur, transiciones comunes */
+.site-topbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 5000;
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  background: rgb(17 24 39 / 50%);
+  transition:
+    background 0.25s ease,
+    border-color 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.site-topbar--light {
+  background: transparent;
+}
+
+.site-topbar__inner {
+  max-width: 90rem;
+  margin: 0 auto;
+  min-height: 3.5rem;
+  display: flex;
+  align-items: center;
+}
+
+@media (min-width: 768px) {
+  .site-topbar__inner {
+    gap: 1rem;
+  }
+
+}
+
+.site-topbar__menu-btn {
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  color: var(--md-on-surface);
+  cursor: pointer;
+  transition: color 0.2s ease, background 0.2s ease;
+}
+
+.site-topbar__menu-btn:hover {
+  color: var(--md-primary);
+  background: color-mix(in srgb, var(--md-primary) 8%, transparent);
+}
+
+.site-topbar__brand {
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--md-primary);
+  white-space: nowrap;
+  margin-right: auto;
+  font-family: 'Epilogue';
+  font-weight: bolder;
+  letter-spacing: 0.2px;
+}
+
+@media (min-width: 768px) {
+  .site-topbar__brand {
+    margin-right: 0;
+    flex-shrink: 0;
+    
+  }
+}
+
+.site-topbar__nav--desktop {
+  display: none;
+  align-items: center;
+  gap: 0.125rem;
+  flex: 1;
+  justify-content: flex-end;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  gap: 1.8rem;
+}
+
+.site-topbar__nav--desktop::-webkit-scrollbar {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .site-topbar__nav--desktop {
+    display: flex;
+  }
+}
+
+.site-topbar__link {
+  font-family: var(--font-label);
+  font-size: 14px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 0.5rem 0rem;
+  border: 1px solid transparent;
+  border-radius: 0;
+  background: transparent;
+  color: color-mix(in srgb, var(--md-on-surface) 85%, transparent);
+  cursor: pointer;
+  white-space: nowrap;
+  transition:
+    color 0.5s ease,
+    border-color 0.5s ease,
+}
+
+.site-topbar__link:hover {
+  color: var(--md-primary);
+  border-bottom:var(--md-primary) solid 1px;
+}
+
+.site-topbar__link.is-active {
+  color: var(--md-primary);
+  border-bottom:var(--md-primary) solid 1px;
+}
+
+.site-topbar__actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-left: auto;
+}
+
+@media (min-width: 768px) {
+  .site-topbar__actions {
+    margin-left: 0;
+    flex-shrink: 0;
+  }
+}
+
+.site-topbar__icon {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.site-topbar__settings {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.site-topbar__settings-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--md-on-surface);
+  cursor: pointer;
+  transition:
+    color 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.15s ease;
+}
+
+.site-topbar__settings-trigger:hover {
+  color: var(--md-primary);
+  transform: rotate(60deg);
+
+}
+
+
+
+.site-topbar__settings-trigger[aria-expanded='true'] {
+  color: var(--md-primary);
+}
+
+.site-topbar__settings-panel {
+  position: absolute;
+  top: calc(100% - 2rem);
+  right: 0;
+  z-index: 5010;
+  width: max(12.5rem, min(17rem, calc(100vw - 1.5rem)));
+  padding: 0.75rem 0.85rem;
+  background: var(--md-surface-container-high);
+  border: 1px solid color-mix(in srgb, var(--md-outline) 40%, transparent);
+  box-shadow: 0 10px 28px var(--shadow-color);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(-7rem);
+  transition:
+    transform 0.22s ease,
+    opacity 0.22s ease,
+    visibility 0s linear 0.22s;
+}
+
+.site-topbar__settings-panel.is-open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateY(0);
+  transition:
+    transform 0.22s ease,
+    opacity 0.22s ease,
+    visibility 0s linear 0s;
+}
+
+.site-topbar__settings-section + .site-topbar__settings-section {
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid color-mix(in srgb, var(--md-outline-variant) 55%, transparent);
+}
+
+.site-topbar__settings-heading {
+  font-family: var(--font-label);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--md-on-surface-variant) 92%, transparent);
+  margin: 0 0 0.45rem;
+}
+
+.site-topbar__segmented {
+  display: flex;
+  border: 1px solid color-mix(in srgb, var(--md-outline) 35%, transparent);
+  border-radius: 0;
+  overflow: hidden;
+}
+
+.site-topbar__segment-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  padding: 0.45rem 0.35rem;
+  border: none;
+  background: transparent;
+  color: color-mix(in srgb, var(--md-on-surface) 88%, transparent);
+  font-family: var(--font-body);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.site-topbar__segment-btn + .site-topbar__segment-btn {
+  border-left: 1px solid color-mix(in srgb, var(--md-outline) 35%, transparent);
+}
+
+.site-topbar__segment-btn:hover {
+  color: var(--md-primary);
+  background: color-mix(in srgb, var(--md-primary) 7%, transparent);
+}
+
+.site-topbar__segment-btn.is-active {
+  background: var(--md-primary);
+  color: var(--md-on-primary);
+}
+
+.site-topbar__segment-icon {
+  width: 1rem;
+  height: 1rem;
+  flex-shrink: 0;
+}
+
+.site-topbar__lang-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.site-topbar__lang-option {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  width: 100%;
+  text-align: left;
+  padding: 0.5rem 0.55rem;
+  border: 1px solid transparent;
+  border-radius: 0;
+  background: transparent;
+  color: var(--md-on-surface);
+  font-family: var(--font-body);
+  font-size: 0.8125rem;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
+}
+
+.site-topbar__lang-option:hover {
+  border-color: color-mix(in srgb, var(--md-primary) 35%, transparent);
+  background: color-mix(in srgb, var(--md-primary) 6%, transparent);
+}
+
+.site-topbar__lang-option.is-active {
+  border-color: var(--md-primary);
+  background: color-mix(in srgb, var(--md-primary) 12%, transparent);
+  color: var(--md-primary);
+}
+
+.site-topbar__lang-code {
+  font-family: var(--font-code);
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  min-width: 1.75rem;
+  color: color-mix(in srgb, var(--md-on-surface-variant) 85%, transparent);
+}
+
+.site-topbar__lang-option.is-active .site-topbar__lang-code {
+  color: inherit;
+}
+
+/* Panel móvil */
+.site-topbar__mobile-panel {
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition:
+    max-height 0.35s ease,
+    opacity 0.25s ease;
+  border-top: 1px solid transparent;
+}
+
+.site-topbar__mobile-panel.is-open {
+  max-height: 70vh;
+  opacity: 1;
+  border-top-color: color-mix(in srgb, var(--md-outline-variant) 50%, transparent);
+}
+
+.site-topbar__mobile-nav {
+  display: flex;
+  flex-direction: column;
+  padding: 0.75rem 1rem 1rem;
+  gap: 0.25rem;
+}
+
+.site-topbar__mobile-link {
+  font-family: var(--font-label);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-align: left;
+  padding: 0.65rem 0.75rem;
+  border: 1px solid transparent;
+  border-radius: 0;
+  background: transparent;
+  color: var(--md-on-surface);
+  cursor: pointer;
+  transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+}
+
+.site-topbar__mobile-link:hover {
+  border-color: color-mix(in srgb, var(--md-primary) 35%, transparent);
+  color: var(--md-primary);
+}
+
+.site-topbar__mobile-link.is-active {
+  border-color: var(--md-primary);
+  color: var(--md-primary);
+  background: color-mix(in srgb, var(--md-primary) 8%, transparent);
+}
+
+body.light-mode .site-topbar__link:not(.is-active) {
+  color: color-mix(in srgb, var(--md-on-surface) 92%, transparent);
+}
+
+body.light-mode .site-topbar__menu-btn {
+  color: var(--md-on-surface);
+}
+
+body.light-mode .site-topbar__settings-trigger {
+  color: var(--md-on-surface);
+}

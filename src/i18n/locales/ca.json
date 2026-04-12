@@ -1,4 +1,25 @@
 {
+  "hero": {
+    "viewPortfolio": "Veure el portfolio"
+  },
+  "topbar": {
+    "brand": "Damián Nardini <DEV />",
+    "sectionsNav": "Seccions del lloc",
+    "language": "Idioma",
+    "openMenu": "Obrir menú",
+    "closeMenu": "Tancar menú",
+    "themeLight": "Activar tema clar",
+    "themeDark": "Activar tema fosc",
+    "settings": "Ajustos",
+    "openSettings": "Obrir ajustos: idioma i tema",
+    "closeSettings": "Tancar ajustos",
+    "themeSection": "Tema",
+    "themeModeDark": "Fosc",
+    "themeModeLight": "Clar",
+    "langEs": "Espanyol",
+    "langCa": "Català",
+    "langEn": "Anglès"
+  },
   "navigation": {
     "home": "Inici",
     "intro": "Introducció",
@@ -10,11 +31,13 @@
   "intro": {
     "title": "Frontend developer",
     "subtitle": "Damián Nardini",
+    "nameDisplay": "Damián Nardini",
     "content": [
       "15+ anys d'experiència en desenvolupament web frontend",
       "Especialitzat en React, TypeScript i tecnologies modernes",
       "Centrat en crear experiències d'usuari excepcionals"
     ],
+    
     "notebook": {
       "code": "const developer = {\n  name: \"Damián Nardini\",\n  experience: \"15+ anys en Frontend\",\n  specialization: \"React • TypeScript • UI/UX\",\n  passion: \"Crear experiències web úniques\",\n  location: \"Barcelona\",\n};\n\nconsole.log(\"Hola! Sóc \" + developer.name);\nconsole.log(\"Amb \" + developer.experience + \" d'experiència\");\nconsole.log(\"En què puc ajudar-te?\");\n\n Hola! Sóc Damián Nardini\n Amb 15+ anys en Frontend d'experiència  \nEn què puc ajudar-te?"
     }
@@ -102,6 +125,7 @@
     "contact": "Contacta'm",
     "learnMore": "Veure més",
     "interestedInService": "Estic interessat en aquest servei",
+    
     "notebook": {
       "code": "// Serveis Professionals Disponibles\n\nconst serveis = {\n  n8n: {\n    descripcio: \"Orquestració de processos i fluxos de treball\",\n    preu: \"Des de €2.500\",\n    caracteristiques: [\n      \"Fluxos de treball automatitzats\",\n      \"Integracions API i CRM\",\n      \"Connectors personalitzats\",\n      \"Monitoratge i alertes\"\n    ]\n  },\n  \n  iaLocal: {\n    descripcio: \"Instal·lació i configuració de LLM\",\n    preu: \"Des de €3.500\",\n    caracteristiques: [\n      \"Ollama /  LM Studio\",\n      \"RAG amb bases de dades locals\",\n      \"Privadesa on-premise\",\n      \"Fine-tuning de models\"\n    ]\n  },\n  \n  manteniment: {\n    descripcio: \"Manteniment i suport per a IA\",\n    preu: \"Des de €1.800\",\n    caracteristiques: [\n      \"Suport mensual i SLA\",\n      \"Actualitzacions de fluxos\",\n      \"Monitoratge continu\",\n      \"Backups i recuperació\"\n    ]\n  },\n  \n  consultoria: {\n    descripcio: \"Estratègia i formació en IA\",\n    preu: \"€150/hora\",\n    caracteristiques: [\n      \"Identificació de casos d'ús\",\n      \"ROI i roadmap d'adopció\",\n      \"Millors pràctiques de prompts\",\n      \"Tallers personalitzats\"\n    ]\n  },\n  \n  frontend: {\n    descripcio: \"Aplicacions web modernes\",\n    preu: \"Des de €2.500\",\n    caracteristiques: [\n      \"React i TypeScript\",\n      \"Components reutilitzables\",\n      \"Optimització de rendiment\",\n      \"Testing i debugging\"\n    ]\n  }\n};\n\nconsole.log(\"Serveis disponibles:\", Object.keys(serveis));\nconsole.log(\"T'interessa algun? Contacta'm!\");"
     }
@@ -109,6 +133,7 @@
   "projects": {
     "title": "Projectes Personals",
     "subtitle": "Treball Recent",
+    
     "filters": {
       "all": "Tots",
       "game": "Jocs",

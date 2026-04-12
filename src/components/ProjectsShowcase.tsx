@@ -1,3 +1,4 @@
+import './ProjectsShowcase.css';
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { projects, projectCategories, Project } from '../data/projectsData';

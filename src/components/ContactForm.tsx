@@ -1,3 +1,4 @@
+import './ContactForm.css';
 import React, { useState, useRef, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useForm, ValidationError } from '@formspree/react';

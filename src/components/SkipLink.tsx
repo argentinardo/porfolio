@@ -1,3 +1,4 @@
+import './SkipLink.css';
 import React from 'react';
 
 interface SkipLinkProps {

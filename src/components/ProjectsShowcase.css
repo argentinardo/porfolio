@@ -1,0 +1,383 @@
+/* Estilos para el showcase de proyectos */
+.projects-showcase {
+  padding: 1rem;
+  max-height: 100%;
+  overflow-y: auto;
+}
+
+.project-filters {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.filter-btn {
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--border-color);
+  background: transparent;
+  color: var(--text-primary);
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.875rem;
+}
+
+.filter-btn:hover {
+  border-color: var(--accent-color);
+  color: var(--accent-color);
+}
+
+.filter-btn.active {
+  background-color: var(--accent-color);
+  color: #111827;
+  border-color: var(--accent-color);
+}
+
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.project-card {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--border-color);
+  border-radius: 0.75rem;
+  padding: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.project-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--accent-color);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+.project-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0.75rem;
+}
+
+.project-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+  font-family: var(--font-subtitle);
+}
+
+.project-year {
+  background: var(--primary-color);
+  color: var(--md-on-primary);
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.project-description {
+  color: var(--text-primary);
+  font-size: 0.875rem;
+  line-height: 1.5;
+  margin-bottom: 1rem;
+  font-family: var(--font-body);
+}
+
+.project-technologies {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.tech-tag {
+  background: rgba(156, 163, 175, 0.2);
+  color: var(--accent-color);
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  border: 1px solid rgba(156, 163, 175, 0.4);
+}
+
+.tech-tag.more {
+  background: rgba(156, 163, 175, 0.1);
+  color: var(--text-secondary);
+  border-color: rgba(156, 163, 175, 0.2);
+}
+
+.project-category {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.category-badge {
+  background: rgba(107, 114, 128, 0.15);
+  color: #6b7280;
+  padding: 0.25rem 0.75rem;
+  border-radius: 1rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  border: 1px solid rgba(107, 114, 128, 0.3);
+}
+
+/* Modal de proyecto */
+.project-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(5px);
+}
+
+.project-modal {
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 1rem;
+  max-height: 80vh;
+  overflow-y: auto;
+  position: relative;
+  backdrop-filter: blur(20px);
+}
+
+.modal-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 1.5rem;
+  cursor: pointer;
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+
+.modal-close:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-primary);
+}
+
+.modal-content {
+  padding: 2rem;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.modal-header h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+  font-family: var(--font-subtitle);
+}
+
+.modal-year {
+  background: var(--primary-color);
+  color: var(--md-on-primary);
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.modal-description {
+  color: var(--text-secondary);
+  font-size: 1rem;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+  font-family: var(--font-body);
+}
+
+.modal-technologies h4 {
+  color: var(--text-primary);
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  font-family: var(--font-subtitle);
+}
+
+.tech-list {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.5rem;
+}
+
+.tech-item {
+  background: rgba(59, 130, 246, 0.1);
+  color: var(--primary-color);
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border: 1px solid rgba(59, 130, 246, 0.2);
+}
+
+.modal-links {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.modal-link {
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  font-family: var(--font-body);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-link svg {
+  color: inherit;
+  width: 1rem;
+  height: 1rem;
+  margin-right: 0.5rem;
+  transition: all 0.3s ease;
+}
+
+.modal-link.live {
+  background: var(--primary-color);
+  color: var(--md-on-primary);
+}
+
+.modal-link.live:hover {
+  background: #1d4ed8;
+  transform: translateY(-2px);
+}
+
+.modal-link.github {
+  background: transparent;
+  color: var(--text-secondary);
+  border: 1px solid var(--border-color);
+}
+
+.modal-link.github:hover {
+  border-color: var(--primary-color);
+  color: var(--primary-color);
+  transform: translateY(-2px);
+}
+
+/* Ajustes para modo claro */
+body.light-mode .project-card {
+  background: rgba(255, 255, 255, 0.9);
+  border-color: #d1d5db;
+}
+
+body.light-mode .project-card:hover {
+  background: rgba(255, 255, 255, 1);
+  border-color: #374151;
+}
+
+body.light-mode .project-modal {
+  background: rgba(255, 255, 255, 0.95);
+  border-color: #e5e7eb;
+}
+
+body.light-mode .tech-tag {
+  background: rgba(55, 65, 81, 0.15);
+  border-color: rgba(55, 65, 81, 0.4);
+  color: var(--primary-color);
+}
+
+body.light-mode .tech-item {
+  background: rgba(55, 65, 81, 0.15);
+  border-color: rgba(55, 65, 81, 0.4);
+  color: var(--primary-color);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .projects-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .project-filters {
+    justify-content: center;
+  }
+  
+  .modal-content {
+    padding: 1.5rem;
+  }
+  
+  .modal-header {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .modal-links {
+    justify-content: center;
+  }
+  
+  .services-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .service-card {
+    padding: 0.5rem;
+    max-width: none;
+  }
+  
+  .service-title {
+    font-size: 1rem;
+  }
+  
+  .service-description {
+    font-size: 0.75rem;
+  }
+  
+  .service-features li {
+    font-size: 0.7rem;
+    margin-bottom: 0.3rem;
+  }
+  
+  .service-icon svg {
+    width: 1.75rem;
+    height: 1.75rem;
+  }
+  
+  .service-modal {
+    max-width: 90%;
+    max-height: 80vh;
+    padding: 0.75rem;
+  }
+  
+  .service-modal-title {
+    font-size: 1.25rem;
+  }
+  
+  .service-modal-description {
+    font-size: 0.875rem;
+  }
+  
+  .service-modal-features li {
+    font-size: 0.8rem;
+  }
+}
+

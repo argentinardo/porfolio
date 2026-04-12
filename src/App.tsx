@@ -1,12 +1,13 @@
 import React from 'react';
 import PortfolioSimple from './components/PortfolioSimple';
-import LanguageSelector from './components/LanguageSelector';
+import { ThemeProvider } from './context/ThemeContext';
 
 function App() {
   return (
     <div className="App">
-      <LanguageSelector />
-      <PortfolioSimple />
+      <ThemeProvider>
+        <PortfolioSimple />
+      </ThemeProvider>
     </div>
   );
 }

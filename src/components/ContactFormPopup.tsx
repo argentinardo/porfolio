@@ -1,3 +1,4 @@
+import './ContactFormPopup.css';
 import React, { useEffect, useState } from 'react';
 import { XMarkIcon, CheckCircleIcon } from '@heroicons/react/24/outline';
 import ContactForm from './ContactForm';

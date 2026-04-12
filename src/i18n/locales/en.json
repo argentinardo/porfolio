@@ -1,4 +1,25 @@
 {
+  "hero": {
+    "viewPortfolio": "View portfolio"
+  },
+  "topbar": {
+    "brand": "Damián Nardini <DEV />",
+    "sectionsNav": "Site sections",
+    "language": "Language",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "themeLight": "Switch to light theme",
+    "themeDark": "Switch to dark theme",
+    "settings": "Settings",
+    "openSettings": "Open settings: language and theme",
+    "closeSettings": "Close settings",
+    "themeSection": "Theme",
+    "themeModeDark": "Dark",
+    "themeModeLight": "Light",
+    "langEs": "Spanish",
+    "langCa": "Catalan",
+    "langEn": "English"
+  },
   "navigation": {
     "home": "Home",
     "intro": "Introduction",
@@ -10,11 +31,13 @@
   "intro": {
     "title": "Frontend Developer",
     "subtitle": "Damián Nardini",
+    "nameDisplay": "Damian Nardini",
     "content": [
       "15+ years of frontend web development experience",
       "Specialized in React, TypeScript and modern technologies",
       "Focused on creating exceptional user experiences"
     ],
+    
     "notebook": {
       "code": "const developer = {\n  name: \"Damián Nardini\",\n  experience: \"15+ years in Frontend\",\n  specialization: \"React • TypeScript • UI/UX\",\n  passion: \"Create unique web experiences\",\n  location: \"Barcelona\",\n};\n\nconsole.log(\"Hello! I'm \" + developer.name);\nconsole.log(\"With \" + developer.experience + \" of experience\");\nconsole.log(\"How can I help you?\");\n\n Hello! I'm Damian Nardini\n With 15+ years in Frontend of experience  \nHow can I help you?"
     }
@@ -102,6 +125,7 @@
     "contact": "Contact me",
     "learnMore": "Learn more",
     "interestedInService": "I'm interested in this service",
+    
     "notebook": {
       "code": "// Professional Services Available\n\nconst services = {\n  n8n: {\n    description: \"Process and workflow orchestration\",\n    price: \"From €2,500\",\n    features: [\n      \"Automated workflows with n8n\",\n      \"API and CRM integrations\",\n      \"Custom connectors\",\n      \"Monitoring and alerts\"\n    ]\n  },\n  \n  localAI: {\n    description: \"LLM installation and configuration\",\n    price: \"From €3,500\",\n    features: [\n      \"Ollama / LM Studio\",\n      \"RAG with local databases\",\n      \"On-premise privacy\",\n      \"Model fine-tuning\"\n    ]\n  },\n  \n  maintenance: {\n    description: \"AI maintenance and support\",\n    price: \"From €1,800\",\n    features: [\n      \"Monthly support and SLA\",\n      \"Flow and dependency updates\",\n      \"Continuous monitoring\",\n      \"Backups and recovery\"\n    ]\n  },\n  \n  consulting: {\n    description: \"AI strategy and training\",\n    price: \"€150/hour\",\n    features: [\n      \"Use case identification\",\n      \"ROI and adoption roadmap\",\n      \"Best prompt practices\",\n      \"Custom workshops\"\n    ]\n  },\n  \n  frontend: {\n    description: \"Modern web applications\",\n    price: \"From €2,500\",\n    features: [\n      \"React and TypeScript\",\n      \"Reusable components\",\n      \"Performance optimization\",\n      \"Testing and debugging\"\n    ]\n  }\n};\n\nconsole.log(\"Available services:\", Object.keys(services));\nconsole.log(\"Interested in any? Contact me!\");"
     }
@@ -109,6 +133,7 @@
   "projects": {
     "title": "Personal Projects",
     "subtitle": "Recent Work",
+    
     "filters": {
       "all": "All",
       "game": "Games",

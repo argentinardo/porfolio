@@ -1,0 +1,59 @@
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0');
+
+/* Utilidades del tema (glass, laptop 3D, rejilla, glows) */
+.glass-panel {
+  background: rgba(37, 38, 38, 0.7);
+  backdrop-filter: blur(40px);
+  border: 1px solid rgba(72, 72, 72, 0.15);
+}
+
+.perspective-laptop {
+  perspective: 1200px;
+}
+
+.laptop-chassis {
+  transform: rotateY(-15deg) rotateX(5deg);
+  box-shadow:
+    0 50px 100px -20px rgba(0, 0, 0, 0.5),
+    0 30px 60px -30px rgba(0, 0, 0, 0.3);
+}
+
+.grid-bg {
+  background-image:
+    linear-gradient(rgba(233, 193, 118, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(233, 193, 118, 0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+.glow-amber {
+  filter: blur(120px);
+  background: radial-gradient(
+    circle,
+    rgba(233, 193, 118, 0.15) 0%,
+    transparent 70%
+  );
+}
+
+.glow-blue {
+  filter: blur(120px);
+  background: radial-gradient(
+    circle,
+    rgba(30, 58, 138, 0.2) 0%,
+    transparent 70%
+  );
+}
+
+.material-symbols-outlined {
+  font-family: 'Material Symbols Outlined', sans-serif;
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  display: inline-block;
+  vertical-align: middle;
+  font-variation-settings:
+    'FILL' 0,
+    'wght' 400,
+    'GRAD' 0,
+    'opsz' 24;
+}

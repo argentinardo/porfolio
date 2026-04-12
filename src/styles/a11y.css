@@ -1,0 +1,99 @@
+/* Mejoras de focus para accesibilidad */
+button:focus,
+a:focus,
+input:focus,
+textarea:focus {
+  outline: none;
+}
+
+/* Estilos para autofill de inputs */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px rgba(255, 255, 255, 0.4) inset !important;
+  -webkit-text-fill-color: var(--text-color) !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+textarea:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px rgba(255, 255, 255, 0.4) inset !important;
+  -webkit-text-fill-color: var(--text-color) !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+/* Estilos para autofill en modo claro */
+body.light-mode input:-webkit-autofill,
+body.light-mode input:-webkit-autofill:hover,
+body.light-mode input:-webkit-autofill:focus,
+body.light-mode input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px rgba(255, 255, 255, 0.4) inset !important;
+  -webkit-text-fill-color: #374151 !important;
+}
+
+body.light-mode textarea:-webkit-autofill,
+body.light-mode textarea:-webkit-autofill:hover,
+body.light-mode textarea:-webkit-autofill:focus,
+body.light-mode textarea:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px rgba(255, 255, 255, 0.4) inset !important;
+  -webkit-text-fill-color: #374151 !important;
+}
+
+/* Reducir animaciones para usuarios que lo prefieren */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* El tema claro/oscuro lo controla body.light-mode + ThemeContext (no prefers-color-scheme). */
+
+/* Estilos específicos para el menú derecho en modo claro */
+body.light-mode .progress-indicators {
+  background: rgba(255, 255, 255, 0.9);
+  border-color: rgba(107, 114, 128, 0.4);
+  backdrop-filter: blur(20px);
+}
+
+body.light-mode .progress-dot {
+  color: rgba(107, 114, 128, 0.8);
+}
+
+body.light-mode .progress-dot:hover {
+  color: rgba(107, 114, 128, 1);
+  background: rgba(107, 114, 128, 0.1);
+}
+
+body.light-mode .progress-dot.active {
+  color: rgba(107, 114, 128, 1);
+  background: rgba(107, 114, 128, 0.15);
+}
+
+body.light-mode .progress-dot-label {
+  color: var(--primary-color);
+}
+
+body.light-mode .progress-indicator-icon {
+  color: var(--primary-color);
+}
+
+body.light-mode .progress-dot:hover .progress-dot-label,
+body.light-mode .progress-dot.active .progress-dot-label {
+  color: var(--primary-color);
+  text-shadow: 0 0 10px rgba(107, 114, 128, 0.5);
+}
+
+body.light-mode .progress-dot:hover .progress-indicator-icon,
+body.light-mode .progress-dot.active .progress-indicator-icon {
+  color: var(--primary-color);
+  filter: drop-shadow(0 0 8px rgba(107, 114, 128, 0.7));
+}
+

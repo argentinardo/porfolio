@@ -56,9 +56,14 @@ src/
 │   └── useScrollProgress.ts
 ├── config/             # Configuración
 │   └── app.ts
-└── styles/             # Estilos CSS
-    └── portfolio.css
+└── styles/             # CSS global (@import en cadena)
+    ├── main.css        # Entrada: tokens → base → a11y
+    ├── tokens.css      # Variables y fuentes
+    ├── base.css        # Reset y estilos de página
+    └── a11y.css        # Foco, autofill, reduced-motion, contraste
 ```
+
+Cada componente puede tener su `.css` en `components/` (mismo nombre que el `.tsx`).
 
 ## 🚀 Instalación
 

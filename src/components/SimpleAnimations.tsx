@@ -1,6 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { SunIcon, MoonIcon, Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
-import { useTranslation } from 'react-i18next';
+import React, { useEffect, useRef } from 'react';
+import { useTheme } from '../context/ThemeContext';
 
 
 interface SimpleAnimationsProps {
@@ -79,85 +78,16 @@ export const SlideIn: React.FC<SimpleAnimationsProps & { direction?: 'left' | 'r
 export const NeuralNetworkBackground: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const mouse = useRef({ x: -1000, y: -1000 });
-  const [isNightMode, setIsNightMode] = useState(true);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const { i18n } = useTranslation();
-  const [currentLanguage, setCurrentLanguage] = useState(i18n.language);
-
-  // Escuchar eventos para controlar el menú móvil
-  useEffect(() => {
-    const handleCloseMobileMenu = () => {
-      setIsMobileMenuOpen(false);
-    };
-
-    const handleToggleMobileMenu = (event: CustomEvent) => {
-      setIsMobileMenuOpen(event.detail.isOpen);
-    };
-
-    window.addEventListener('closeMobileMenu', handleCloseMobileMenu);
-    window.addEventListener('toggleMobileMenu', handleToggleMobileMenu as EventListener);
-    
-    return () => {
-      window.removeEventListener('closeMobileMenu', handleCloseMobileMenu);
-      window.removeEventListener('toggleMobileMenu', handleToggleMobileMenu as EventListener);
-    };
-  }, []);
-
-  // Función para mapear idiomas del navegador a idiomas soportados
-  const mapBrowserLanguage = (browserLang: string): string => {
-    const languageMap: { [key: string]: string } = {
-      'es': 'es',
-      'en': 'en',
-      'ca': 'ca',
-      'es-ES': 'es',
-      'en-US': 'en',
-      'en-GB': 'en',
-      'ca-ES': 'ca'
-    };
-    return languageMap[browserLang] || 'es';
-  };
-
-  // Actualizar el idioma actual cuando cambie
-  useEffect(() => {
-    const handleLanguageChange = () => {
-      setCurrentLanguage(i18n.language);
-    };
-
-    // Escuchar cambios de idioma
-    i18n.on('languageChanged', handleLanguageChange);
-    
-    // Establecer el idioma inicial si no hay uno guardado
-    if (!localStorage.getItem('i18nextLng')) {
-      const browserLang = navigator.language;
-      const defaultLang = mapBrowserLanguage(browserLang);
-      i18n.changeLanguage(defaultLang);
-    }
-
-    return () => {
-      i18n.off('languageChanged', handleLanguageChange);
-    };
-  }, [i18n]);
-
-  const changeLanguage = (lng: string) => {
-    i18n.changeLanguage(lng);
-    setCurrentLanguage(lng);
-  };
+  const { isDark } = useTheme();
 
   useEffect(() => {
-    // Aplicar clase al body según el modo
-    if (isNightMode) {
-      document.body.classList.remove('light-mode');
-    } else {
-      document.body.classList.add('light-mode');
-    }
-
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
     // --- INTERFACES ---
-          interface Particle {
+        interface Particle {
         id: number;
         x: number;
         y: number;
@@ -195,7 +125,7 @@ export const NeuralNetworkBackground: React.FC = () => {
     // Calcular número de partículas basado en el tamaño de la pantalla
     const getParticleCount = () => {
       const screenArea = window.innerWidth * window.innerHeight;
-      const baseParticleCount = 250;
+      const baseParticleCount = 500;
       
       // Reducir partículas en pantallas pequeñas
       if (screenArea < 500000) { // Pantallas muy pequeñas (< 500k píxeles)
@@ -259,6 +189,17 @@ export const NeuralNetworkBackground: React.FC = () => {
     const SPAWN_INTERVAL = 150; // Intervalo entre spawns (ms) - más lento
     const MAX_NODES_TO_SPAWN = Math.min(30, Math.max(5, Math.floor(particleCount * 0.1))); // Menos nodos por spawn
     let breathingTime = 0; // Para el efecto de respiración
+    /** Scroll de ventana: el fondo se desplaza más lento (parallax) y el mundo Y cubre todo el documento. */
+    let scrollY = window.scrollY;
+    const SCROLL_PARALLAX = 0.3;
+    const MAX_TOTAL_PARTICLES = Math.min(900, particleCount * 2 + 160);
+    const CONNECTION_GLOW_DURATION_MS = 200;
+    const getWorldHeight = () =>
+      Math.max(
+        document.documentElement.scrollHeight,
+        document.body?.scrollHeight ?? 0,
+        window.innerHeight
+      );
 
     // Función para generar una dirección aleatoria normalizada
     const getRandomDirection = () => {
@@ -293,28 +234,49 @@ export const NeuralNetworkBackground: React.FC = () => {
     resizeCanvas();
     window.addEventListener('resize', resizeCanvas);
 
-    const handleMouseMove = (event: MouseEvent) => {
-      mouse.current.x = event.clientX;
-      mouse.current.y = event.clientY;
+    const handleScroll = () => {
+      scrollY = window.scrollY;
     };
-    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('scroll', handleScroll, { passive: true });
+
+    /** Simulación en mundo 2D; al pintar: parallax de scroll + perspectiva + parallax de ratón. */
+    const project = (p: Particle) => {
+      const viewX = p.x;
+      const viewY = p.y - scrollY * SCROLL_PARALLAX;
+      const mcx = canvas.width * 0.5;
+      const mcy = canvas.height * 0.5;
+      const minDim = Math.min(canvas.width, canvas.height);
+      const focal = Math.max(420, minDim * 0.52);
+      const depthSpread = Math.max(220, minDim * 0.28);
+      const mouseParallax = 0.045;
+      const zTerm = (1 - p.z) * depthSpread;
+      const perspScale = focal / (focal + zTerm);
+      const mox = (mouse.current.x - mcx) * mouseParallax;
+      const moy = (mouse.current.y - mcy) * mouseParallax;
+      const backWeight = 1 - p.z;
+      return {
+        sx: mcx + (viewX - mcx) * perspScale + mox * backWeight,
+        sy: mcy + (viewY - mcy) * perspScale + moy * backWeight,
+        perspScale,
+      };
+    };
 
     // Función para encontrar el nodo más cercano al cursor
     const findNodeAtPosition = (x: number, y: number) => {
       let closestNode = null;
       let closestDistance = Infinity;
-      
-      particles.forEach(particle => {
-        const distance = Math.hypot(x - particle.x, y - particle.y);
-        // Considerar el tamaño del nodo para la detección
-        const nodeRadius = particle.size * (0.7 + particle.value * 0.3) * 8; // Radio basado en el tamaño del nodo
-        
+
+      particles.forEach((particle) => {
+        const { sx, sy, perspScale } = project(particle);
+        const distance = Math.hypot(x - sx, y - sy);
+        const nodeRadius = particle.size * (0.7 + particle.value * 0.3) * 8 * perspScale;
+
         if (distance <= nodeRadius && distance < closestDistance) {
           closestDistance = distance;
           closestNode = particle;
         }
       });
-      
+
       return closestNode;
     };
 
@@ -355,14 +317,15 @@ export const NeuralNetworkBackground: React.FC = () => {
     const createNewParticle = (id: number) => {
       const direction = getRandomDirection();
       const maxLife = Math.random() * (MAX_LIFE_FRAMES - MIN_LIFE_FRAMES) + MIN_LIFE_FRAMES;
+      const worldH = getWorldHeight();
       return {
         id: id,
         x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
+        y: Math.random() * Math.max(worldH, canvas.height),
         z: Math.random(),
         vx: direction.x * BASE_SPEED,
         vy: direction.y * BASE_SPEED,
-        vz: 0,
+        vz: (Math.random() - 0.5) * 0.003,
         size: Math.random() * 0.5 + 2,
         hue: 220,
         illumination: 0,
@@ -396,6 +359,41 @@ export const NeuralNetworkBackground: React.FC = () => {
 
     // Inicializar spawn progresivo
     initializeProgressiveSpawn();
+
+    const countParticlesInView = () => {
+      const W = canvas.width;
+      const H = canvas.height;
+      const pad = 100;
+      let n = 0;
+      for (let i = 0; i < particles.length; i++) {
+        const p = particles[i];
+        const vy = p.y - scrollY * SCROLL_PARALLAX;
+        if (p.x >= -pad && p.x <= W + pad && vy >= -pad && vy <= H + pad) n++;
+      }
+      return n;
+    };
+
+    const spawnParticlesInVisibleBand = (howMany: number) => {
+      const W = canvas.width;
+      const H = canvas.height;
+      const worldH = getWorldHeight();
+      const bandCenterY = scrollY * SCROLL_PARALLAX + H * 0.5;
+      const halfBand = H * 0.85;
+      let yLo = Math.max(0, bandCenterY - halfBand);
+      let yHi = Math.min(worldH, bandCenterY + halfBand);
+      if (yHi <= yLo) {
+        yLo = 0;
+        yHi = Math.max(worldH, H);
+      }
+      for (let k = 0; k < howMany; k++) {
+        if (particles.length >= MAX_TOTAL_PARTICLES) break;
+        const idx = particles.length;
+        const patch = createNewParticle(idx);
+        patch.x = Math.random() * W;
+        patch.y = yLo + Math.random() * (yHi - yLo);
+        particles.push(patch);
+      }
+    };
 
     const updateConnections = () => {
       // Optimización: limitar el número de conexiones por nodo en pantallas pequeñas
@@ -568,9 +566,10 @@ export const NeuralNetworkBackground: React.FC = () => {
         // Aplicar efecto de ondas de profundidad
         applyDepthWaveEffect(p1);
 
-        // Efecto 3D: acercar nodos conectados al nodo que está siendo agrandado por el mouse
+        // Efecto 3D: acercar nodos conectados al nodo que está siendo agrandado por el mouse (coords de pantalla)
+        const screenPy = p1.y - scrollY * SCROLL_PARALLAX;
         const dx = mouse.current.x - p1.x;
-        const dy = mouse.current.y - p1.y;
+        const dy = mouse.current.y - screenPy;
         const mouseDistance = Math.hypot(dx, dy);
         
         if (mouseDistance < CONNECTION_PULL_RADIUS) {
@@ -644,7 +643,8 @@ export const NeuralNetworkBackground: React.FC = () => {
         // Limitar la profundidad Z entre 0 y 1
         p1.z = Math.max(0, Math.min(1, p1.z));
 
-        // Mantener los nodos dentro del canvas con rebote suave
+        // Mantener los nodos dentro del mundo (ancho viewport, alto documento)
+        const worldH = getWorldHeight();
         if (p1.x < 0) {
           p1.x = 0;
           p1.vx = Math.abs(p1.vx) * 0.5;
@@ -656,8 +656,8 @@ export const NeuralNetworkBackground: React.FC = () => {
         if (p1.y < 0) {
           p1.y = 0;
           p1.vy = Math.abs(p1.vy) * 0.5;
-        } else if (p1.y > canvas.height) {
-          p1.y = canvas.height;
+        } else if (p1.y > worldH) {
+          p1.y = worldH;
           p1.vy = -Math.abs(p1.vy) * 0.5;
         }
       });
@@ -713,18 +713,15 @@ export const NeuralNetworkBackground: React.FC = () => {
           }
           pulses.splice(i, 1);
         } else {
-          const x = pulse.source.x + (pulse.destination.x - pulse.source.x) * pulse.progress;
-          const y = pulse.source.y + (pulse.destination.y - pulse.source.y) * pulse.progress;
+          const pa = project(pulse.source);
+          const pb = project(pulse.destination);
+          const x = pa.sx + (pb.sx - pa.sx) * pulse.progress;
+          const y = pa.sy + (pb.sy - pa.sy) * pulse.progress;
+          const pulseScale = (pa.perspScale + pb.perspScale) * 0.5;
           ctx.beginPath();
-          ctx.arc(x, y, isNightMode ? 1.5 : 1.5, 0, Math.PI * 2);
-          
-          // Colores de pulsos ajustados - más contraste en modo oscuro
-          if (isNightMode) {
-            ctx.fillStyle = `hsla(160, 40%, 75%, 0.15)`; // Aumentar saturación y opacidad
-          } else {
-            ctx.fillStyle = `hsla(0, 0%, 75%, 0.6)`; // Pulsos más oscuros y visibles en modo día
-          }
-          
+          const pulseRadius = 1.5 * 0.4 * pulseScale;
+          ctx.arc(x, y, pulseRadius, 0, Math.PI * 2);
+          ctx.fillStyle = isDark ? 'hsl(160, 40%, 72%)' : 'hsl(0, 0%, 42%)';
           ctx.fill();
         }
       }
@@ -732,7 +729,8 @@ export const NeuralNetworkBackground: React.FC = () => {
 
 
     const applyDepthWaveEffect = (particle: Particle) => {
-      // Función vacía ya que no aplicamos efectos de ondas
+      particle.vz += Math.sin(breathingTime * 0.85 + particle.id * 0.12) * 0.00014;
+      particle.vz += (Math.random() - 0.5) * 0.00006;
     };
 
     const drawParticles = () => {
@@ -743,55 +741,50 @@ export const NeuralNetworkBackground: React.FC = () => {
       breathingTime += 0.02;
       
       sortedParticles.forEach((p, index) => {
-        ctx.beginPath();
-        
+        const { sx, sy, perspScale } = project(p);
+
         // Efecto de respiración: variación sutil de opacidad (no afecta tamaño)
         const breathingPhase = breathingTime + (index * 0.1); // Fase diferente para cada nodo
         
         // Calcular tamaño base basado ÚNICAMENTE en el valor del nodo
         const valueSizeMultiplier = 0.5 + (p.value * 0.5); // El valor afecta el tamaño (0.5x a 1.0x) - 0 = más pequeño, 1 = más grande
-        const baseSize = p.size * valueSizeMultiplier; // Solo el valor del nodo determina el tamaño
+        const baseSize = p.size * valueSizeMultiplier * perspScale;
         
         // Tamaño de fuente basado ÚNICAMENTE en el valor del nodo
-        const numberFontSize = Math.max(baseSize * 5.5, 9); // Tamaño intermedio
+        const numberFontSize = Math.max(baseSize * 5.5, 7);
         ctx.font = `${numberFontSize}px monospace`;
         
         // Calcular opacidad basada en profundidad Z + respiración + valor del nodo
-        const baseOpacity = isNightMode ? 0.15 : 0.4; // Mayor opacidad en modo día
+        const baseOpacity = isDark ? 0.15 : 0.4; // Mayor opacidad en modo día
         const depthOpacity = p.z *  0.3;
         const lifeOpacity = p.life *  0.25 ;
         const valueOpacity = p.value * 0.2; // Nodos con valores más altos son más opacos
         const breathingOpacity = Math.sin(breathingPhase) * 0.05; // Variación sutil de opacidad
         const totalOpacity = baseOpacity + depthOpacity + lifeOpacity + valueOpacity + breathingOpacity;
         
-        // Colores ajustados con efecto de profundidad, respiración y valor del nodo
-        if (isNightMode) {
-          const baseBrightness = p.illumination > 0 ? 66 : 65; // Efecto de color más sutil cuando está iluminado
-          const valueBrightness = p.value * 15; // Nodos con valores más altos son más brillantes
-          const brightness = Math.min(85, baseBrightness + valueBrightness); // Limitar brillo máximo
-          const saturation = 30 + (p.z * 20) + (Math.sin(breathingPhase) * 10) + (p.value * 20); // Saturación variable + valor
-          ctx.fillStyle = `hsla(160, ${saturation}%, ${brightness}%, ${totalOpacity})`;
+        let textFill: string;
+        if (isDark) {
+          const baseBrightness = p.illumination > 0 ? 66 : 65;
+          const valueBrightness = p.value * 15;
+          const brightness = Math.min(85, baseBrightness + valueBrightness);
+          const saturation =
+            30 + p.z * 20 + Math.sin(breathingPhase) * 10 + p.value * 20;
+          textFill = `hsla(160, ${saturation}%, ${brightness}%, ${totalOpacity})`;
         } else {
-          const baseBrightness = p.illumination > 0 ? 30 : 25; // Nodos más oscuros en modo día
-          const valueBrightness = p.value * 15; // Nodos con valores más altos son más brillantes
-          const brightness = Math.min(50, baseBrightness + valueBrightness); // Limitar brillo máximo
-          ctx.fillStyle = `hsla(0, 0%, ${brightness}%, ${totalOpacity})`;
+          const baseBrightness = p.illumination > 0 ? 30 : 25;
+          const valueBrightness = p.value * 15;
+          const brightness = Math.min(50, baseBrightness + valueBrightness);
+          textFill = `hsla(0, 0%, ${brightness}%, ${totalOpacity})`;
         }
-        
+
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         
         // Mostrar el valor del contador redondeado a 1 decimal
         const displayValue = Math.round(p.value * 10) / 10;
-        ctx.fillText(displayValue.toString(), p.x, p.y);
-        
-        // Efecto de brillo más visible
-        if (p.illumination > 0.6) {
-          ctx.shadowColor = isNightMode ? 'rgba(16, 185, 129, 0.15)' : 'rgba(0, 0, 0, 0.9)';
-          ctx.shadowBlur = p.illumination * 2;
-          ctx.fillText(displayValue.toString(), p.x, p.y);
-          ctx.shadowBlur = 0;
-        }
+
+        ctx.fillStyle = textFill;
+        ctx.fillText(displayValue.toString(), sx, sy);
         
         if (p.illumination > 0) {
           p.illumination -= 0.15; // Decay más lento para que dure más el efecto
@@ -799,14 +792,20 @@ export const NeuralNetworkBackground: React.FC = () => {
       });
     };
 
-    const animate = () => {
+    let lastAnimationTs = performance.now();
+
+    const animate = (ts: number) => {
       if (!ctx || !canvas) return;
-      
+
+      const dtMs = Math.min(64, ts - lastAnimationTs);
+      lastAnimationTs = ts;
+
       // Limpiar canvas con color según el modo
-      if (isNightMode) {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      if (isDark) {
+        ctx.fillStyle = '#000000';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
       } else {
-        ctx.fillStyle = '#ffffff'; // Fondo blanco puro
+        ctx.fillStyle = '#cccccc';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
       }
 
@@ -819,63 +818,76 @@ export const NeuralNetworkBackground: React.FC = () => {
 
       // Solo actualizar si hay nodos
       if (particles.length > 0) {
+        scrollY = window.scrollY;
         updateConnections();
         updateParticles();
+
+        const minVisible = Math.max(16, Math.min(72, Math.floor(particleCount * 0.2)));
+        if (countParticlesInView() < minVisible && particles.length < MAX_TOTAL_PARTICLES) {
+          spawnParticlesInVisibleBand(Math.min(14, MAX_TOTAL_PARTICLES - particles.length));
+        }
+
         updatePulses();
 
-        // Dibujar conexiones de fondo con efecto de profundidad
-        particles.forEach(p => {
-          p.neighbors.forEach(neighborId => {
+        // Conexiones en orden de profundidad (atrás primero) y coordenadas proyectadas
+        const edges: { a: Particle; b: Particle; avgZ: number }[] = [];
+        particles.forEach((p) => {
+          p.neighbors.forEach((neighborId) => {
             const neighbor = particles[neighborId];
-            
-            // Calcular profundidad promedio de la conexión
-            const avgZ = (p.z + neighbor.z) / 2;
-            
-            ctx.beginPath();
-            ctx.moveTo(p.x, p.y);
-            ctx.lineTo(neighbor.x, neighbor.y);
-            
-            // Opacidad basada en profundidad
-            const connectionOpacity = isNightMode ? (0.08 + (avgZ * 0.12)) : (0.05 + (avgZ * 0.05)); // Conexiones más visibles en modo día
-            
-            // Colores de conexiones ajustados con efecto de profundidad
-            if (isNightMode) {
-              const saturation = 25 + (avgZ * 15);
-              ctx.strokeStyle = `hsla(160, ${saturation}%, 70%, ${connectionOpacity})`;
-            } else {
-              ctx.strokeStyle = `hsla(0, 0%, 30%, ${connectionOpacity})`; // Conexiones más oscuras en modo día
+            if (neighbor && p.id < neighbor.id) {
+              edges.push({ a: p, b: neighbor, avgZ: (p.z + neighbor.z) / 2 });
             }
-            
-            // Grosor de línea basado en profundidad
-            ctx.lineWidth = 0.5 + (avgZ * 1.5);
-            ctx.stroke();
           });
+        });
+        edges.sort((e1, e2) => e1.avgZ - e2.avgZ);
+
+        edges.forEach(({ a, b, avgZ }) => {
+          const pa = project(a);
+          const pb = project(b);
+          const lineScale = (pa.perspScale + pb.perspScale) * 0.5;
+          ctx.beginPath();
+          ctx.moveTo(pa.sx, pa.sy);
+          ctx.lineTo(pb.sx, pb.sy);
+
+          const connectionOpacity = isDark
+            ? 0.07 + avgZ * 0.14
+            : 0.04 + avgZ * 0.06;
+
+          if (isDark) {
+            const saturation = 25 + avgZ * 15;
+            ctx.strokeStyle = `hsla(160, ${saturation}%, 70%, ${connectionOpacity})`;
+          } else {
+            ctx.strokeStyle = `hsla(0, 0%, 30%, ${connectionOpacity})`;
+          }
+
+          ctx.lineWidth = (0.5 + avgZ * 1.5) * lineScale;
+          ctx.stroke();
         });
 
         // Dibujar brillos de conexiones recientes
         for (let i = connectionGlows.length - 1; i >= 0; i--) {
           const glow = connectionGlows[i];
-          glow.life -= 0.03;
+          glow.life -= dtMs / CONNECTION_GLOW_DURATION_MS;
           if (glow.life <= 0) {
             connectionGlows.splice(i, 1);
           } else {
+            const ga = project(glow.source);
+            const gb = project(glow.destination);
             ctx.beginPath();
-            ctx.moveTo(glow.source.x, glow.source.y);
-            ctx.lineTo(glow.destination.x, glow.destination.y);
+            ctx.moveTo(ga.sx, ga.sy);
+            ctx.lineTo(gb.sx, gb.sy);
             
             // Colores de brillos ajustados - más contraste en modo oscuro
-            if (isNightMode) {
-              ctx.strokeStyle = `hsla(160, 35%, 75%, ${glow.life * 0.04})`; // Aumentar opacidad y saturación
-              ctx.shadowColor = `hsla(160, 30%, 70%, 0.2)`; // Sombra más visible
+            if (isDark) {
+              ctx.strokeStyle = `hsl(160, 35%, 75%)`;
             } else {
-              ctx.strokeStyle = `hsla(0, 0%, 75%, ${glow.life * 0.08})`; // Mantener sutil en modo claro
-              ctx.shadowColor = `hsla(0, 0%, 70%, 0.05)`; // Sombra sutil
+              ctx.strokeStyle = `hsl(0, 0%, 45%)`;
             }
-            
+
+            ctx.globalAlpha = glow.life * 0.35;
             ctx.lineWidth = 1;
-            ctx.shadowBlur = isNightMode ? 1 * glow.life : 0.5 * glow.life; // Más blur en modo oscuro
             ctx.stroke();
-            ctx.shadowBlur = 0;
+            ctx.globalAlpha = 1;
           }
         }
 
@@ -888,21 +900,13 @@ export const NeuralNetworkBackground: React.FC = () => {
 
     animationFrameId = requestAnimationFrame(animate);
 
-    // Event listener para cerrar el menú móvil
-    const handleCloseMobileMenu = () => {
-      setIsMobileMenuOpen(false);
-    };
-
-    window.addEventListener('closeMobileMenu', handleCloseMobileMenu);
-
     return () => {
       cancelAnimationFrame(animationFrameId);
       window.removeEventListener('resize', resizeCanvas);
-      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('scroll', handleScroll);
       window.removeEventListener('click', handleMouseClick);
-      window.removeEventListener('closeMobileMenu', handleCloseMobileMenu);
     };
-  }, [isNightMode]);
+  }, [isDark]);
 
   return (
     <div style={{ position: 'relative' }}>
@@ -912,332 +916,13 @@ export const NeuralNetworkBackground: React.FC = () => {
         style={{
           position: 'fixed',
           top: 0,
-          left: 0,
-          width: '100%',
+          left: '-10%',
+          width: '120%',
           height: '100%',
           pointerEvents: 'auto',
           zIndex: 0,
-          cursor: 'crosshair',
         }}
       />
-      
-      {/* Switch de día/noche para desktop */}
-      <div className="desktop-controls" style={{
-        position: 'fixed',
-        top: '20px',
-        right: '20px',
-        zIndex: 10,
-        pointerEvents: 'auto'
-      }}>
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          width: '60px',
-          height: '40px',
-          borderRadius: '25px',
-          background: isNightMode 
-            ? 'rgba(255, 255, 255, 0.1)' 
-            : 'rgba(0, 0, 0, 0.1)',
-          backdropFilter: 'blur(10px)',
-          border: `1px solid ${isNightMode ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.2)'}`,
-          cursor: 'pointer',
-          transition: 'all 0.3s ease',
-          userSelect: 'none'
-        }}
-        onClick={() => setIsNightMode(!isNightMode)}
-        >
-          <div style={{
-            position: 'relative',
-            width: '48px',
-            height: '24px',
-            borderRadius: '12px',
-            background: isNightMode ? 'transparent' : '#9ca3af',
-            transition: 'all 0.3s ease',
-            cursor: 'pointer'
-          }}>
-            <div style={{
-              position: 'absolute',
-              top: '2px',
-              left: isNightMode ? '26px' : '2px',
-              width: '20px',
-              height: '20px',
-              borderRadius: '50%',
-              background: '#ffffff',
-              boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2)',
-              transition: 'all 0.3s ease',
-              transform: isNightMode ? 'translateX(0)' : 'translateX(0)'
-            }} />
-            {/* Iconos dentro del switch */}
-            <div style={{
-              position: 'absolute',
-              top: '50%',
-              left: '4px',
-              transform: 'translateY(-50%)',
-              color: isNightMode ? 'rgba(255, 255, 255, 0.9)' : 'rgba(255, 255, 255, 0.7)',
-              transition: 'all 0.3s ease',
-              filter: isNightMode ? 'none' : 'brightness(0.8)',
-              width: '12px',
-              height: '12px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center'
-            }}>
-              <SunIcon />
-            </div>
-            <div style={{
-              position: 'absolute',
-              top: '50%',
-              right: '4px',
-              transform: 'translateY(-50%)',
-              color: isNightMode ? 'rgba(255, 255, 255, 0.7)' : 'rgba(255, 255, 255, 0.9)',
-              transition: 'all 0.3s ease',
-              filter: isNightMode ? 'brightness(0.8)' : 'none',
-              width: '12px',
-              height: '12px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center'
-            }}>
-              <MoonIcon />
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Botón de menú móvil - ahora manejado por la barra sticky */}
-      <div className="mobile-menu-button" style={{
-        position: 'fixed',
-        top: '20px',
-        right: '20px',
-        zIndex: 15,
-        pointerEvents: 'auto',
-        display: 'none'
-      }}>
-        <button
-          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          style={{
-            width: '50px',
-            height: '50px',
-            borderRadius: '50%',
-            background: isNightMode 
-              ? 'rgba(255, 255, 255, 0.1)' 
-              : 'rgba(0, 0, 0, 0.1)',
-            backdropFilter: 'blur(10px)',
-            border: `1px solid ${isNightMode ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.2)'}`,
-            cursor: 'pointer',
-            transition: 'all 0.3s ease',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: isNightMode ? '#ffffff' : '#000000'
-          }}
-        >
-          {isMobileMenuOpen ? <XMarkIcon width={24} height={24} /> : <Bars3Icon width={24} height={24} />}
-        </button>
-      </div>
-
-      {/* Menú móvil desplegable */}
-      <div className="mobile-menu" style={{
-        position: 'fixed',
-        top: '4rem',
-        right: '1rem',
-        zIndex: 14,
-        pointerEvents: 'auto',
-        display: isMobileMenuOpen ? 'flex' : 'none',
-        flexDirection: 'column',
-        gap: '1rem',
-        padding: '1.5rem',
-        background: isNightMode 
-          ? 'rgba(17, 24, 39, 0.8)' 
-          : 'rgba(255, 255, 255, 0.8)',
-        backdropFilter: 'blur(15px)',
-        borderRadius: '1rem',
-        border: `1px solid ${isNightMode ? 'rgba(75, 85, 99, 0.3)' : 'rgba(0, 0, 0, 0.1)'}`,
-        minWidth: '250px',
-        transform: isMobileMenuOpen ? 'translateX(0)' : 'translateX(100%)',
-        transition: 'all 0.3s ease',
-        opacity: isMobileMenuOpen ? 1 : 0
-      }}>
-        {/* Switch de día/noche para móvil */}
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          padding: '0.5rem 0'
-        }}>
-          <span style={{
-            color: isNightMode ? '#ffffff' : '#000000',
-            fontSize: '0.875rem',
-            fontWeight: '500'
-          }}>
-            {isNightMode ? 'Modo Oscuro' : 'Modo Claro'}
-          </span>
-          <div style={{
-            position: 'relative',
-            width: '48px',
-            height: '24px',
-            borderRadius: '12px',
-            background: isNightMode ? '#10b981' : '#9ca3af',
-            transition: 'all 0.3s ease',
-            cursor: 'pointer'
-          }}
-          onClick={() => setIsNightMode(!isNightMode)}
-          >
-            <div style={{
-              position: 'absolute',
-              top: '2px',
-              left: isNightMode ? '26px' : '2px',
-              width: '20px',
-              height: '20px',
-              borderRadius: '50%',
-              background: '#ffffff',
-              boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2)',
-              transition: 'all 0.3s ease'
-            }} />
-            <div style={{
-              position: 'absolute',
-              top: '50%',
-              left: '4px',
-              transform: 'translateY(-50%)',
-              color: isNightMode ? 'rgba(255, 255, 255, 0.9)' : 'rgba(255, 255, 255, 0.7)',
-              transition: 'all 0.3s ease',
-              filter: isNightMode ? 'none' : 'brightness(0.8)',
-              width: '12px',
-              height: '12px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center'
-            }}>
-              <SunIcon />
-            </div>
-            <div style={{
-              position: 'absolute',
-              top: '50%',
-              right: '4px',
-              transform: 'translateY(-50%)',
-              color: isNightMode ? 'rgba(255, 255, 255, 0.7)' : 'rgba(255, 255, 255, 0.9)',
-              transition: 'all 0.3s ease',
-              filter: isNightMode ? 'brightness(0.8)' : 'none',
-              width: '12px',
-              height: '12px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center'
-            }}>
-              <MoonIcon />
-            </div>
-          </div>
-        </div>
-
-        {/* Selector de idiomas para móvil */}
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          padding: '0.5rem 0'
-        }}>
-          <span style={{
-            color: isNightMode ? '#ffffff' : '#000000',
-            fontSize: '0.875rem',
-            fontWeight: '500'
-          }}>
-            Idioma
-          </span>
-          <div style={{
-            display: 'flex',
-            gap: '0.5rem'
-          }}>
-            <button
-              onClick={() => changeLanguage('es')}
-              style={{
-                padding: '0.25rem 0.5rem',
-                borderRadius: '0.375rem',
-                fontSize: '0.75rem',
-                fontWeight: '500',
-                border: 'none',
-                cursor: 'pointer',
-                transition: 'all 0.2s ease',
-                background: currentLanguage === 'es' 
-                  ? (isNightMode ? '#10b981' : '#059669')
-                  : (isNightMode ? 'rgba(75, 85, 99, 0.3)' : 'rgba(0, 0, 0, 0.1)'),
-                color: currentLanguage === 'es' 
-                  ? '#ffffff' 
-                  : (isNightMode ? '#ffffff' : '#000000')
-              }}
-            >
-              ES
-            </button>
-            <button
-              onClick={() => changeLanguage('ca')}
-              style={{
-                padding: '0.25rem 0.5rem',
-                borderRadius: '0.375rem',
-                fontSize: '0.75rem',
-                fontWeight: '500',
-                border: 'none',
-                cursor: 'pointer',
-                transition: 'all 0.2s ease',
-                background: currentLanguage === 'ca' 
-                  ? (isNightMode ? '#10b981' : '#059669')
-                  : (isNightMode ? 'rgba(75, 85, 99, 0.3)' : 'rgba(0, 0, 0, 0.1)'),
-                color: currentLanguage === 'ca' 
-                  ? '#ffffff' 
-                  : (isNightMode ? '#ffffff' : '#000000')
-              }}
-            >
-              CA
-            </button>
-            <button
-              onClick={() => changeLanguage('en')}
-              style={{
-                padding: '0.25rem 0.5rem',
-                borderRadius: '0.375rem',
-                fontSize: '0.75rem',
-                fontWeight: '500',
-                border: 'none',
-                cursor: 'pointer',
-                transition: 'all 0.2s ease',
-                background: currentLanguage === 'en' 
-                  ? (isNightMode ? '#10b981' : '#059669')
-                  : (isNightMode ? 'rgba(75, 85, 99, 0.3)' : 'rgba(0, 0, 0, 0.1)'),
-                color: currentLanguage === 'en' 
-                  ? '#ffffff' 
-                  : (isNightMode ? '#ffffff' : '#000000')
-              }}
-            >
-              EN
-            </button>
-          </div>
-        </div>
-
-        {/* Separador */}
-        <div style={{
-          height: '1px',
-          background: isNightMode ? 'rgba(75, 85, 99, 0.3)' : 'rgba(0, 0, 0, 0.1)',
-          margin: '0.5rem 0'
-        }} />
-
-        {/* Marcadores de navegación para móvil */}
-        <div style={{
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '0.75rem'
-        }}>
-          <span style={{
-            color: isNightMode ? '#ffffff' : '#000000',
-            fontSize: '0.875rem',
-            fontWeight: '600',
-            marginBottom: '0.5rem'
-          }}>
-            Navegación
-          </span>
-          {/* Aquí se insertarán los marcadores dinámicamente */}
-          <div id="mobile-navigation-markers">
-            {/* Los marcadores se agregarán aquí desde el componente principal */}
-          </div>
-        </div>
-      </div>
     </div>
   );
 }; 

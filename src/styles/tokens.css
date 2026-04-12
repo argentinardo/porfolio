@@ -1,0 +1,100 @@
+@import './material-theme.css';
+
+@import url('https://fonts.googleapis.com/css2?family=Epilogue:ital,wght@0,300;0,400;0,500;0,600;0,700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Manrope:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+
+/* Tipografías del tema (headline / body / label) */
+:root {
+  --font-headline: 'Epilogue', 'Inter', system-ui, sans-serif;
+  --font-body: 'Manrope', 'Inter', system-ui, sans-serif;
+  --font-label: 'Space Grotesk', 'Inter', system-ui, sans-serif;
+
+  --font-title: var(--font-headline);
+  --font-subtitle: var(--font-label);
+  --font-code: 'JetBrains Mono', ui-monospace, monospace;
+
+  /* Radios alineados con tailwind.config (DEFAULT / lg / xl = 0; full = pill) */
+  --radius-default: 0px;
+  --radius-lg: 0px;
+  --radius-xl: 0px;
+  --radius-full: 9999px;
+  --border-radius-sm: var(--radius-default);
+  --border-radius-md: var(--radius-default);
+  --border-radius-lg: var(--radius-lg);
+  --border-radius-xl: var(--radius-xl);
+
+  /* Alias usados en el portfolio → tokens MD3 */
+  --primary-color: var(--md-primary);
+  --secondary-color: var(--md-secondary);
+  --accent-color: var(--md-tertiary);
+  --success-color: #10b981;
+  --warning-color: #f59e0b;
+  --error-color: var(--md-error);
+
+  --bg-gradient: var(--md-surface-dim);
+  --bg-primary: var(--md-background);
+
+  --text-color: var(--md-on-background);
+  --text-primary: var(--md-on-surface);
+  --text-secondary: var(--md-on-surface-variant);
+  --text-muted: var(--md-on-surface-variant);
+
+  --border-color: color-mix(in srgb, var(--md-outline) 35%, transparent);
+  --shadow-color: rgba(0, 0, 0, 0.5);
+}
+
+/*
+ * Tema claro: texto oscuro sobre superficies claras.
+ * Se redefine en body para que hereden bien --text-* y --md-*.
+ */
+body.light-mode {
+  --md-background: #f5f4f2;
+  --md-surface: #f5f4f2;
+  --md-surface-dim: #ebe8e4;
+  --md-surface-container: #e8e4df;
+  --md-surface-container-low: #e3ded8;
+  --md-surface-container-high: #ddd8d1;
+  --md-surface-container-highest: #d4cfc7;
+  --md-surface-variant: #e5e0d8;
+  --md-surface-bright: #ffffff;
+  --md-surface-container-lowest: #ffffff;
+
+  --md-on-surface: #1c1917;
+  --md-on-background: #1c1917;
+  --md-on-surface-variant: #44403c;
+  --md-on-secondary: #292524;
+  --md-secondary: #57534e;
+  --md-secondary-dim: #57534e;
+  --md-tertiary: #292524;
+  --md-on-tertiary: #fafaf9;
+  --md-outline: #78716c;
+  --md-outline-variant: #d6d3d1;
+
+  --md-primary: #5c4510;
+  --md-on-primary: #fffef9;
+  --md-primary-dim: #6d5214;
+  --md-inverse-primary: #e9c176;
+  --md-surface-tint: #5c4510;
+  --md-on-primary-container: #2d2108;
+  --md-primary-container: #f0e4c8;
+
+  --md-secondary-container: #e7e5e2;
+  --md-on-secondary-container: #1c1917;
+  --md-tertiary-container: #e7e5e2;
+  --md-on-tertiary-container: #292524;
+
+  --md-inverse-surface: #1c1917;
+  --md-inverse-on-surface: #f5f4f2;
+
+  --shadow-color: rgba(0, 0, 0, 0.12);
+
+  --text-color: var(--md-on-background);
+  --text-primary: var(--md-on-surface);
+  --text-secondary: var(--md-on-surface-variant);
+  --text-muted: var(--md-on-surface-variant);
+  --primary-color: var(--md-primary);
+  --secondary-color: var(--md-secondary);
+  --accent-color: var(--md-tertiary);
+  --border-color: color-mix(in srgb, var(--md-outline) 30%, transparent);
+  --bg-primary: var(--md-background);
+  --bg-gradient: var(--md-surface-dim);
+}

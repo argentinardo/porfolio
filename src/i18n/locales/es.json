@@ -1,4 +1,25 @@
 {
+  "hero": {
+    "viewPortfolio": "Ver portfolio"
+  },
+  "topbar": {
+    "brand": "Damián Nardini <DEV />",
+    "sectionsNav": "Secciones del sitio",
+    "language": "Idioma",
+    "openMenu": "Abrir menú",
+    "closeMenu": "Cerrar menú",
+    "themeLight": "Activar tema claro",
+    "themeDark": "Activar tema oscuro",
+    "settings": "Ajustes",
+    "openSettings": "Abrir ajustes: idioma y tema",
+    "closeSettings": "Cerrar ajustes",
+    "themeSection": "Tema",
+    "themeModeDark": "Oscuro",
+    "themeModeLight": "Claro",
+    "langEs": "Español",
+    "langCa": "Català",
+    "langEn": "English"
+  },
   "navigation": {
     "home": "Inicio",
     "intro": "Introducción",
@@ -15,6 +36,7 @@
       "Especializado en React, TypeScript y tecnologías modernas",
       "Enfocado en crear experiencias de usuario excepcionales"
     ],
+    
     "notebook": {
       "code": "const developer = {\n  name: \"Damián Nardini\",\n  experience: \"15+ años en Frontend\",\n  specialization: \"React • TypeScript • UI/UX\",\n  passion: \"Crear experiencias web únicas\",\n  location: \"Barcelona\",\n};\n\nconsole.log(\"¡Hola! Soy \" + developer.name);\nconsole.log(\"Con \" + developer.experience + \" de experiencia\");\nconsole.log(\"¿En que puedo ayudarte?\");\n\n ¡Hola! Soy Damián Nardini\n Con 15+ años en Frontend de experiencia  \n¿En que puedo ayudarte?"
     }
@@ -102,6 +124,7 @@
     "contact": "Contáctame",
     "learnMore": "Ver más",
     "interestedInService": "Estoy interesado en este servicio",
+    
     "notebook": {
       "code": "// Servicios Profesionales Disponibles\n\nconst servicios = {\n  n8n: {\n    descripcion: \"Orquestación de procesos y flujos de trabajo\",\n    precio: \"Desde €2.500\",\n    caracteristicas: [\n      \"Flujos de trabajo automatizados\",\n      \"Integraciones API y CRM\",\n      \"Conectores personalizados\",\n      \"Monitoreo y alertas\"\n    ]\n  },\n  \n  iaLocal: {\n    descripcion: \"Instalación y configuración de LLM\",\n    precio: \"Desde €3.500\",\n    caracteristicas: [\n      \"Ollama /  LM Studio\",\n      \"RAG con bases de datos locales\",\n      \"Privacidad on-premise\",\n      \"Fine-tuning de modelos\"\n    ]\n  },\n  \n  mantenimiento: {\n    descripcion: \"Mantenimiento y soporte para IA\",\n    precio: \"Desde €1.800\",\n    caracteristicas: [\n      \"Soporte mensual y SLA\",\n      \"Actualizaciones de flujos\",\n      \"Monitoreo continuo\",\n      \"Backups y recuperación\"\n    ]\n  },\n  \n  consultoria: {\n    descripcion: \"Estrategia y formación en IA\",\n    precio: \"€150/hora\",\n    caracteristicas: [\n      \"Identificación de casos de uso\",\n      \"ROI y roadmap de adopción\",\n      \"Mejores prácticas de prompts\",\n      \"Talleres personalizados\"\n    ]\n  },\n  \n  frontend: {\n    descripcion: \"Aplicaciones web modernas\",\n    precio: \"Desde €2.500\",\n    caracteristicas: [\n      \"React y TypeScript\",\n      \"Componentes reutilizables\",\n      \"Optimización de rendimiento\",\n      \"Testing y debugging\"\n    ]\n  }\n};\n\nconsole.log(\"Servicios disponibles:\", Object.keys(servicios));\nconsole.log(\"¿Te interesa alguno? ¡Contáctame!\");"
     }
@@ -109,6 +132,7 @@
   "projects": {
     "title": "Proyectos Personales",
     "subtitle": "Trabajo Reciente",
+    
     "filters": {
       "all": "Todos",
       "game": "Juegos",

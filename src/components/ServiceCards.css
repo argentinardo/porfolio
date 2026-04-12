@@ -1,0 +1,861 @@
+/* Estilos para las cards de servicios */
+.services-showcase {
+  padding: 1rem;
+  max-height: 100%;
+  overflow-y: auto;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.6s ease;
+}
+
+.services-showcase.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.service-card {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--border-color);
+  border-radius: 0.75rem;
+  padding: 0.75rem;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.service-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--accent-color);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.service-header {
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.service-icon {
+  margin-bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: var(--primary-color);
+  flex-shrink: 0;
+}
+
+.service-icon svg {
+  width: 2rem;
+  height: 2rem;
+}
+
+.service-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--primary-color);
+  font-family: var(--font-subtitle);
+}
+
+
+.service-description {
+  color: var(--text-primary);
+  font-size: 0.8rem;
+  line-height: 1.4;
+  margin: 0 0 1rem 0;
+  font-family: var(--font-body);
+}
+
+.service-features {
+  flex: 1;
+  margin-bottom: 1.5rem;
+}
+
+.service-features ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.service-features li {
+  color: var(--text-primary);
+  font-size: 0.75rem;
+  line-height: 1.4;
+  margin-bottom: 0.4rem;
+  padding-left: 1.25rem;
+  position: relative;
+  font-family: var(--font-body);
+}
+
+.service-features li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: var(--success-color);
+  font-weight: bold;
+}
+
+.service-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+}
+
+
+
+.learn-more-btn {
+  background: transparent;
+  color: var(--primary-color);
+  border: 1px solid var(--primary-color);
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 400;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: 'JetBrains Mono', monospace;
+  min-width: 100px;
+  border-radius: var(--border-radius-sm);
+}
+
+.learn-more-btn:hover {
+  background: var(--primary-color);
+  color: #111827;
+}
+
+/* Ajustes para modo claro */
+body.light-mode .service-card {
+  background: rgba(255, 255, 255, 0.8);
+  border-color: #d1d5db;
+}
+
+body.light-mode .service-card:hover {
+  background: var(--md-surface-bright);
+  border-color: var(--md-outline);
+}
+
+body.light-mode .service-title {
+  color: var(--md-on-surface);
+}
+
+body.light-mode .service-icon {
+  color: var(--md-on-surface-variant);
+}
+
+body.light-mode .service-description,
+body.light-mode .service-features li {
+  color: var(--md-on-surface-variant);
+}
+
+body.light-mode .learn-more-btn {
+  color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+body.light-mode .learn-more-btn:hover {
+  background: var(--primary-color);
+  color: var(--md-on-primary);
+}
+
+/* Listas minimalistas: en claro el texto pasa a tonos oscuros */
+body.light-mode .services-minimal,
+body.light-mode .projects-minimal {
+  color: var(--md-on-surface-variant);
+}
+
+body.light-mode .services-minimal-title,
+body.light-mode .projects-minimal-title {
+  color: var(--md-on-surface);
+}
+
+body.light-mode .service-minimal-item {
+  background-color: var(--md-surface-container);
+  border-color: var(--border-color);
+}
+
+body.light-mode .service-minimal-item:hover {
+  background: var(--md-surface-container-high);
+  border-color: color-mix(in srgb, var(--md-primary) 35%, transparent);
+  box-shadow: 0 4px 12px var(--shadow-color);
+}
+
+body.light-mode .service-minimal-content .service-minimal-title {
+  color: var(--md-on-surface);
+}
+
+body.light-mode .service-minimal-description {
+  color: var(--md-on-surface-variant);
+}
+
+body.light-mode .project-minimal-card {
+  background-color: var(--md-surface-container);
+  border-color: var(--border-color);
+}
+
+body.light-mode .project-minimal-title {
+  color: var(--md-on-surface);
+}
+
+body.light-mode .project-minimal-description {
+  color: var(--md-on-surface-variant);
+}
+
+body.light-mode .project-minimal-tech .tech-tag {
+  background-color: color-mix(in srgb, var(--md-primary) 14%, transparent);
+  color: var(--md-primary);
+}
+
+/* Estilos para versión minimalista de servicios */
+.services-minimal {
+  padding: 1rem;
+  color: #e5e7eb;
+}
+
+.services-minimal-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  color: #f3f4f6;
+  text-align: center;
+}
+
+.services-minimal-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+}
+
+.service-minimal-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  background-color: rgba(31, 41, 55, 0.5);
+  border: 1px solid rgba(75, 85, 99, 0.3);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.service-minimal-item:hover {
+  background: rgba(31, 41, 55, 0.7);
+  border-color: rgba(55, 65, 81, 0.5);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(55, 65, 81, 0.2);
+}
+
+.service-minimal-icon {
+  width: 1.5rem;
+  height: 1.5rem;
+  color: var(--primary-color);
+  flex-shrink: 0;
+  margin-top: 0.25rem;
+}
+
+.service-minimal-content {
+  flex: 1;
+}
+
+.service-minimal-content .service-minimal-title {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #f3f4f6;
+}
+
+.service-minimal-description {
+  font-size: 0.875rem;
+  color: #9ca3af;
+  line-height: 1.4;
+}
+
+/* Modal de servicios */
+.service-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  animation: fadeIn 0.3s ease;
+  pointer-events: auto;
+}
+
+.service-modal {
+  background: rgba(17, 24, 39, 0.95);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(55, 65, 81, 0.3);
+  border-radius: 1rem;
+  padding: 1rem;
+  max-width: 400px;
+  width: 85%;
+  max-height: 70vh;
+  overflow-y: auto;
+  animation: slideInUp 0.3s ease;
+  position: relative;
+}
+
+.service-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(55, 65, 81, 0.2);
+}
+
+.service-modal-title-section {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex: 1;
+}
+
+.service-modal-icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  background: rgba(55, 65, 81, 0.1);
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary-color);
+  flex-shrink: 0;
+}
+
+.service-modal-icon svg {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.service-modal-close {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.service-modal-close:hover {
+  background: rgba(107, 114, 128, 0.1);
+  color: var(--primary-color);
+}
+
+.service-modal-close svg {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.service-modal-content {
+  color: var(--text-color);
+}
+
+.service-modal-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--primary-color);
+  margin: 0;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.service-modal-description {
+  color: var(--text-secondary);
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.service-modal-features h4 {
+  color: var(--primary-color);
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.service-modal-features ul {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1.5rem 0;
+}
+
+.service-modal-features li {
+  color: var(--text-color);
+  padding: 0.25rem 0;
+  position: relative;
+  padding-left: 1.5rem;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.service-modal-features li::before {
+  content: '▸';
+  color: var(--primary-color);
+  position: absolute;
+  left: 0;
+  font-weight: bold;
+}
+
+
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Estilos para modo claro */
+body.light-mode .service-modal {
+  background: rgba(255, 255, 255, 0.95);
+  border-color: rgba(55, 65, 81, 0.3);
+}
+
+body.light-mode .service-modal-header {
+  border-bottom-color: rgba(55, 65, 81, 0.2);
+}
+
+body.light-mode .service-modal-icon {
+  background: rgba(55, 65, 81, 0.1);
+  color: var(--primary-color);
+}
+
+body.light-mode .service-modal-title {
+  color: var(--primary-color);
+}
+
+body.light-mode .service-modal-features h4 {
+  color: var(--primary-color);
+}
+
+body.light-mode .service-modal-features li::before {
+  color: var(--primary-color);
+}
+
+
+
+/* Descripción de servicios */
+.services-description {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  background: rgba(59, 130, 246, 0.05);
+  border: 1px solid rgba(59, 130, 246, 0.1);
+  border-radius: 0.5rem;
+}
+
+.services-description p {
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  line-height: 1.6;
+  margin: 0;
+  font-family: var(--font-body);
+}
+
+/* Botón de consulta en servicios */
+.service-consult-btn {
+  background: transparent;
+  color: var(--primary-color);
+  border: 1px solid var(--primary-color);
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 400;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: 'JetBrains Mono', monospace;
+  min-width: 100px;
+  border-radius: var(--border-radius-sm);
+}
+
+.service-consult-btn:hover {
+  background: var(--primary-color);
+  color: var(--md-on-primary);
+}
+
+/* Estilos para modo claro */
+body.light-mode .service-consult-btn {
+  color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+body.light-mode .service-consult-btn:hover {
+  background: var(--primary-color);
+  color: var(--md-on-primary);
+}
+
+/* Botón de contacto en modal */
+.service-modal-actions {
+  margin-top: 1.5rem;
+  text-align: center;
+}
+
+.service-modal-contact-btn {
+  background: transparent;
+  color: var(--primary-color);
+  border: 1px solid var(--primary-color);
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 400;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: 'JetBrains Mono', monospace;
+  min-width: 100px;
+}
+
+.service-modal-contact-btn:hover:not(:disabled) {
+  background: var(--primary-color);
+  color: var(--md-on-primary);
+}
+
+/* Estilos para modo claro */
+body.light-mode .service-modal-contact-btn {
+  color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+body.light-mode .service-modal-contact-btn:hover:not(:disabled) {
+  background: var(--primary-color);
+  color: var(--md-on-primary);
+}
+
+/* Estilos para versión minimalista de proyectos */
+.projects-minimal {
+  padding: 1rem;
+  color: #e5e7eb;
+}
+
+.projects-minimal-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  color: #f3f4f6;
+  text-align: center;
+}
+
+.project-minimal-card {
+  background-color: rgba(31, 41, 55, 0.5);
+  border: 1px solid rgba(75, 85, 99, 0.3);
+  border-radius: 0.75rem;
+  padding: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.project-minimal-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  align-items: stretch;
+}
+
+/* Alternar posición de video: impar (1, 3, 5...) = video a la derecha, par (2, 4, 6...) = video a la izquierda */
+.project-minimal-card:nth-child(odd) .project-minimal-content {
+  grid-template-columns: 1fr 1fr;
+}
+
+.project-minimal-card:nth-child(odd) .project-minimal-info {
+  order: 1;
+}
+
+.project-minimal-card:nth-child(odd) .project-video-container {
+  order: 2;
+}
+
+.project-minimal-card:nth-child(even) .project-minimal-content {
+  grid-template-columns: 1fr 1fr;
+}
+
+.project-minimal-card:nth-child(even) .project-minimal-info {
+  order: 2;
+}
+
+.project-minimal-card:nth-child(even) .project-video-container {
+  order: 1;
+}
+
+.project-minimal-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.project-minimal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+/* Video de YouTube en las cards */
+.project-video-container {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  background: #000;
+}
+
+.project-video-iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+  border-radius: 0.5rem;
+}
+
+/* Responsive para mobile - una sola columna */
+@media (max-width: 768px) {
+  .project-minimal-card {
+    .project-minimal-content {
+      display: flex;
+      flex-direction: column;
+      .project-video-container {
+        order: -1; /* Video arriba en mobile */
+      }
+      .project-minimal-info {
+        order: 1; /* Video arriba en mobile */
+      }
+    }
+  }
+}
+
+.project-minimal-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #f3f4f6;
+  margin: 0;
+}
+
+.project-minimal-year {
+  font-size: 0.875rem;
+  color: var(--success-color);
+  font-weight: 500;
+}
+
+.project-minimal-description {
+  font-size: 0.875rem;
+  color: #9ca3af;
+  line-height: 1.5;
+  margin-bottom: 0.75rem;
+}
+
+.project-minimal-tech {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.project-minimal-tech .tech-tag {
+  background-color: rgba(55, 65, 81, 0.2);
+  color: var(--primary-color);
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.project-minimal-links {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 1.5rem;
+}
+
+/* Espaciado entre múltiples tarjetas de proyectos */
+.project-minimal-card + .project-minimal-card {
+  margin-top: 1.5rem;
+}
+
+/* En móvil, reducir el espaciado */
+@media (max-width: 768px) {
+  .project-minimal-card + .project-minimal-card {
+    margin-top: 1rem;
+
+  }
+}
+
+.project-minimal-link {
+  background: transparent;
+  color: var(--primary-color);
+  border: 1px solid var(--primary-color);
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 400;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: 'JetBrains Mono', monospace;
+  min-width: 100px;
+  border-radius: var(--border-radius-sm);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.project-minimal-link svg {
+  color: var(--primary-color);
+  width: 1rem;
+  height: 1rem;
+  margin-right: 0.5rem;
+  transition: all 0.3s ease;
+}
+
+.project-minimal-link:hover {
+  background: var(--primary-color);
+  color: var(--md-on-primary);
+}
+
+.project-minimal-link:hover svg {
+  color: var(--md-on-primary);
+}
+
+/* Estilos específicos para botón de jugar demo */
+.project-minimal-link.demo {
+  color: var(--success-color);
+  border-color: var(--success-color);
+}
+
+.project-minimal-link.demo:hover {
+  background-color: var(--success-color);
+  color: #111827;
+}
+
+/* Estilos para el botón de jugar cuando es button */
+.project-minimal-link[type="button"] {
+  background: transparent;
+  color: var(--primary-color);
+  border: 1px solid var(--primary-color);
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 400;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: 'JetBrains Mono', monospace;
+  min-width: 100px;
+  border-radius: var(--border-radius-sm);
+}
+
+.project-minimal-link[type="button"]:hover {
+  background: var(--primary-color);
+  color: var(--md-on-primary);
+}
+
+/* Estilos específicos para botón de jugar demo cuando es button */
+.project-minimal-link[type="button"].demo {
+  border-color: var(--success-color);
+  color: var(--success-color);
+}
+
+.project-minimal-link[type="button"].demo:hover {
+  background: var(--success-color);
+  color: #111827;
+}
+
+/* Estilos para modo claro */
+body.light-mode .project-minimal-link {
+  color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+body.light-mode .project-minimal-link:hover {
+  background: var(--primary-color);
+  color: var(--md-on-primary);
+}
+
+body.light-mode .project-minimal-link[type="button"] {
+  color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+body.light-mode .project-minimal-link[type="button"]:hover {
+  background: var(--primary-color);
+  color: var(--md-on-primary);
+}
+
+/* Estilos para la ventana del juego */
+.window-base.game {
+  height: 100%;
+  background-color: #111827;
+}
+
+.game-content {
+  height: calc(100% - 2.5rem);
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+.game-content iframe {
+  width: 1368px;
+  height: 913px;
+  border: none;
+  border-radius: 0 0 0.5rem 0.5rem;
+  transform: scale(0.5) translate(-50%, -50%);
+}
+
+/* Responsive para las cards de servicios */
+@media (max-width: 768px) {
+  .services-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .service-card {
+    padding: 1rem;
+  }
+  
+  .service-footer {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: stretch;
+  }
+  
+  .learn-more-btn {
+    width: 100%;
+    min-width: auto;
+  }
+  
+  .service-consult-btn {
+    min-width: auto;
+  }
+  
+  .project-minimal-link {
+    min-width: auto;
+  }
+  
+  .submit-btn {
+    min-width: auto;
+  }
+}
+
